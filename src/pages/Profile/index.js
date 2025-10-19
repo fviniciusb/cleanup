@@ -1,7 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import Header from "../../components/Header";
-import Title from "../../components/Title";
-import { FiSettings, FiUpload } from "react-icons/fi";
+import { FiUpload } from "react-icons/fi";
 import avatar from '../../assets/avatar.png';
 import { AuthContext } from "../../contexts/auth";
 import { doc, updateDoc } from 'firebase/firestore';
@@ -9,10 +7,11 @@ import { db, storage } from '../../services/FirebaseConnection';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import './profile.css';
 import { toast } from 'react-toastify';
+import InputMask from 'react-input-mask'; // Não esqueça de importar
+
 
 export default function Profile() {
     const { user, setUser, storageUser } = useContext(AuthContext);
-
     const [avatarUrl, setAvatarUrl] = useState(user && user.avatarUrl);
     const [imagemAvatar, setImagemAvatar] = useState(null);
     const [nome, setNome] = useState(user && user.nome);
@@ -20,14 +19,15 @@ export default function Profile() {
     const [email, setEmail] = useState(user && user.email);
     const [cpf, setCpf] = useState(user && user.cpf);
     const [telefone, setTelefone] = useState(user && user.telefone);
-    const [dataNascimento, setDataNascimento] = useState(user && user.dataNascimento);
-    const [genero, setGenero] = useState(user && user.genero || ""); // Começa vazio
-    const [disponivel, setDisponivel] = useState(user && user.disponivel || false);
-
-    const [endereco, setEndereco] = useState(user && user.endereco || "");
-    const [estado, setEstado] = useState(user && user.estado || "");
-    const [sobreDomicilio, setSobreDomicilio] = useState(user && user.sobreDomicilio || "");
-    const [servicos, setServicos] = useState(user && user.servicos || "");
+    const [dataNascimento, setDataNascimento] = useState(user && user.dataNascimento);// Linha 25
+    const [genero, setGenero] = useState((user && user.genero) || "");
+    const [disponivel, setDisponivel] = useState((user && user.disponivel) || false);
+    const [endereco, setEndereco] = useState((user && user.endereco) || "");
+    const [cep, setCep] = useState((user && user.cep) || "");
+    const [bairro, setBairro] = useState((user && user.bairro) || "");
+    const [estado, setEstado] = useState((user && user.estado) || "");
+    const [sobreDomicilio, setSobreDomicilio] = useState((user && user.sobreDomicilio) || "");
+    const [servicos, setServicos] = useState((user && user.servicos) || "");
 
     useEffect(() => {
         if (user && user.genero) {
@@ -118,12 +118,7 @@ export default function Profile() {
 
     return (
         <div>
-            <Header />
             <div className="content">
-                <Title nome="Meu perfil">
-                    <FiSettings size={25} />
-                </Title>
-
                 <div className="container">
                     <form className="form-profile" onSubmit={salvar}>
                         <label className="label-avatar">
@@ -151,17 +146,27 @@ export default function Profile() {
 
                             <div className="field">
                                 <label>Email</label>
-                                <input type="text" value={email} disabled />
+                                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
                             </div>
 
                             <div className="field">
                                 <label>CPF</label>
-                                <input type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
-                            </div>
+                                <InputMask 
+                                    mask="999.999.999-99" 
+                                    name="cpf"
+                                    value={cpf} 
+                                    onChange={(e) => setCpf(e.target.value)}
+                                />
+                                </div>
 
                             <div className="field">
                                 <label>Telefone</label>
-                                <input type="text" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
+                                <InputMask 
+                                  mask="(99) 99999-9999"
+                                  name="telefone"
+                                  value={telefone}
+                                  onChange={(e) => setTelefone(e.target.value)}
+                                />
                             </div>
 
                             <div className="field">
@@ -177,11 +182,21 @@ export default function Profile() {
                                     </option>
                                     <option value="Masculino">Masculino</option>
                                     <option value="Feminino">Feminino</option>
+                                    <option value="Outro">Prefiro não informar</option>
                                 </select>
                             </div>
 
                             {user.objetivo === "1" && (
                                 <>
+                                    <div className="field">
+                                        <label>CEP</label>
+                                        <input type="text" value={cep} onChange={(e) => setCep(e.target.value)} />
+                                    </div>
+                                    <div className="field">
+                                        <label>Bairro</label>
+                                        <input type="text" value={bairro} onChange={(e) => setBairro(e.target.value)} />
+                                    </div>
+                                    
                                     <div className="field">
                                         <label>Endereço</label>
                                         <input type="text" value={endereco} onChange={(e) => setEndereco(e.target.value)} />

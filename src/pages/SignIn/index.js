@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react'
 import './signin.css'
 
-import logo from '../../assets/logo.png'
+import logo from '../../assets/logo-feia.png'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../contexts/auth'
 import {toast} from 'react-toastify'
@@ -9,8 +9,7 @@ import {toast} from 'react-toastify'
 export default function SignIn(){
   const [email, setEmail] = useState('');
   const [password, setSenha] = useState('');
-  const { signIn } = useContext(AuthContext);
-  const { loadingAuth } = useContext(AuthContext);
+  const { signIn, loadingAuth } = useContext(AuthContext);
 
   function logar(e){
     e.preventDefault();
@@ -45,8 +44,8 @@ export default function SignIn(){
             onChange={ (e) => setSenha(e.target.value) }
           />
 
-        <button type="submit" className='botaoLogin'>
-            Entrar
+          <button type="submit" className='botaoLogin' disabled={loadingAuth}>
+              {loadingAuth ? 'Carregando...' : 'Entrar'}
           </button>
         </form>
 

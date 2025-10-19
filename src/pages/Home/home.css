@@ -52,7 +52,7 @@ h1 {
 
 .info h2 {
     font-size: 1.8rem;
-    color: black;
+    color: #2a6179;
     margin-bottom: 10px;
 }
 
@@ -62,8 +62,26 @@ h1 {
     color: #5EA1BD;
 }
 
+.rating {
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.rating strong {
+  color: #F5B50A; /* Cor da nota */
+  font-size: 0.9rem;
+}
+
+.rating span {
+  font-size: 0.8rem;
+  color: #666;
+}
 .btn-agendar {
-    background-color: black;
+    background-color: #395e6e;
     color: white;
     border: none;
     border-radius: 10px;
@@ -83,7 +101,7 @@ h1 {
 
 .loading, .empty {
     font-size: 1.5rem;
-    color: black;
+    color: #2a6179;
     text-align: center;
     margin-top: 50px;
     font-weight: bold;
@@ -119,8 +137,8 @@ h1 {
 
 .modal label {
     display: block;
-    margin: 10px 0;
-    font-size: 1rem;
+    margin: 15px 0;
+    font-size: 1.2rem;
     color: #444;
 }
 
@@ -130,10 +148,11 @@ h1 {
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 1rem;
 }
 
 .modal-actions {
-    margin-top: 20px;
+    margin-top: 30px;
     display: flex;
     justify-content: space-between;
 }

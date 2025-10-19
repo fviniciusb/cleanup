@@ -1,11 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import { collection, getDocs, doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../../services/FirebaseConnection";
-import Header from "../../components/Header";
-import Title from "../../components/Title";
-import { FiHome } from "react-icons/fi";
 import { AuthContext } from "../../contexts/auth";
 import { toast } from "react-toastify";
+import { FaStar } from "react-icons/fa";
 
 import "../Home/home.css";
 
@@ -34,6 +32,8 @@ export default function Home() {
                             servicos: data.servicos,
                             avatarUrl: data.avatarUrl || "",
                             telefone: data.telefone || "Não informado",
+                            mediaAvaliacoes: data.mediaAvaliacoes || 0,
+                            totalAvaliacoes: data.totalAvaliacoes || 0,
                         });
                     }
                 });
@@ -121,11 +121,7 @@ export default function Home() {
 
     return (
         <div>
-            <Header />
             <div className="content">
-                <Title nome="Meu perfil">
-                    <FiHome size={25} />
-                </Title>
 
                 <div className="container">
                     {loading ? (
@@ -141,6 +137,15 @@ export default function Home() {
                                         alt={faxineira.nome}
                                         className="avatar"
                                     />
+                                    <div className="rating">
+                                    <FaStar color="#F5B50A" />
+                                    <strong>
+                                        {faxineira.mediaAvaliacoes > 0 ? faxineira.mediaAvaliacoes.toFixed(1) : 'N/A'}
+                                    </strong>
+                                    <span>
+                                        ({faxineira.totalAvaliacoes} {faxineira.totalAvaliacoes === 1 ? 'avaliação' : 'avaliações'})
+                                    </span>
+                                </div>
                                     <div className="info">
                                         <h2>{faxineira.nome}</h2>
                                         <p><strong>Serviços:</strong> {faxineira.servicos}</p>

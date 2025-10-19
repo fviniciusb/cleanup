@@ -1,11 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../services/FirebaseConnection";
-import Header from "../../components/Header";
 import { AuthContext } from "../../contexts/auth";
 import { toast } from "react-toastify";
-import Title from "../../components/Title";
-import { FiUser } from "react-icons/fi";
+
 
 import "./agendamento.css";
 
@@ -83,11 +81,7 @@ export default function Agendamento() {
 
     return (
         <div>
-            <Header />
-                <div className="content">
-                    <Title nome="Meus agendamentos">
-                        <FiUser size={25} />
-                    </Title>
+        <div className="content">
             <div className="container">
                 {loading ? (
                     <div className="loading">Carregando...</div>

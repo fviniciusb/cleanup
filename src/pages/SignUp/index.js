@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo-feia.png';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../contexts/auth';
 import { toast } from 'react-toastify';
@@ -34,14 +34,14 @@ export default function SignUp() {
     }
   
     // Verificar o comprimento da senha
-    if (senha.length < 6) {
-      toast.info('A senha deve ter pelo menos 6 caracteres.');
+    if (senha.length < 8) {
+      toast.info('A senha deve ter pelo menos 8 caracteres.');
       return;
     }
   
     // Verificar a opção do objetivo
-    if (objetivo !== '1' && objetivo !== '2') {
-      toast.info('Opção de objetivo inválida. Insira 1 para "Quero uma faxina" ou 2 para "Quero faxinar".');
+    if ((objetivo !== '1' && objetivo !== '2') && (objetivo !== 'Cliente' && objetivo !== 'Prestador' && objetivo !== 'Prestadora')) {
+      toast.info('Opção de objetivo inválida. Insira 1 para "Cliente" ou 2 para "Prestador".');
       return;
     }
   
@@ -81,21 +81,21 @@ export default function SignUp() {
 
           <input
             type="text"
-            placeholder="Seu nome"
+            placeholder="Nome"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
           />
 
           <input
             type="text"
-            placeholder="Seu sobrenome"
+            placeholder="Sobrenome"
             value={sobrenome}
             onChange={(e) => setSobrenome(e.target.value)}
           />
 
           <input
             type="email"
-            placeholder="usuario@email.com"
+            placeholder="seu@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -116,13 +116,13 @@ export default function SignUp() {
 
           <input
             type="text"
-            placeholder="1=Quero faxina / 2=Quero faxinar"
+            placeholder="        1 - Cliente          2 - Prestador"
             value={objetivo}
             onChange={(e) => setObjetivo(e.target.value)}
           />
 
-          <button type="submit" className="botaoLogin">
-            Cadastrar
+        <button type="submit" className='botaoLogin' disabled={loadingAuth}>
+              {loadingAuth ? 'Carregando...' : 'Cadastrar-se'}
           </button>
         </form>
 

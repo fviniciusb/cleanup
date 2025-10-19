@@ -1,24 +1,35 @@
+// Em: src/components/Header/index.js
+
 import { useContext } from 'react';
 import avatarImg from '../../assets/avatar.png';
 import { Link, useLocation } from 'react-router-dom';
 
 import { AuthContext } from '../../contexts/auth';
-import { FiMessageSquare, FiUser, FiSettings, FiLogOut, FiHome } from 'react-icons/fi';
-import './header.css';
+import { FiUser, FiSettings, FiLogOut, FiHome } from 'react-icons/fi';
+import './header.css'; // O CSS que vamos modificar
 
-export default function Header() {
+// 1. Receba a prop { isOpen }
+export default function Header({ isOpen }) {
     const { user, logout } = useContext(AuthContext);
     const location = useLocation();
 
+    // 2. Crie a classe dinâmica baseada na prop
+    const sidebarClasses = `sidebar ${isOpen ? 'open' : ''}`;
+
     return (
-        <div className="sidebar">
+        // 3. Aplique a classe dinâmica
+        <div className={sidebarClasses}>
             <div>
-                <img src={user.avatarUrl === null ? avatarImg : user.avatarUrl} alt="Foto do usuário" />
+                <img 
+                    src={user.avatarUrl === null ? avatarImg : user.avatarUrl} 
+                    alt="Foto do usuário" 
+                    className="sidebar-avatar" // Adicione esta classe para o CSS
+                />
             </div>
 
             <Link
                 to="/home"
-                className={location.pathname === '/home' ? 'active' : ''} // Classe 'active' para a rota ativa
+                className={location.pathname === '/home' ? 'active' : ''}
             >
                 <FiHome color="#FFF" size={24} />
                 <span>Home</span>
@@ -26,7 +37,7 @@ export default function Header() {
 
             <Link
                 to="/agendamentos"
-                className={location.pathname === '/agendamentos' ? 'active' : ''} // Aplica classe se estiver na rota
+                className={location.pathname === '/agendamentos' ? 'active' : ''}
             >
                 <FiUser color="#FFF" size={24} />
                 <span>Agendamentos</span>
@@ -34,7 +45,7 @@ export default function Header() {
 
             <Link
                 to="/perfil"
-                className={location.pathname === '/perfil' ? 'active' : ''} // Aplica classe se estiver na rota
+                className={location.pathname === '/perfil' ? 'active' : ''}
             >
                 <FiSettings color="#FFF" size={24} />
                 <span>Perfil</span>

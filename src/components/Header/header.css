@@ -1,125 +1,86 @@
+/* Em: src/components/Header/header.css */
+/* POR FAVOR, SUBSTITUA TUDO NESTE ARQUIVO POR ISTO */
+
 .sidebar {
-    width: 180px;
-    margin: 0;
-    padding: 0;
-    background-color: #000000;
-    position: fixed;
-    height: 100%;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Mantém a estrutura flexível */
-}
+  /* --- ESTADO FECHADO (PADRÃO) --- */
+  width: 80px; /* Largura só para os ícones */
+  height: 100vh;
+  background-color: #5EA1BD; /* Sua cor */
+  transition: width 0.3s ease;
   
-  .sidebar div{
-    background-color: #000000;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 150px;
-  }
+  /* IMPORTANTE: Esconde o que vazar */
+  overflow-x: hidden; 
   
-  .sidebar div{
-    padding-top: 30px;
-  }
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
   
-  .sidebar div img {
-    width: 90px;
-    height: 90px;
-    display: block;
-    margin: auto;
-    border-radius: 50%;
-    object-fit: cover;
-    filter: drop-shadow(2px 3px 6px #121212);
-    -webkit-filter: drop-shadow(2px 3px 6px #121212);
-  }
-  
-  .sidebar a {
-    display: block;
-    padding: 16px;
-    display: flex;
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.7);
-    flex-direction: row;
-    align-items: center;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave */
-}
-  
-
-  
-  .sidebar a:hover{
-    background-color: #5EA1BD;
-    color: #FFF;
-  }
-  
-  .content{
-    margin-left: 200px;
-    padding: 1px 16px;
-  }
-
-  .sidebar a.active,
-.sidebar a:hover {
-    background-color: #5EA1BD;
-    color: #FFF;
+  /* IMPORTANTE: Fixa a sidebar na tela */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
 }
 
+/* --- ESTADO ABERTO --- */
+.sidebar.open {
+  width: 240px; /* Largura total */
+}
+
+/* --- LINKS --- */
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #FFF;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 4px;
+  white-space: nowrap; /* Impede que o texto quebre linha */
+}
+
+/* ----------------------------------------------------
+  AQUI ESTÁ A MÁGICA
+  ----------------------------------------------------
+*/
 .sidebar a svg {
-    margin-right: 0.5rem;
+  display: block;
+  opacity: 1;
+  flex-shrink: 0; 
 }
 
-.sidebar a:last-child {
-  margin-top: auto; /* Garante que o botão de sair seja empurrado para o final */
+/* 1. O TEXTO FICA INVISÍVEL QUANDO A SIDEBAR ESTÁ FECHADA */
+.sidebar a span {
+  opacity: 0; 
+  transition: opacity 0.2s ease;
 }
 
-  
-  @media screen and (max-width: 781px){
-    .sidebar{
-        margin: auto;  
-        width: 100%;
-        height: auto;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        flex-direction: row;
-    }
-  
-    div.content{
-      margin-left: 0;
-    }
-  
-    .sidebar a{
-      float: left;
-    }
-  
-    .sidebar div{
-      display: none;
-    }
+/* 2. O TEXTO SÓ APARECE QUANDO A SIDEBAR TIVER A CLASSE .open */
+.sidebar.open a span {
+  opacity: 1;
+}
+/* ----------------------------------------------------
+  FIM DA MÁGICA
+  ----------------------------------------------------
+*/
 
-    
-  }
-  
-  
-@media screen and (max-width: 475px){
-    .sidebar a{
-        margin: auto;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        float: none;
-    }
 
-    .sidebar a span {
-        display: none;
-    }
+/* Link ativo (copiado da sua lógica) */
+.sidebar a.active {
+  background-color: rgba(0, 0, 0, 0.2);
+}
 
-    .sidebar a.active,
-    .sidebar a:hover {
-      background-color: transparent;
-        color: #FFF;
-    }
-    
-    .sidebar a svg {
-        margin-right: 0.5rem;
-    }
+/* --- AVATAR --- */
+.sidebar-avatar {
+  width: 50px; /* Tamanho fechado */
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #FFF;
+  margin: 10px auto 20px auto;
+  transition: all 0.3s ease;
+}
+
+.sidebar.open .sidebar-avatar {
+  width: 90px; /* Tamanho aberto */
+  height: 90px;
 }
