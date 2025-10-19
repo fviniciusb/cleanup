@@ -118,7 +118,7 @@ export default function SignUp() {
             value={objetivo}
             onChange={(e) => setObjetivo(e.target.value)}
           >
-            <option value="">Selecione um objetivo</option>
+            <option value="" hidden>Selecione seu objetivo</option>
             <option value="1">Cliente</option>
             <option value="2">Prestador</option>
           </select>

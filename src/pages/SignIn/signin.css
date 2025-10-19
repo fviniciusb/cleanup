@@ -112,14 +112,41 @@
     margin: auto;
     margin-bottom: 1rem;
   }
-  
-  /* select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }   */
+  /* Container principal - pode ser a sua classe .select-profile */
+.select-profile {
+  display: flex; /* Coloca os botões lado a lado */
+  gap: 12px;     /* Espaço entre os botões */
+}
+ riginal */
+.select-profile input[type="radio"] {
+  display: none;
+}
+
+/* Label que parece um botão */
+.radio-label {
+  flex-grow: 1; /* Faz os dois botões terem o mesmo tamanho */
+  text-align: center;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #f8f8f8;
+  color: #555;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Efeito ao passar o mouse (não selecionado) */
+.radio-label:hover {
+  border-color: #999;
+}
+
+/* ESTILO DO BOTÃO SELECIONADO */
+.select-profile input[type="radio"]:checked + .radio-label {
+  background-color: #007bff; /* Cor primária (ex: azul) */
+  color: white;
+  border-color: #007bff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
   @media screen and (max-width: 700px){
     .login input{
