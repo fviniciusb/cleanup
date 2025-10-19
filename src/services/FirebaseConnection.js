@@ -4,13 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBpah4E0wmsWzzQ9mYaqibGZcoUzr5wG8s",
-    authDomain: "faxinei-8206d.firebaseapp.com",
-    projectId: "faxinei-8206d",
-    storageBucket: "faxinei-8206d.appspot.com",
-    messagingSenderId: "653543986614",
-    appId: "1:653543986614:web:3f848abe9e58fa37669d17",
-    measurementId: "G-BQYX5C0DS7"
+    apiKey: "AIzaSyDeNgrFUdLTeXyErl3g01tOh1AkLE1aP5c",
+  authDomain: "cleanup-af26e.firebaseapp.com",
+  projectId: "cleanup-af26e",
+  storageBucket: "cleanup-af26e.firebasestorage.app",
+  messagingSenderId: "72304199163",
+  appId: "1:72304199163:web:7f93b8f23062a0a3ba375e",
+  measurementId: "G-0W0W1TTWNM"
 };
 
 const firebaseApp = initializeApp(firebaseConfig);

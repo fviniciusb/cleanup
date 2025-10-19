@@ -84,3 +84,26 @@
   width: 90px; /* Tamanho aberto */
   height: 90px;
 }
+
+ @media screen and (max-width: 768px){
+    .sidebar{
+        margin: auto;  
+        width: 100%;
+        height: auto;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+    }
+  }
+
+  @media screen and (max-width: 475px){
+    .sidebar a{
+        margin: auto;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        float: none;
+    }
+  }

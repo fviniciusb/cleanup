@@ -102,14 +102,24 @@
   .objetivo {
     margin-top: 15px;
   }
+
+  .select-profile{
+    background-color: white;
+    padding: 8px;
+    border-radius: 20px;
+    font-size: 14px;
+    width: 60%;
+    margin: auto;
+    margin-bottom: 1rem;
+  }
   
-  select {
+  /* select {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }  
+  }   */
 
   @media screen and (max-width: 700px){
     .login input{

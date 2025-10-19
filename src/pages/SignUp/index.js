@@ -114,12 +114,14 @@ export default function SignUp() {
             onChange={(e) => setConfirmarSenha(e.target.value)}
           />
 
-          <input
-            type="text"
-            placeholder="        1 - Cliente          2 - Prestador"
+          <select className='select-profile'
             value={objetivo}
             onChange={(e) => setObjetivo(e.target.value)}
-          />
+          >
+            <option value="">Selecione um objetivo</option>
+            <option value="1">Cliente</option>
+            <option value="2">Prestador</option>
+          </select>
 
         <button type="submit" className='botaoLogin' disabled={loadingAuth}>
               {loadingAuth ? 'Carregando...' : 'Cadastrar-se'}
