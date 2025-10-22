@@ -8,7 +8,7 @@ import Home from '../pages/Home';
 import Agendamento from '../pages/Agendamento';
 import Private from './Private';
 import Profile from '../pages/Profile';
-
+import ForgotPassword from '../pages/ForgotPassword';
 // 1. Importe os ícones que você vai usar nos títulos
 import { FiHome, FiUser, FiSettings } from 'react-icons/fi';
 
@@ -19,7 +19,7 @@ function RoutesApp() {
             <Route path="/" element={<SignIn />} />
             <Route path="/faxinei" element={<SignIn />} />
             <Route path="/cadastrar" element={<SignUp />} /> {/* Corrigi para SignUp */}
-
+            <Route path="/recuperar-senha" element={ <ForgotPassword/> } />
             {/* --- Rotas Privadas (com layout) --- */}
             <Route
                 path="/home"

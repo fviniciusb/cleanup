@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../../contexts/auth';
 import { toast } from 'react-toastify';
 
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../../services/FirebaseConnection";
+//Adicionados imports do Firestore para a verificação do e-mail
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from '../../services/FirebaseConnection'; 
 
 export default function SignUp() {
   const [nome, setNome] = useState('');
@@ -15,60 +16,62 @@ export default function SignUp() {
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [objetivo, setObjetivo] = useState('');
-  const { signUp } = useContext(AuthContext);
-  const { loadingAuth } = useContext(AuthContext);
 
-  async function cadastrar(e) {
+  const { signUp, loadingAuth, signUpWithGoogle } = useContext(AuthContext);
+
+  async function handleEmailSignUp(e) {
     e.preventDefault();
   
-    // Verificar se todos os campos foram preenchidos
-    if (nome === '' || sobrenome === '' || email === '' || senha === '' || confirmarSenha === '' || objetivo === '') {
+    // 1. Validação dos campos do formulário
+    if (nome === '' || sobrenome === '' || email === '' || senha === '' || objetivo === '') {
       toast.info('Preencha todos os campos.');
       return;
     }
   
-    // Verificar se as senhas correspondem
     if (senha !== confirmarSenha) {
-      toast.info('As senhas não correspondem.');
+      toast.error('As senhas não correspondem.');
       return;
     }
   
-    // Verificar o comprimento da senha
     if (senha.length < 8) {
       toast.info('A senha deve ter pelo menos 8 caracteres.');
       return;
     }
   
-    // Verificar a opção do objetivo
-    if ((objetivo !== '1' && objetivo !== '2') && (objetivo !== 'Cliente' && objetivo !== 'Prestador' && objetivo !== 'Prestadora')) {
-      toast.info('Opção de objetivo inválida. Insira 1 para "Cliente" ou 2 para "Prestador".');
+    // --- VERIFICAR SE O E-MAIL JÁ EXISTE ---
+    try {
+      const usuariosRef = collection(db, 'usuarios');
+      // Cria uma query que busca na coleção 'usuarios' onde o campo 'email' é igual ao e-mail digitado
+      const q = query(usuariosRef, where("email", "==", email));
+      
+      const querySnapshot = await getDocs(q);
+
+      // Se 'querySnapshot.empty' for 'false', significa que encontrou pelo menos um documento
+      if (!querySnapshot.empty) {
+        toast.error("Este e-mail já está em uso. Faça login ou tente recuperar sua senha.");
+        return; // Impede a continuação do cadastro
+      }
+
+    } catch (error) {
+      console.error("Erro ao verificar e-mail no Firestore:", error);
+      toast.error("Não foi possível verificar o e-mail. Tente novamente.");
+      return; // Impede o cadastro se a verificação falhar
+    }
+    
+
+    // 3. Se passou por todas as validações, chama a função de cadastro do contexto
+    await signUp(nome, sobrenome, email, senha, objetivo);
+  }
+
+  // Função para cadastro com o Google 
+  async function handleGoogleSignUp() {
+    if (objetivo === '') {
+      toast.info('Por favor, selecione seu objetivo (Cliente ou Prestador) antes de continuar.');
       return;
     }
-  
-    // Verificar se o email já existe na coleção "usuarios"
-    const usuariosRef = collection(db, 'usuarios');
-    const q = query(usuariosRef, where('email', '==', email));
-  
-    try {
-      const querySnapshot = await getDocs(q);
-  
-      if (!querySnapshot.empty) {
-        toast.info('Este e-mail já está cadastrado.');
-        return;
-      }
-  
-      // Se o e-mail não existe e a senha é válida, criar o usuário
-      await signUp(nome, sobrenome, email, senha, objetivo); // Chamada corrigida
-  
-      // Mensagem de sucesso após o cadastro
-      toast.success('Usuário cadastrado com sucesso!');
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
-      toast.error('Ocorreu um erro ao cadastrar o usuário.');
-    }
+    await signUpWithGoogle(objetivo);
   }
   
-
   return (
     <div className="container-center">
       <div className="login">
@@ -76,7 +79,7 @@ export default function SignUp() {
           <img src={logo} alt="Logo do sistema de chamados" />
         </div>
 
-        <form onSubmit={cadastrar}>
+        <form onSubmit={handleEmailSignUp}>
           <h1>Cadastre-se</h1>
 
           <input
@@ -102,7 +105,7 @@ export default function SignUp() {
 
           <input
             type="password"
-            placeholder="Senha"
+            placeholder="Senha (mín. 8 caracteres)"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />
@@ -114,7 +117,8 @@ export default function SignUp() {
             onChange={(e) => setConfirmarSenha(e.target.value)}
           />
 
-          <select className='select-profile'
+          <select 
+            className='select-profile'
             value={objetivo}
             onChange={(e) => setObjetivo(e.target.value)}
           >
@@ -123,10 +127,18 @@ export default function SignUp() {
             <option value="2">Prestador</option>
           </select>
 
-        <button type="submit" className='botaoLogin' disabled={loadingAuth}>
-              {loadingAuth ? 'Carregando...' : 'Cadastrar-se'}
+          <button type="submit" className='botaoLogin' disabled={loadingAuth}>
+            {loadingAuth ? 'Carregando...' : 'Cadastrar-se'}
           </button>
         </form>
+
+        <div className='divisor'>
+          <span>OU</span>
+        </div>
+
+        <button onClick={handleGoogleSignUp} className="google-btn" disabled={loadingAuth}>
+           Cadastrar com Google
+        </button>
 
         <Link to="/">Já possui uma conta? <span className="cadastre-se">Faça login</span></Link>
       </div>
