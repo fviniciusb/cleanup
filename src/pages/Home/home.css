@@ -1,218 +1,262 @@
-.main-title{
-    color: #333;
-    margin-bottom: 35px;
-    font-size: 2.5rem;
-    font-weight: 500;
-    font-family: serif;
-    text-align: center;
-}
+/* --- ESTILOS GLOBAIS DA PÁGINA --- */
 
-/* Container principal (padrão) */
-.home-container {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 5%);
-  padding: 32px;
+.main-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  padding: 20px 1px;
+  position: relative;
+  top: 10px;
+  text-align: justify;
   max-width: 1200px;
-  width: 100%;
   margin: 0 auto;
-  box-sizing: border-box;
 }
 
-/* Estilos para Loading e "Vazio" (padrão) */
 .loading-container,
 .empty-container {
-  text-align: center;
-  padding: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 16px;
   font-size: 1.2rem;
-  color: #667;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 5%);
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
+  color: #777;
+  min-height: 300px;
 }
 
-/* --- GRID DOS CARDS --- */
+/* --- LAYOUT DA GRADE DE CARDS (O "ESTILO OLX") --- */
+
+.home-container {
+  /* Controla o espaçamento lateral de toda a grade */
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+  left: 50px;
+}
+
 .cards-container {
   display: grid;
-
-  /* Cria colunas responsivas:
-     - Tenta criar colunas de 300px
-     - Se não couber, elas encolhem (minmax)
-     - '1fr' significa que se só tiver 1, ele ocupa 100%
-  */
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px; /* Espaço entre os cards */
+  gap: 15px; /* Espaçamento entre os cards */
 }
 
-/* --- NOVO DESIGN DO CARD --- */
+
+/* --- ESTILO DO CARD INDIVIDUAL --- */
+
 .card {
-  background: #fff;
-  border: 1px solid #e9ecef;
-  border-radius: 10px;
-  overflow: hidden; /* Garante que a imagem não vaze */
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+  overflow: hidden; /* Garante que a imagem respeite as bordas */
   display: flex;
-  flex-direction: column;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  flex-direction: column; /* Empilha imagem, info e botão */
+  transition: box-shadow 0.2s ease-in-out;
 }
 
 .card:hover {
-  box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
-  border-color: #ced4da;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 .card .avatar {
-  width: 50%;
-  height: 200px; /* Altura fixa para a imagem */
-  object-fit: cover; /* Garante que a imagem cubra o espaço */
-  border-bottom: 1px solid #e9ecef;
+  width: 70%;
+  height: 150px; /* Altura fixa para todas as imagens */
+  object-fit: cover; /* Evita distorção da imagem */
+  border-bottom: 1px solid #eee;
   margin: auto;
 }
 
 .card .info {
-  padding: 20px;
-  flex-grow: 1; /* Faz esta div crescer para empurrar o botão para baixo */
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Faz este bloco crescer e empurrar o botão para baixo */
 }
 
 .card .info h2 {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  color: #333;
-  margin: 0 0 12px;
+  color: #222;
+  margin: 0 0 8px 0;
 }
 
 .card .rating {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .card .rating strong {
   color: #333;
 }
 
+.card .rating span {
+  color: #777;
+  font-size: 0.85rem;
+}
+
 .card .info p {
   font-size: 0.9rem;
   color: #555;
-  margin-bottom: 8px;
-  line-height: 1.4;
+  margin-bottom: 6px;
+  line-height: 1.5;
 }
 
 .card .info p strong {
   color: #333;
 }
 
-.card .btn-agendar {
-  background-color: #5EA1BD; /* Azul (mesmo do perfil) */
-  color: #fff;
-  text-align: center;
+.btn-agendar {
+  background-color: #007bff; /* Cor primária (azul) */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 16px;
   font-size: 1rem;
   font-weight: 600;
-  padding: 14px 20px;
-  border: none;
   cursor: pointer;
-  transition: background-color 0.2s;
-
-  /* Adicionado para alinhar ao design */
-  margin: 20px; 
-  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  width: calc(100% - 32px); /* 100% - (padding * 2) */
+  margin: 0 16px 16px 16px; /* Alinha com o padding do .info */
 }
 
-.card .btn-agendar:hover {
-  background-color: #0b5ed7;
+.btn-agendar:hover {
+  background-color: #0056b3;
 }
 
 
-/* --- CSS DO MODAL (BÔNUS) --- */
+/* --- ESTILOS DO MODAL DE AGENDAMENTO --- */
+
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgb(0 0 0 / 50%);
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
+  padding: 16px;
 }
 
 .modal-content {
-  background: #fff;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgb(0 0 0 / 10%);
-  width: 90%;
-  max-width: 450px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  padding: 24px 30px;
+  width: 100%;
+  max-width: 500px;
 }
 
 .modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
   font-size: 1.5rem;
-  margin: 0 0 10px;
   color: #333;
 }
 
 .modal-field {
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 16px;
 }
 
 .modal-field label {
-  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 8px;
   font-weight: 600;
   color: #555;
-  margin-bottom: 8px;
 }
 
 .modal-field input[type="date"],
 .modal-field input[type="time"] {
-  padding: 12px 14px;
-  font-size: 1rem;
-  border: 1px solid #ced4da;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
   border-radius: 6px;
-  box-sizing: border-box; 
+  font-size: 1rem;
+  font-family: inherit; /* Garante a mesma fonte do site */
+  box-sizing: border-box; /* Garante que o padding não quebre o layout */
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 24px;
 }
 
-.modal-actions button {
+.btn-cancelar,
+.btn-confirmar {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
   font-size: 0.95rem;
   font-weight: 600;
-  padding: 10px 20px;
-  border-radius: 6px;
-  border: none;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.btn-cancelar {
-  background-color: #f1f1f1;
-  color: #555;
-  border: 1px solid #ddd;
-}
-
-.btn-cancelar:hover {
-  background-color: #e9ecef;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .btn-confirmar {
-  background-color: #0d6efd; /* Azul */
-  color: #fff;
+  background-color: #28a745; /* Cor de sucesso (verde) */
+  color: white;
 }
 
 .btn-confirmar:hover {
-  background-color: #0b5ed7;
+  background-color: #218838;
+}
+
+.btn-cancelar {
+  background-color: transparent;
+  color: #777;
+  border: 1px solid #ccc;
+}
+
+.btn-cancelar:hover {
+  background-color: #f1f1f1;
+}
+@media (max-width: 768px) {
+
+  /* 1. Reduz o tamanho do título principal */
+  .main-title {
+    font-size: 1.5rem; /* Menor no mobile */
+    padding: 16px 16px 8px 16px;
+  }
+
+  /* 2. Ajusta o padding do container da grade */
+  .home-container {
+    padding: 0 16px 24px 16px;
+  }
+
+  /* 3. Ajustes no Modal para telas pequenas */
+  .modal-content {
+    padding: 24px 16px; /* Menos padding lateral */
+  }
+
+  .modal-actions {
+    flex-direction: column; /* Empilha os botões do modal */
+    gap: 10px;
+  }
+
+  .modal-actions .btn-cancelar,
+  .modal-actions .btn-confirmar {
+    width: 100%; /* Botões ocupam 100% */
+    margin: 0;
+  }
+}
+
+/* Ajustes finos para celulares bem pequenos */
+@media (max-width: 480px) {
+  /* Força a grade a ter 1 coluna e menos gap */
+  .cards-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .card .avatar {
+    height: 180px; /* Imagem do card um pouco menor */
+  }
 }

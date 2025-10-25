@@ -5,9 +5,9 @@ import { AuthContext } from "../../contexts/auth";
 import { doc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../../services/FirebaseConnection';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import './profile.css'; // <-- Certifique-se que o profile.css também está ATUALIZADO
+import './profile.css';
 import { toast } from 'react-toastify';
-import InputMask from 'react-input-mask';
+import InputMask from 'react-input-mask'; // Você já estava importando!
 
 export default function Profile() {
     const { user, setUser, storageUser } = useContext(AuthContext);
@@ -30,118 +30,147 @@ export default function Profile() {
     const [sobreDomicilio, setSobreDomicilio] = useState((user && user.sobreDomicilio) || "");
     const [servicos, setServicos] = useState((user && user.servicos) || "");
 
-    // Este useEffect é redundante, pois o useState já faz essa lógica inicial.
-    // Pode remover se quiser, mas não causa problemas.
-    useEffect(() => {
-        if (user && user.genero) {
-            setGenero(user.genero);
-        }
-        if (user && typeof user.disponivel !== "undefined") {
-            setDisponivel(user.disponivel);
-        }
-    }, [user]);
+    // ... (seu useEffect está aqui, tudo certo) ...
+    useEffect(() => {
+        if (user && user.genero) {
+            setGenero(user.genero);
+        }
+        if (user && typeof user.disponivel !== "undefined") {
+            setDisponivel(user.disponivel);
+        }
+    }, [user]);
 
-    // Função 'mudarFoto' (está correta)
+    // ... (suas funções mudarFoto, uploadFoto, atualizarDados, salvar, alternarDisponibilidade estão aqui) ...
+    // ... (não vou colar todas para economizar espaço, elas estão corretas) ...
+
     function mudarFoto(e) {
-        if (e.target.files[0]) {
-            const image = e.target.files[0];
-            if (image.type === 'image/jpeg' || image.type === 'image/png') {
-                setImagemAvatar(image);
-                setAvatarUrl(URL.createObjectURL(image));
-            } else {
-                toast.error("Envie uma imagem do tipo PNG ou JPEG");
-                setImagemAvatar(null);
-            }
-        }
-    }
+        if (e.target.files[0]) {
+            const image = e.target.files[0];
+            if (image.type === 'image/jpeg' || image.type === 'image/png') {
+                setImagemAvatar(image);
+                setAvatarUrl(URL.createObjectURL(image));
+            } else {
+                toast.error("Envie uma imagem do tipo PNG ou JPEG");
+                setImagemAvatar(null);
+            }
+        }
+    }
 
-    // Função 'uploadFoto' (corrigida para retornar a URL)
-    async function uploadFoto() {
-        const currentUid = user.uid;
-        const uploadRef = ref(storage, `imagens/${currentUid}/${imagemAvatar.name}`);
+    async function uploadFoto() {
+        const currentUid = user.uid;
+        const uploadRef = ref(storage, `imagens/${currentUid}/${imagemAvatar.name}`);
+        try {
+            const snapshot = await uploadBytes(uploadRef, imagemAvatar);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            return downloadURL;
+        } catch (error) {
+            console.error("Erro no upload da foto: ", error);
+            toast.error("Erro ao enviar a imagem.");
+            return null; 
+        }
+    }
+
+    async function atualizarDados(atualizacoes) {
+        const docRef = doc(db, "usuarios", user.uid);
+        await updateDoc(docRef, atualizacoes)
+            .then(() => {
+                const updatedUser = { ...user, ...atualizacoes };
+                setUser(updatedUser);
+                storageUser(updatedUser);
+                toast.success("Atualizado com sucesso!");
+            })
+            .catch((error) => {
+                console.error("Erro ao atualizar dados:", error);
+                toast.error("Erro ao atualizar dados.");
+            });
+    }
+
+    async function salvar(e) {
+        e.preventDefault();
+        if (!cpf) {
+            toast.error("Por favor, preencha seu CPF.");
+            return;
+        }
+        const atualizacoes = {
+            nome,
+            sobrenome,
+            cpf,
+            telefone,
+            dataNascimento,
+            genero,
+            ...(user.objetivo === "1" && {
+                cep,
+                bairro,
+                endereco,
+                estado,
+                sobreDomicilio,
+            }),
+            ...(user.objetivo === "2" && {
+                servicos,
+            }),
+        };
+        if (imagemAvatar) {
+            const novaAvatarUrl = await uploadFoto();
+            if (novaAvatarUrl) {
+                atualizacoes.avatarUrl = novaAvatarUrl;
+            } else {
+                return;
+            }
+        }
+        await atualizarDados(atualizacoes);
+    }
+
+    async function alternarDisponibilidade() {
+        const novaDisponibilidade = !disponivel;
+        setDisponivel(novaDisponibilidade);
+        await atualizarDados({ disponivel: novaDisponibilidade });
+    }
+
+
+    // ==========================================================
+    // ======> 1. ADIÇÃO: FUNÇÃO DE BUSCAR CEP
+    // ==========================================================
+    const handleCepBlur = async (e) => {
+        // Pega o valor do CEP do state, que já foi atualizado pelo onChange
+        const cepLimpo = cep.replace(/\D/g, ''); 
+
+        if (cepLimpo.length !== 8) {
+          // Se o CEP (sem máscara) não tiver 8 dígitos, não faz nada
+          return; 
+        }
 
         try {
-            const snapshot = await uploadBytes(uploadRef, imagemAvatar);
-            const downloadURL = await getDownloadURL(snapshot.ref);
-            return downloadURL; // Retorna a URL de download
-        } catch (error) {
-            console.error("Erro no upload da foto: ", error);
-            toast.error("Erro ao enviar a imagem.");
-            return null; // Retorna null em caso de erro
-        }
-    }
+          // Faz a chamada para a API ViaCEP
+          const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+          const data = await response.json();
 
-    // Função 'atualizarDados' (está correta)
-    async function atualizarDados(atualizacoes) {
-        const docRef = doc(db, "usuarios", user.uid);
-        await updateDoc(docRef, atualizacoes)
-            .then(() => {
-                const updatedUser = { ...user, ...atualizacoes };
-                setUser(updatedUser);
-                storageUser(updatedUser);
-                toast.success("Atualizado com sucesso!");
-            })
-            .catch((error) => {
-                console.error("Erro ao atualizar dados:", error);
-                toast.error("Erro ao atualizar dados.");
-            });
-    }
-
-    // --- FUNÇÃO 'SALVAR' COM A LÓGICA CORRIGIDA ---
-    async function salvar(e) {
-        e.preventDefault();
-
-        // (Você tinha uma validação de Gênero, mudei para CPF que é mais comum)
-        if (!cpf) {
-            toast.error("Por favor, preencha seu CPF.");
+          if (data.erro) {
+            toast.error("CEP não encontrado.");
+            // Limpa os campos caso o CEP seja inválido
+            setEndereco('');
+            setBairro('');
+            setEstado('');
             return;
+          }
+
+          // Atualiza os states do seu componente com os dados da API
+          // Os nomes já batem: setEndereco, setBairro, setEstado
+          setEndereco(data.logradouro);
+          setBairro(data.bairro);
+          setEstado(data.uf);
+          
+          // Opcional: focar no campo de endereço após o preenchimento
+          // document.getElementById('endereco-input').focus(); 
+          // (Para isso, adicione o id="endereco-input" no input de Endereço)
+
+        } catch (error) {
+          console.error("Erro ao buscar o CEP:", error);
+          toast.error("Erro ao buscar o CEP. Tente novamente.");
         }
+      };
 
-        // 1. Monta o objeto base com todas as atualizações de texto
-        const atualizacoes = {
-            nome,
-            sobrenome,
-            cpf,
-            telefone,
-            dataNascimento,
-            genero,
-            ...(user.objetivo === "1" && {
-                cep, // Adicionei cep e bairro que faltavam
-                bairro,
-                endereco,
-                estado,
-                sobreDomicilio,
-            }),
-            ...(user.objetivo === "2" && {
-                servicos,
-            }),
-        };
 
-        // 2. Verifica se uma nova imagem foi selecionada
-        if (imagemAvatar) {
-            const novaAvatarUrl = await uploadFoto(); // Espera o upload terminar
-
-            if (novaAvatarUrl) {
-                // 3. Adiciona a URL da nova foto ao objeto de atualizações
-                atualizacoes.avatarUrl = novaAvatarUrl;
-            } else {
-                // Se o upload falhar, impede o resto da atualização
-                return;
-            }
-        }
-
-        // 4. Chama o 'atualizarDados' UMA VEZ com TUDO
-        await atualizarDados(atualizacoes);
-    }
-
-    // Função 'alternarDisponibilidade' (está correta)
-    async function alternarDisponibilidade() {
-        const novaDisponibilidade = !disponivel;
-        setDisponivel(novaDisponibilidade);
-        await atualizarDados({ disponivel: novaDisponibilidade });
-    }
-
-    // --- NOVO JSX PARA O LAYOUT MODERNO ---
+    // --- SEU JSX (COM A PEQUENA MUDANÇA NO CAMPO CEP) ---
     return (
         <div>
             
@@ -165,7 +194,6 @@ export default function Profile() {
                         <p>{email}</p>
                     </div>
 
-                    {/* Botão de Disponibilidade (só aparece para objetivo "2") */}
                     {user.objetivo === "2" && (
                         <button
                             type="button"
@@ -236,12 +264,22 @@ export default function Profile() {
                             {/* Campos de Endereço (Exemplo para objetivo "1") */}
                             {user.objetivo === "1" && (
                                 <>
+                                    {/* ========================================================== */}
+                                    {/* ======> 2. MUDANÇA: CAMPO CEP COM MÁSCARA E ONBLUR
+                                    {/* ========================================================== */}
                                     <div className="field-group">
                                         <label>CEP</label>
-                                        <input type="text" value={cep} onChange={(e) => setCep(e.target.value)} />
+                                        <InputMask 
+                                            className="styled-mask"
+                                            mask="99999-999"
+                                            value={cep} 
+                                            onChange={(e) => setCep(e.target.value)}
+                                            onBlur={handleCepBlur} // <-- ISSO FOI ADICIONADO
+                                        />
                                     </div>
                                     <div className="field-group">
                                         <label>Bairro</label>
+                                        {/* O 'value' e 'onChange' já estavam corretos! */}
                                         <input type="text" value={bairro} onChange={(e) => setBairro(e.target.value)} />
                                     </div>
                                     <div className="field-group">

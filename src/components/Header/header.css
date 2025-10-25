@@ -1,33 +1,27 @@
 /* Em: src/components/Header/header.css */
 
-/* POR FAVOR, SUBSTITUA TUDO NESTE ARQUIVO POR ISTO */
-
+/* --- ESTADO DESKTOP (PADRÃO) --- */
 .sidebar {
-  /* --- ESTADO FECHADO (PADRÃO) --- */
-  width: 80px; /* Largura só para os ícones */
+  width: 80px; /* Largura fechado */
   height: 100vh;
-  background-color: #5EA1BD; /* Sua cor */
+  background-color: #5EA1BD;
   transition: width 0.3s ease;
-  
-  /* IMPORTANTE: Esconde o que vazar */
   overflow-x: hidden; 
   display: flex;
   flex-direction: column;
   padding: 15px;
   
-  /* IMPORTANTE: Fixa a sidebar na tela */
   position: fixed;
   left: 0;
   top: 0;
   z-index: 100;
 }
 
-/* --- ESTADO ABERTO --- */
 .sidebar.open {
-  width: 240px; /* Largura total */
+  width: 240px; /* Largura aberto */
 }
 
-/* --- LINKS --- */
+/* --- LINKS (Desktop) --- */
 .sidebar a {
   display: flex;
   align-items: center;
@@ -36,44 +30,31 @@
   text-decoration: none;
   padding: 10px;
   border-radius: 4px;
-  white-space: nowrap; /* Impede que o texto quebre linha */
+  white-space: nowrap; 
 }
 
-/* ----------------------------------------------------
-  AQUI ESTÁ A MÁGICA
-  ----------------------------------------------------
-*/
 .sidebar a svg {
   display: block;
   opacity: 1;
   flex-shrink: 0; 
 }
 
-/* 1. O TEXTO FICA INVISÍVEL QUANDO A SIDEBAR ESTÁ FECHADA */
 .sidebar a span {
   opacity: 0; 
   transition: opacity 0.2s ease;
 }
 
-/* 2. O TEXTO SÓ APARECE QUANDO A SIDEBAR TIVER A CLASSE .open */
 .sidebar.open a span {
   opacity: 1;
 }
 
-/* ----------------------------------------------------
-  FIM DA MÁGICA
-  ----------------------------------------------------
-*/
-
-
-/* Link ativo (copiado da sua lógica) */
 .sidebar a.active {
   background-color: rgb(0 0 0 / 20%);
 }
 
-/* --- AVATAR --- */
+/* --- AVATAR (Desktop) --- */
 .sidebar-avatar {
-  width: 50px; /* Tamanho fechado */
+  width: 50px; 
   height: 50px;
   border-radius: 50%;
   border: 2px solid #FFF;
@@ -82,62 +63,83 @@
 }
 
 .sidebar.open .sidebar-avatar {
-  width: 90px; /* Tamanho aberto */
+  width: 90px;
   height: 90px;
 }
 
- @media screen and (width <= 768px){
-    .sidebar{
-        margin: auto;  
-        width: 100%;
-        height: auto;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        flex-direction: row;
-    }
-  }
+/* ======================================================== */
+/* === RESPONSIVIDADE (A CORREÇÃO SIMPLES) === */
+/* ======================================================== */
 
-  @media screen and (width <= 475px){
-    .sidebar a{
-        margin: auto;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        float: none;
-    }
+@media screen and (max-width: 768px) {
+  
+  /* Simplesmente esconde o sidebar da esquerda no mobile,
+    pois você JÁ TEM um header mobile (o cinza escuro).
+  */
+  .sidebar {
+    display: none;
   }
+  
+}.btn-cancelar {
 
-.btn-cancelar {
   font-size: 0.95rem;
+
   font-weight: 600;
+
   padding: 10px 20px;
+
   border-radius: 6px;
+
   border: 1px solid #ddd;
+
   background-color: #f1f1f1;
+
   color: #555;
+
   cursor: pointer;
+
   transition: background-color 0.2s;
+
 }
+
+
 
 .btn-cancelar:hover {
+
   background-color: #e9ecef;
+
 }
+
+
 
 /* Botão Confirmar Perigo (Vermelho) */
+
 .btn-confirmar-perigo {
+
   font-size: 0.95rem;
+
   font-weight: 600;
+
   padding: 10px 20px;
+
   border-radius: 6px;
+
   border: none;
+
   cursor: pointer;
+
   transition: background-color 0.2s;
+
   background-color: #d9534f; /* Vermelho */
+
   color: #fff;
+
 }
 
+
+
 .btn-confirmar-perigo:hover {
+
   background-color: #8b4f4d; /* Vermelho mais escuro */
+
 }

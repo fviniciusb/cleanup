@@ -1,8 +1,10 @@
 .page-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 5px;
+  gap: 1px;
+  padding: 1px;
+  position: relative;
+  bottom: 5px;
   background-color: #FFF; /* Fundo branco */
   border-bottom: 1px solid #DDD;
   width: 100%;
