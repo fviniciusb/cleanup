@@ -1,6 +1,13 @@
 import { useState, createContext, useEffect } from 'react';
 import { auth, db } from '../services/FirebaseConnection';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut,
+  sendPasswordResetEmail, // Import já presente, ótimo!
+  GoogleAuthProvider, 
+  signInWithPopup      
+} from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -8,141 +15,206 @@ import { toast } from 'react-toastify';
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
-    const [user, setUser] = useState(false);
-    const [loadingAuth, setLoadingAuth] = useState(false);
-    const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null); 
+  const [loadingAuth, setLoadingAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        async function loadUser() {
-            const storageUser = localStorage.getItem('@sistema');
-    
-            if (storageUser) {
-                setUser(JSON.parse(storageUser));
-            }
-            setLoading(false); // Define o loading para false apenas após verificar `localStorage`
-        }
-    
-        loadUser();
-    }, []);
-    
-    
+  useEffect(() => {
+    async function loadUser() {
+      const storageUser = localStorage.getItem('@sistema');
 
-    async function signIn(email, senha) {
-        setLoadingAuth(true);
-
-        await signInWithEmailAndPassword(auth, email, senha)
-            .then(async (value) => {
-                let uid = value.user.uid;
-
-                const docRef = doc(db, 'usuarios', uid);
-                const docSnap = await getDoc(docRef);
-
-                let data = {
-                    uid: uid,
-                    nome: docSnap.data().nome,
-                    sobrenome: docSnap.data().sobrenome,  // Adiciona o sobrenome
-                    objetivo: docSnap.data().objetivo,    // Adiciona o objetivo
-                    avatarUrl: docSnap.data().avatarUrl,
-                    cpf: docSnap.data().cpf,
-                    telefone: docSnap.data().telefone,
-                    dataNascimento: docSnap.data().dataNascimento,
-                    genero: docSnap.data().genero,
-                    email: value.user.email,
-                };
-
-                setUser(data);
-                storageUser(data);
-                setLoadingAuth(false);
-                toast.success('Bem-vindo de volta!');
-                navigate('/perfil');
-            })
-            .catch((error) => {
-                console.log(error);
-                toast.error('Usuário inválido.');
-                setLoadingAuth(false);
-            });
+      if (storageUser) {
+        setUser(JSON.parse(storageUser));
+      }
+      setLoading(false);
     }
 
-    // cadastrar novo usuario
-    async function signUp(nome, sobrenome, email, senha, objetivo) { // Adiciona sobrenome e objetivo
-        setLoadingAuth(true);
+    loadUser();
+  }, []);
 
-        await createUserWithEmailAndPassword(auth, email, senha)
-            .then(async (value) => {
-                let uid = value.user.uid;
+  // --- FUNÇÃO AJUSTADA ---
+  // Agora retorna 'true' para sucesso e 'false' para erro.
+  async function signIn(email, senha) {
+    setLoadingAuth(true);
 
-                await setDoc(doc(db, 'usuarios', uid), {
-                    nome: nome,
-                    sobrenome: sobrenome,     // Armazena o sobrenome no Firestore
-                    objetivo: objetivo,       // Armazena o objetivo no Firestore
-                    avatarUrl: null,
-                    cpf: '',
-                    telefone: '',
-                    dataNascimento: '',
-                    genero: '',
-                    email: email,
-                })
-                    .then(() => {
-                        let data = {
-                            uid: uid,
-                            nome: nome,
-                            sobrenome: sobrenome, // Inclui o sobrenome nos dados locais
-                            objetivo: objetivo,   // Inclui o objetivo nos dados locais
-                            email: email,
-                            avatarUrl: null,
-                            cpf: '',
-                            telefone: '',
-                            dataNascimento: '',
-                            genero: '',
-                        };
+    try {
+      const value = await signInWithEmailAndPassword(auth, email, senha);
+      const uid = value.user.uid;
 
-                        setUser(data);
-                        storageUser(data);
-                        setLoadingAuth(false);
-                        navigate('/perfil');
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        toast.error('Erro ao criar usuário.');
-                        setLoadingAuth(false);
-                    });
-            })
-            .catch((error) => {
-                console.log(error);
-                toast.error('Usuário inválido.');
-                setLoadingAuth(false);
-            });
+      const docRef = doc(db, 'usuarios', uid);
+      const docSnap = await getDoc(docRef);
+
+      const data = {
+        uid: uid,
+        email: value.user.email,
+        ...docSnap.data()
+      };
+
+      setUser(data);
+      storageUser(data);
+      toast.success('Bem-vindo(a) de volta!');
+      navigate('/perfil');
+      setLoadingAuth(false);
+      return true; // 👈 SUCESSO
+
+    } catch (error) {
+      console.error("ERRO AO LOGAR:", error);
+      toast.error('E-mail ou senha incorretos.');
+      setLoadingAuth(false);
+      return false; // 👈 FALHA
     }
+  }
 
-    function storageUser(data) {
-        localStorage.setItem('@sistema', JSON.stringify(data));
+  // Função de cadastro (permanece a mesma)
+  async function signUp(nome, sobrenome, email, senha, objetivo) {
+    setLoadingAuth(true);
+
+    try {
+      const value = await createUserWithEmailAndPassword(auth, email, senha);
+      const uid = value.user.uid;
+
+      const userData = {
+        nome: nome,
+        sobrenome: sobrenome,
+        objetivo: objetivo,
+        email: email,
+        avatarUrl: null,
+        cpf: '',
+        telefone: '',
+        dataNascimento: '',
+        genero: '',
+      };
+      
+      await setDoc(doc(db, 'usuarios', uid), userData);
+
+      const localData = {
+        uid: uid,
+        ...userData
+      };
+
+      setUser(localData);
+      storageUser(localData);
+      toast.success('Cadastro realizado com sucesso!');
+      navigate('/perfil');
+
+    } catch (error) {
+      console.error("ERRO AO CADASTRAR:", error);
+      if (error.code === 'auth/email-already-in-use') {
+        toast.error('Este e-mail já está em uso.');
+      } else {
+        toast.error('Ocorreu um erro ao cadastrar.');
+      }
+    } finally {
+      setLoadingAuth(false);
     }
+  }
+  
+  // Login/Cadastro com Google (permanece o mesmo)
+  async function signUpWithGoogle(objetivo = "1") {
+    setLoadingAuth(true);
+    const provider = new GoogleAuthProvider();
 
-    async function logout() {
-        await signOut(auth);
-        localStorage.removeItem('@sistema');
-        setUser(null);
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const googleUser = result.user;
+      const uid = googleUser.uid;
+
+      const docRef = doc(db, "usuarios", uid);
+      const docSnap = await getDoc(docRef);
+
+      let data;
+
+      if (!docSnap.exists()) {
+        const nomeCompleto = googleUser.displayName.split(' ');
+        const nome = nomeCompleto[0];
+        const sobrenome = nomeCompleto.slice(1).join(' ');
+
+        const newUserData = {
+          nome: nome,
+          sobrenome: sobrenome,
+          objetivo: objetivo,
+          email: googleUser.email,
+          avatarUrl: googleUser.photoURL,
+          cpf: '',
+          telefone: '',
+          dataNascimento: '',
+          genero: '',
+        };
+        
+        await setDoc(docRef, newUserData);
+        data = { uid, ...newUserData };
+      
+      } else {
+        data = {
+          uid: uid,
+          email: googleUser.email,
+          ...docSnap.data()
+        };
+      }
+
+      setUser(data);
+      storageUser(data);
+      toast.success(`Bem-vindo(a), ${data.nome}!`);
+      navigate('/perfil');
+
+    } catch (error) {
+      console.error("ERRO COM O LOGIN DO GOOGLE: ", error);
+      toast.error("Ocorreu um erro ao tentar login com Google.");
+    } finally {
+      setLoadingAuth(false);
     }
+  }
 
-    return (
-        <AuthContext.Provider
-            value={{
-                signed: !!user, // falso se o user for nulo
-                user,
-                signIn,
-                signUp,
-                logout,
-                loadingAuth,
-                loading,
-                storageUser,
-                setUser,
-            }}
-        >
-            {children}
-        </AuthContext.Provider>
-    );
+  // --- NOVA FUNÇÃO ---
+  // Envia o e-mail de redefinição de senha
+  async function sendPasswordReset(email) {
+    setLoadingAuth(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast.success("Link de redefinição enviado! Verifique sua caixa de entrada e spam.");
+    } catch (error) {
+      console.error("ERRO AO ENVIAR E-MAIL DE RESET:", error);
+      if (error.code === 'auth/user-not-found') {
+        toast.error("Nenhuma conta encontrada com este e-mail.");
+      } else {
+        toast.error("Ocorreu um erro. Tente novamente.");
+      }
+    } finally {
+      setLoadingAuth(false);
+    }
+  }
+
+  function storageUser(data) {
+    localStorage.setItem('@sistema', JSON.stringify(data));
+  }
+
+  async function logout() {
+    await signOut(auth);
+    localStorage.removeItem('@sistema');
+    setUser(null);
+  }
+
+  return (
+    <AuthContext.Provider
+      value={{
+        signed: !!user,
+        user,
+        signIn,
+        signUp,
+        signUpWithGoogle,
+        sendPasswordReset, 
+        loadingAuth,
+        loading,
+        storageUser,
+        setUser,
+        logout
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export default AuthProvider;

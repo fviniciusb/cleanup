@@ -1,186 +1,210 @@
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-    background-color: white;
-}
-
-h1 {
+.main-title{
+    color: #333;
+    margin-bottom: 35px;
     font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: black;
-    font-weight: bold;
+    font-weight: 500;
+    font-family: serif;
+    text-align: center;
 }
 
+/* Container principal (padrão) */
+.home-container {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 32px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Estilos para Loading e "Vazio" (padrão) */
+.loading-container,
+.empty-container {
+  text-align: center;
+  padding: 60px;
+  font-size: 1.2rem;
+  color: #667;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* --- GRID DOS CARDS --- */
 .cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
+  display: grid;
+  /* Cria colunas responsivas:
+     - Tenta criar colunas de 300px
+     - Se não couber, elas encolhem (minmax)
+     - '1fr' significa que se só tiver 1, ele ocupa 100%
+  */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px; /* Espaço entre os cards */
 }
 
+/* --- NOVO DESIGN DO CARD --- */
 .card {
-    background-color: white;
-    border: 1px solid #5EA1BD;
-    border-radius: 15px;
-    width: 300px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  overflow: hidden; /* Garante que a imagem não vaze */
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s, border-color 0.2s;
 }
 
 .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #ced4da;
 }
 
-.avatar {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-bottom: 3px solid #5EA1BD;
+.card .avatar {
+  width: 50%;
+  height: 200px; /* Altura fixa para a imagem */
+  object-fit: cover; /* Garante que a imagem cubra o espaço */
+  border-bottom: 1px solid #e9ecef;
+  margin: auto;
 }
 
-.info {
-    padding: 20px;
-    text-align: center;
+.card .info {
+  padding: 20px;
+  flex-grow: 1; /* Faz esta div crescer para empurrar o botão para baixo */
 }
 
-.info h2 {
-    font-size: 1.8rem;
-    color: #2a6179;
-    margin-bottom: 10px;
+.card .info h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 12px 0;
 }
 
-.info p {
-    font-size: 1rem;
-    margin: 5px 0;
-    color: #5EA1BD;
-}
-
-.rating {
-    padding-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 10px;
-}
-
-.rating strong {
-  color: #F5B50A; /* Cor da nota */
+.card .rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 16px;
+}
+.card .rating strong {
+  color: #333;
 }
 
-.rating span {
-  font-size: 0.8rem;
-  color: #666;
+.card .info p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 8px;
+  line-height: 1.4;
 }
-.btn-agendar {
-    background-color: #395e6e;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 20px;
-    margin: auto;
-    margin-bottom: 15px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+.card .info p strong {
+  color: #333;
 }
 
-.btn-agendar:hover {
-    background-color: #5EA1BD;
-    transform: scale(1.05);
+.card .btn-agendar {
+  background-color: #5EA1BD; /* Azul (mesmo do perfil) */
+  color: #fff;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 14px 20px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  /* Adicionado para alinhar ao design */
+  margin: 20px; 
+  border-radius: 6px;
 }
 
-.loading, .empty {
-    font-size: 1.5rem;
-    color: #2a6179;
-    text-align: center;
-    margin-top: 50px;
-    font-weight: bold;
+.card .btn-agendar:hover {
+  background-color: #0b5ed7;
 }
 
+
+/* --- CSS DO MODAL (BÔNUS) --- */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.modal {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    width: 400px;
-    text-align: center;
+.modal-content {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.modal h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    color: #333;
+.modal-content h2 {
+  font-size: 1.5rem;
+  margin: 0 0 10px 0;
+  color: #333;
 }
 
-.modal label {
-    display: block;
-    margin: 15px 0;
-    font-size: 1.2rem;
-    color: #444;
+.modal-field {
+  display: flex;
+  flex-direction: column;
 }
-
-.modal input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
+.modal-field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+}
+.modal-field input[type="date"],
+.modal-field input[type="time"] {
+  padding: 12px 14px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  box-sizing: border-box; 
 }
 
 .modal-actions {
-    margin-top: 30px;
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.modal-actions button {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .btn-cancelar {
-    background: #ccc;
-    color: black;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  background-color: #f1f1f1;
+  color: #555;
+  border: 1px solid #ddd;
 }
-
 .btn-cancelar:hover {
-    background: #bbb;
+  background-color: #e9ecef;
 }
 
 .btn-confirmar {
-    background: #5EA1BD;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  background-color: #0d6efd; /* Azul */
+  color: #fff;
 }
-
 .btn-confirmar:hover {
-    background: #4b90a5;
+  background-color: #0b5ed7;
 }

@@ -1,0 +1,155 @@
+/* src/pages/ChatPage/chat.css */
+
+.chat-page-container {
+  display: flex;
+  flex-direction: column;
+  height: 88vh; /* Ocupa a altura inteira da tela */
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #f0f2f5; /* Um fundo cinza claro */
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* --- Cabeçalho do Chat --- */
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.btn-voltar {
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-voltar:hover {
+  background-color: #f1f1f1;
+}
+
+/* --- Lista de Mensagens --- */
+.message-list {
+  flex-grow: 1; 
+  overflow-y: auto; 
+  padding: 20px;
+  display: flex;
+  flex-direction: column; /* <-- ESTA É A LINHA QUE EMPILHA AS MENSAGENS */
+  gap: 12px;
+}
+
+.message {
+  display: flex;
+  max-width: 70%;
+}
+
+/* Mensagem Enviada (Direita) */
+.message.sent {
+  align-self: flex-end; /* <-- ESTA É A LINHA QUE JOGA PRA DIREITA */
+}
+
+/* Mensagem Recebida (Esquerda) */
+.message.received {
+  align-self: flex-start; /* <-- ESTA É A LINHA QUE JOGA PRA ESQUERDA */
+}
+
+.loading-chat {
+  text-align: center;
+  color: #888;
+  font-size: 1rem;
+  padding: 20px;
+}
+
+.message {
+  display: flex;
+  max-width: 70%;
+}
+
+.message-bubble {
+  padding: 10px 15px;
+  border-radius: 18px;
+  line-height: 1.4;
+}
+
+.message-bubble p {
+  margin: 0;
+  color: #000;
+}
+
+/* Mensagem Enviada (Direita) */
+.message.sent {
+  align-self: flex-end; /* Alinha à direita */
+}
+.message.sent .message-bubble {
+  background-color: #0d6efd; /* Azul (nosso padrão) */
+  border-bottom-right-radius: 4px;
+}
+.message.sent .message-bubble p {
+  color: #fff; /* Texto branco */
+}
+
+/* Mensagem Recebida (Esquerda) */
+.message.received {
+  align-self: flex-start; /* Alinha à esquerda */
+}
+.message.received .message-bubble {
+  background-color: #fff; /* Branca */
+  border: 1px solid #e9ecef;
+  border-bottom-left-radius: 4px;
+}
+
+/* --- Formulário de Input --- */
+.chat-input-form {
+    display: flex;
+    padding: 15px;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    flex-direction: row;
+    width: 100%;
+}
+
+.chat-input-form input {
+  flex-grow: 1;
+  padding: 12px 14px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 20px;
+  margin-right: 10px;
+  background-color: #f8f9fa;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.chat-input-form input:focus {
+  border-color: #0d6efd;
+}
+
+.chat-input-form button {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background-color: #0d6efd;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.chat-input-form button:hover {
+  background-color: #0b5ed7;
+}

@@ -1,174 +1,212 @@
-.container{
+/* --- ESTRUTURA PRINCIPAL --- */
+
+.profile-container {
   display: flex;
-  background-color: #f8f8f8;
-  border-radius: 5px;
-  padding: 0.8em;
-  align-items: center;
-  margin-bottom: 1em;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Garante que os cantos arredondados sejam aplicados */
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.label-avatar{
-  width: 280px;
-  height: 280px;
+/* --- COLUNA DA ESQUERDA (SIDEBAR) --- */
+.profile-sidebar {
+  flex-basis: 300px; /* Largura fixa */
+  flex-shrink: 0;
+  padding: 32px;
+  background-color: #f8f9fa; /* Um cinza bem claro */
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  cursor: pointer;
-}
-
-.label-avatar input{
-  display: none;
-}
-
-.label-avatar span{
-  z-index: 99;
-  position: absolute;
-  opacity: 0.7;
-  transition: all 0.5s;
-}
-
-.label-avatar span:hover{
-  opacity: 1;
-  transform: scale(1.4);
-}
-
-.form-profile img{
-  margin-bottom: 1em;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.form-profile label{
-  margin-bottom: 0.5em;
-  font-size: 1em;
-  text-align: left;
-}
-
-.form-profile input, textarea, select{
-  margin-bottom: 1em;
-  padding: 0.7em;
-  border:0;
-  border-radius: 5px;
-  max-width: 300px;
-}
-
-.form-profile input:disabled{
-  cursor: not-allowed;
-}
-
-.logout-btn{
-  padding: 8px 20px;
-  border: 1px solid #121212;
-  background-color: transparent;
-  border-radius: 5px;
-  font-size: 1em;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  border-right: 1px solid #e9ecef;
 }
 
-.botaoPerfil{
-  height: 30px;
-  border:0;
-  border-radius: 20px;
-  background-color: #5EA1BD;
-  color: #FFF;
-  font-size: 1rem;
-  transition: 0.7s;
-  max-width: 120px;
-  margin-top: 5px;
+/* Re-estilizando seu 'label-avatar' para este contexto */
+.profile-sidebar .label-avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin-bottom: 24px;
 }
 
-.botaoPerfil:hover{
-  background-color: #5ea0bdc2;
+.profile-sidebar .label-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
-.botaoLogout{
-  height: 30px;
-  border:0;
-  background-color: transparent;
-  border-radius: 50px;
-  color: #181c2e;
-  font-size: 1rem;
-  transition: 0.7s;
-  width: 35px;
-  margin-top: 5px;
-  transition: 1s;
+.profile-sidebar .label-avatar span {
+  /* Posiciona o ícone de upload no centro */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  opacity: 0; /* Começa invisível */
+  transition: all 0.3s;
 }
 
-.botaoLogout:hover{
-  background-color: #8e2525;
-  color: #FFF;
+.profile-sidebar .label-avatar:hover span {
+  opacity: 1; /* Aparece no hover */
 }
 
-.icone{
-  font-size: 1.3rem;
+.profile-sidebar .label-avatar:hover img {
+  filter: brightness(0.7); /* Escurece a imagem no hover */
+}
+
+/* Informações de texto na sidebar */
+.sidebar-info {
+  text-align: center;
+}
+.sidebar-info h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 4px;
+  word-wrap: break-word;
+}
+.sidebar-info p {
+  font-size: 0.9rem;
+  color: #667;
+  word-wrap: break-word;
 }
 
 
+/* --- COLUNA DA DIREITA (FORMULÁRIO) --- */
+.profile-form-container {
+  flex-grow: 1; /* Ocupa o resto do espaço */
+  padding: 30px;
+}
 
-.profile-fields {
+.form-profile {
+  width: 100%;
+}
+
+/* O GRID MÁGICO! */
+.form-grid {
+  display: grid;
+  /* Cria 2 colunas de tamanho igual */
+  grid-template-columns: 1fr 1fr;
+  /* Espaçamento entre os campos */
+  gap: 18px; 
+}
+
+/* Grupo de (label + input) */
+.field-group {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1em; /* Espaçamento entre os itens */
+  flex-direction: column;
 }
 
-.field {
-  flex: 1 1 30%; /* Cada item ocupa 30% da largura do contêiner */
-  min-width: 150px; /* Define uma largura mínima para evitar que fiquem muito estreitos */
-  display: flex;
-  flex-direction: column; /* Garante que a label fique acima do input */
+/* Classe para fazer um campo ocupar as 2 colunas */
+.field-group.full-width {
+  grid-column: 1 / -1; /* Ocupa do início ao fim */
 }
 
-.form-profile label {
-  margin-bottom: 0.3em;
+/* --- ESTILO DOS CAMPOS DO FORMULÁRIO --- */
+
+.field-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
 }
 
-.form-profile input {
+/* Este é o bloco de CSS CORRIGIDO */
+.field-group input[type="text"],
+.field-group input[type="date"],
+.field-group select,
+.field-group .styled-mask,
+.field-group textarea
+ { /* Adicionamos o seletor .input-mask */
+  
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  background-color: #fdfdfd;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box; 
+}
+
+.field-group input:disabled {
+  background-color: #e9ecef;
+  color: #888;
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus,
+.field-group .InputMask:focus {
+  outline: none;
+  border-color: #0d6efd; /* Um azul mais forte */
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.field-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* --- BOTÃO ATUALIZAR --- */
+.form-actions {
+  margin-top: 32px;
+  text-align: right; /* Alinha o botão à direita */
+}
+
+.btn-atualizar {
+  background-color: #0d6efd; /* Azul mais forte */
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-atualizar:hover {
+  background-color: #0b5ed7; /* Azul um pouco mais escuro */
+}
+
+*/
+.form-profile .styled-mask {
   width: 100%;
   padding: 0.7em;
   border: 0;
   border-radius: 5px;
+  margin-bottom: 1em;
+  
+  /* Linhas importantes para o layout */
+  max-width: none; /* Remove o max-width que podia estar quebrando */
+  box-sizing: border-box; /* Garante que o padding não quebre a largura */
 }
 
 .btn-disponibilidade {
-  margin-top: 10px;
-  padding: 10px 15px;
+  width: 100%; /* Faz o botão ocupar toda a largura da sidebar */
+  margin-top: 24px; /* Adiciona um espaço acima do botão */
+  padding: 12px 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px; /* Borda alinhada com os inputs */
   font-size: 1rem;
+  font-weight: 600; /* Texto em negrito */
+  color: white; /* Cor do texto é sempre branca */
   cursor: pointer;
   transition: background-color 0.3s ease;
+  box-sizing: border-box; /* Garante que o padding não quebre o layout */
 }
 
 .btn-disponibilidade.disponivel {
-  background-color: #28a745;
-  color: white;
+  background-color: #28a745; /* Verde */
 }
 
 .btn-disponibilidade.indisponivel {
-  background-color: #d9534f;
-  color: white;
+  background-color: #d9534f; /* Vermelho (da sua foto) */
 }
 
 .btn-disponibilidade:hover {
   opacity: 0.9;
-}
-
-
-
-
-@media screen and (max-width: 350px){
-  .form-profile img{
-    margin-bottom: 1em;
-    border-radius: 50%;
-    object-fit: cover;
-    width: 60vw;
-    height: 60vw;
-  }
-  .label-avatar{
-    width: 70vw;
-    height: 70vw;
-  }
 }

@@ -1,176 +1,197 @@
-.container-center{
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: radial-gradient(circle, #5EA1BD, #1A4A5F);
-    padding: 0 12px;
-  }
-  
-  .login{
-    background-color: #EAEAEC;
-    width: 550px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.3);
-    border-radius: 12px;
-  }
-  
-  .login-area{
-    background-color: #EAEAEC;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    height: 120px;
-    border-radius: 12px;
-  }
+/* src/pages/SignIn/signin.css */
 
-  .login-area img {
-    width: 150px;
-    height: auto;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto;
-  }  
-  
-  form{
-    margin-top: 0.5rem;
-    width: 85%;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  form h1{
-    font-size: 2rem;
-    text-align: center;
-    margin: 0rem 0rem 1.7rem 0rem;
-    color: #000000;
-  }
-  
-  .login input{
-    margin: auto;
-    margin-bottom: 1rem;
-    height: 35px;
-    border-radius: 20px;
-    padding: 8px;
-    font-size: 15px;
-    background-color: 'white';
-    border: 0;
-    width: 60%;
-    
-  }
-  
-  .botaoLogin{
-    margin: auto;
-    height: 40px;
-    border:0;
-    border-radius: 20px;
-    background-color: #5EA1BD;
-    color: #FFF;
-    font-size: 1.2rem;
-    transition: 0.8s;
-    width: 30%;
-  }
-
-  .botaoLogin:hover{
-    background-color: #5e77bdc2;
-  }
-  
-  .login a{
-    margin: 1rem 0 1.5rem 0;
-    color: #181c2e;
-    cursor: pointer;
-    transition: 0.8s;
-    font-size: 12px;
-  }
-
-  .login a:hover{
-    color: #181c2ed4
-  }
-
-  .cadastre-se {
-    color: #5EA1BD;
-    transition: 0.7s;
-  }
-
-  .cadastre-se:hover {
-    color: #5ea0bdc2;
-  }
-
-  .objetivo {
-    margin-top: 15px;
-  }
-
-  .select-profile{
-    background-color: white;
-    padding: 8px;
-    border-radius: 20px;
-    font-size: 14px;
-    width: 60%;
-    margin: auto;
-    margin-bottom: 1rem;
-  }
-  /* Container principal - pode ser a sua classe .select-profile */
-.select-profile {
-  display: flex; /* Coloca os botões lado a lado */
-  gap: 12px;     /* Espaço entre os botões */
-}
- riginal */
-.select-profile input[type="radio"] {
-  display: none;
+/* ================================================== */
+/* SEU CSS EXISTENTE DE LOGIN (EXEMPLO) */
+/* ================================================== */
+.container-center {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle, #5EA1BD, #1A4A5F);
+  padding: 0 12px;
 }
 
-/* Label que parece um botão */
-.radio-label {
-  flex-grow: 1; /* Faz os dois botões terem o mesmo tamanho */
+.login {
+  background-color: #fff;
+  width: 90%;
+  max-width: 450px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
-  padding: 12px 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+}
+
+.login-area img {
+  max-width: 100px; /* Ajuste o tamanho do seu logo */
+  margin-bottom: 20px;
+}
+
+.login form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login form h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.login form input,
+.login form select {
+  margin-bottom: 15px;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  padding: 0 10px;
+  font-size: 1rem;
+  /* Adiciona esta linha para o <select> parecer um input */
+  appearance: none; 
+}
+
+.botaoLogin {
+  height: 40px;
+  border: 0;
+  border-radius: 6px;
+  background-color: #0d6efd; /* Azul */
+  color: #FFF;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  background-color: #f8f8f8;
+  transition: background-color 0.2s;
+}
+.botaoLogin:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.login a {
+  display: block;
+  margin-top: 20px;
   color: #555;
-  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+}
+.login a .cadastre-se {
+  color: #0d6efd;
+  font-weight: 600;
 }
 
-/* Efeito ao passar o mouse (não selecionado) */
-.radio-label:hover {
-  border-color: #999;
+.gsi-material-button {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: none;
+  background-color: WHITE;
+  background-image: none;
+  border: 1px solid #747775;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #1f1f1f;
+  cursor: pointer;
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 14px;
+  height: 40px;
+  letter-spacing: 0.25px;
+  outline: none;
+  overflow: hidden;
+  padding: 0 12px;
+  position: relative;
+  text-align: center;
+  -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
+  transition: background-color .218s, border-color .218s, box-shadow .218s;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  max-width: 400px;
+  min-width: min-content;
+
+  /* --- AJUSTE PARA O SEU LAYOUT --- */
+  width: 100%; /* Faz ocupar 100% da largura, igual o botão 'Acessar' */
+  margin-top: 12px; /* Adiciona um espaço acima dele */
 }
 
-/* ESTILO DO BOTÃO SELECIONADO */
-.select-profile input[type="radio"]:checked + .radio-label {
-  background-color: #007bff; /* Cor primária (ex: azul) */
-  color: white;
-  border-color: #007bff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.gsi-material-button .gsi-material-button-icon {
+  height: 20px;
+  margin-right: 12px;
+  min-width: 20px;
+  width: 20px;
+}
+/* ... (Cole o resto do CSS do Google aqui) ... */
+.gsi-material-button .gsi-material-button-content-wrapper {
+  -webkit-align-items: center;
+  align-items: center;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  height: 100%;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
 }
 
-  @media screen and (max-width: 700px){
-    .login input{
-      margin: auto;
-      margin-bottom: 1.5rem;
-      height: 35px;
-      border-radius: 20px;
-      padding: 10px;
-      font-size: 15px;
-      background-color: 'white';
-      border: 0;
-      width: 90%;
-      
-    }
-    
-    .botaoLogin{
-      margin: auto;
-      height: 40px;
-      border:0;
-      border-radius: 20px;
-      background-color: #5EA1BD;
-      color: #FFF;
-      font-size: 1.2rem;
-      transition: 0.7s;
-      width: 50%;
-    }
-  }
+.gsi-material-button .gsi-material-button-contents {
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+
+.gsi-material-button .gsi-material-button-state {
+  -webkit-transition: opacity .218s;
+  transition: opacity .218s;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.gsi-material-button:disabled {
+  cursor: default;
+  background-color: #ffffff61;
+  border-color: #1f1f1f1f;
+}
+
+.gsi-material-button:disabled .gsi-material-button-contents {
+  opacity: 38%;
+}
+
+.gsi-material-button:disabled .gsi-material-button-icon {
+  opacity: 38%;
+}
+
+.gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+.gsi-material-button:not(:disabled):focus .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 12%;
+}
+
+.gsi-material-button:not(:disabled):hover {
+  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+}
+
+.gsi-material-button:not(:disabled):hover .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 8%;
+}
+
+.divisor {
+  font-size: 15px;
+  position: relative;
+  top: 6px;
+}
+
+.gsi-material-button-contents {
+  margin: auto;
+  position: relative;
+  right: 12px;
+}

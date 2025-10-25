@@ -76,7 +76,7 @@
   height: 50px;
   border-radius: 50%;
   border: 2px solid #FFF;
-  margin: 10px auto 20px auto;
+  margin: 10px auto 30px auto;
   transition: all 0.3s ease;
 }
 
@@ -107,3 +107,33 @@
         float: none;
     }
   }
+.btn-cancelar {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background-color: #f1f1f1;
+  color: #555;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-cancelar:hover {
+  background-color: #e9ecef;
+}
+
+/* Botão Confirmar Perigo (Vermelho) */
+.btn-confirmar-perigo {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  background-color: #d9534f; /* Vermelho */
+  color: #fff;
+}
+.btn-confirmar-perigo:hover {
+  background-color: #8b4f4d; /* Vermelho mais escuro */
+}
