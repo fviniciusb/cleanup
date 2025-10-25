@@ -1,7 +1,7 @@
 // src/pages/ChatPage/index.js
 import { useState, useEffect, useContext, useRef } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { doc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { doc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp} from 'firebase/firestore';
 import { AuthContext } from '../../contexts/auth';
 import { db } from '../../services/FirebaseConnection';
 import { toast } from 'react-toastify';

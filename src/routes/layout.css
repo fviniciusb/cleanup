@@ -10,9 +10,9 @@
   overflow-y: auto;
 
   /* ESTA É A LINHA IMPORTANTE: */
+
   /* ELA EMPURRA O CONTEÚDO PARA DEPOIS DA SIDEBAR FECHADA */
   margin-left: 80px; 
-
   transition: margin-left 0.3s ease;
 }
 

@@ -1,13 +1,13 @@
-/* src/pages/ChatPage/chat.css */
+
 
 .chat-page-container {
   display: flex;
   flex-direction: column;
-  height: 88vh; /* Ocupa a altura inteira da tela */
+  height: 88vh; 
   max-width: 800px;
   margin: 0 auto;
-  background-color: #f0f2f5; /* Um fundo cinza claro */
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background-color: #f0f2f5; 
+  box-shadow: 0 0 10px rgb(0 0 0 / 10%);
 }
 
 /* --- Cabeçalho do Chat --- */
@@ -17,7 +17,7 @@
   padding: 15px 20px;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
 }
 
 .chat-header h2 {
@@ -37,17 +37,17 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
+
 .btn-voltar:hover {
   background-color: #f1f1f1;
 }
 
-/* --- Lista de Mensagens --- */
 .message-list {
   flex-grow: 1; 
   overflow-y: auto; 
   padding: 20px;
   display: flex;
-  flex-direction: column; /* <-- ESTA É A LINHA QUE EMPILHA AS MENSAGENS */
+  flex-direction: column; 
   gap: 12px;
 }
 
@@ -93,10 +93,12 @@
 .message.sent {
   align-self: flex-end; /* Alinha à direita */
 }
+
 .message.sent .message-bubble {
   background-color: #0d6efd; /* Azul (nosso padrão) */
   border-bottom-right-radius: 4px;
 }
+
 .message.sent .message-bubble p {
   color: #fff; /* Texto branco */
 }
@@ -105,6 +107,7 @@
 .message.received {
   align-self: flex-start; /* Alinha à esquerda */
 }
+
 .message.received .message-bubble {
   background-color: #fff; /* Branca */
   border: 1px solid #e9ecef;
@@ -132,6 +135,7 @@
   outline: none;
   transition: border-color 0.2s;
 }
+
 .chat-input-form input:focus {
   border-color: #0d6efd;
 }
@@ -150,6 +154,7 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
+
 .chat-input-form button:hover {
   background-color: #0b5ed7;
 }

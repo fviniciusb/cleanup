@@ -14,7 +14,7 @@
 .agendamentos-container {
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 5%);
   padding: 32px;
   max-width: 1200px;
   width: 100%;
@@ -35,10 +35,11 @@
   padding: 60px;
   font-size: 1.2rem;
   color: #667;
+
   /* Re-usa o estilo do container principal */
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 5%);
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
@@ -65,7 +66,7 @@
 }
 
 .agendamento-card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 7%);
   border-color: #ced4da;
 }
 
@@ -78,7 +79,7 @@
   font-size: 1.2rem;
   font-weight: 600;
   color: #333;
-  margin: 0 0 12px 0;
+  margin: 0 0 12px;
 }
 
 .card-details {
@@ -118,7 +119,7 @@
 
 
 /* Responsividade para telas pequenas */
-@media (max-width: 600px) {
+@media (width <= 600px) {
   .agendamentos-container {
     padding: 20px;
   }

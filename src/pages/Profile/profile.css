@@ -4,7 +4,7 @@
   display: flex;
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 5%);
   overflow: hidden; /* Garante que os cantos arredondados sejam aplicados */
   max-width: 1200px;
   width: 100%;
@@ -61,16 +61,18 @@
 .sidebar-info {
   text-align: center;
 }
+
 .sidebar-info h2 {
   font-size: 1.5rem;
   color: #333;
   margin-bottom: 4px;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
+
 .sidebar-info p {
   font-size: 0.9rem;
   color: #667;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 
@@ -87,8 +89,10 @@
 /* O GRID MÁGICO! */
 .form-grid {
   display: grid;
+
   /* Cria 2 colunas de tamanho igual */
   grid-template-columns: 1fr 1fr;
+
   /* Espaçamento entre os campos */
   gap: 18px; 
 }
@@ -120,7 +124,6 @@
 .field-group .styled-mask,
 .field-group textarea
  { /* Adicionamos o seletor .input-mask */
-  
   width: 100%;
   padding: 12px 14px;
   font-size: 1rem;
@@ -142,7 +145,7 @@
 .field-group .InputMask:focus {
   outline: none;
   border-color: #0d6efd; /* Um azul mais forte */
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+  box-shadow: 0 0 0 3px rgb(13 110 253 / 15%);
 }
 
 .field-group textarea {
@@ -172,7 +175,6 @@
   background-color: #0b5ed7; /* Azul um pouco mais escuro */
 }
 
-*/
 .form-profile .styled-mask {
   width: 100%;
   padding: 0.7em;
