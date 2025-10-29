@@ -1,48 +1,167 @@
+/* src/pages/ChatList/chatlist.css */
+
+/* Container da Página */
 .chatlist-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 24px;
+    padding: 20px;
+    max-width: 800px; /* Ou a largura que preferir */
+    margin: 30px auto; /* Adiciona margem no topo */
+    background-color: #fff; /* Fundo branco para a área da lista */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
 }
 
+/* Título Principal */
+.main-title {
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.8rem; /* Um pouco menor que antes */
+    font-weight: 600;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee; /* Linha sutil abaixo do título */
+}
+
+/* Mensagens de Loading e Vazio */
+.loading-container,
+.empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px; /* Menor altura */
+    padding: 30px;
+    text-align: center;
+    color: #777;
+    font-size: 1.1em;
+}
+.empty-container p {
+    margin: 5px 0;
+}
+
+/* Lista UL (Remove estilos padrão) */
 .chat-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #eee;
 }
 
+/* Item Individual da Lista (LI) */
+.chat-item {
+    border-bottom: 1px solid #eee; 
+    border-radius: 8px; /* Bordas arredondadas para cada item */
+}
+/* Remove borda do último item */
+.chat-item:last-child {
+    border-bottom: none;
+}
+
+/* Link dentro do Item (A) - O container principal do item */
 .chat-item a {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  text-decoration: none;
-  color: #333;
-  transition: background-color 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center; /* Alinha avatar e texto verticalmente */
+    padding: 16px 12px; /* Padding interno */
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.15s ease-in-out;
+    border-radius: 8px; /* Bordas arredondadas para cada item */
+    margin: 4px 0; /* Pequeno espaço vertical */
 }
 
 .chat-item a:hover {
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+    background-color: #f5f5f5; /* Fundo cinza claro no hover */
 }
 
-.chat-item .chat-info h3 {
-  margin: 0 0 4px 0;
-  font-size: 1.2rem;
-  font-weight: 600;
+/* Container do Avatar */
+.chat-avatar-container {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+    flex-shrink: 0;
+    background-color: #eee; /* Cor de fundo enquanto carrega */
 }
 
-.chat-item .chat-info p {
-  margin: 0;
-  color: #666;
-  font-size: 0.9rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 500px; 
+/* Imagem do Avatar */
+.chat-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Bloco de Informações (Nome + Última Mensagem) */
+.chat-info {
+    flex-grow: 1; /* Ocupa o espaço disponível */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Limita a largura para o timestamp caber */
+    overflow: hidden; /* Esconde overflow do texto */
+    padding-right: 10px; /* Espaço antes do timestamp */
+}
+
+/* Nome do Usuário */
+.chat-info h3 {
+    margin: 0 0 3px 0; /* Menos margem inferior */
+    font-size: 1.05em; /* Tamanho do nome */
+    color: #222; /* Cor mais escura para o nome */
+    font-weight: 600; /* Negrito */
+    /* Truncar nome longo */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Última Mensagem */
+.chat-info p {
+    margin: 0;
+    font-size: 0.9em; /* Tamanho menor */
+    color: #666; /* Cor cinza */
+    /* Truncar mensagem longa */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Timestamp (Hora da Última Mensagem) */
+.chat-timestamp {
+    font-size: 0.75em; /* Bem pequeno */
+    color: #999; /* Cinza claro */
+    margin-left: auto; /* Joga para a direita */
+    padding-left: 10px; /* Espaço à esquerda */
+    flex-shrink: 0; /* Impede de encolher */
+    align-self: flex-start; /* Alinha com o topo do nome */
+    padding-top: 2px; /* Pequeno ajuste vertical */
+}
+
+/* Responsividade (Opcional, para telas muito pequenas) */
+@media (max-width: 480px) {
+    .chatlist-container {
+        padding: 10px;
+        margin: 15px auto;
+    }
+    .main-title {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    .chat-item a {
+        padding: 12px 8px;
+    }
+    .chat-avatar-container {
+        width: 45px;
+        height: 45px;
+        margin-right: 10px;
+    }
+    .chat-info h3 {
+        font-size: 1em;
+    }
+    .chat-info p {
+        font-size: 0.85em;
+    }
+    .chat-timestamp {
+        font-size: 0.7em;
+    }
 }

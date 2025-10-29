@@ -9,7 +9,6 @@ import Agendamento from '../pages/Agendamento';
 import Private from './Private';
 import Profile from '../pages/Profile';
 import ForgotPassword from '../pages/ForgotPassword';
-import ChatPage from '../pages/Chat/index.';
 import ChatList from '../pages/ChatList';
 import ChatRoom from '../pages/ChatRoom';
 
@@ -24,9 +23,8 @@ function RoutesApp() {
             <Route path="/faxinei" element={<SignIn />} />
             <Route path="/cadastrar" element={<SignUp />} /> {/* Corrigi para SignUp */}
             <Route path="/recuperar-senha" element={<ForgotPassword />} />
-            <Route path="/chat/:chatId" element={<Private><ChatPage /></Private>} />
             <Route path="/chat" element={<Private><ChatList /></Private>} />
-            <Route path="/chat/:id" element={<Private><ChatRoom /></Private>} />
+            <Route path="/chat/:id" element={<Private><ChatRoom/></Private>} />
             {/* --- Rotas Privadas (com layout) --- */}
             <Route
                 path="/home"

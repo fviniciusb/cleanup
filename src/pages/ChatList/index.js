@@ -4,8 +4,8 @@ import { db } from '../../services/FirebaseConnection';
 import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import './chatlist.css';
-// (Opcional) importe seu avatar padrão
-// import avatarPadrao from '../../assets/avatar.png'; 
+
+import avatarPadrao from '../../assets/avatar.png'; 
 
 export default function ChatList() {
     const { user } = useContext(AuthContext);
@@ -50,27 +50,56 @@ export default function ChatList() {
     }, [user]);
 
     if (loading) {
-        return <div className="loading-container">Carregando conversas...</div>
+        // Usa a classe CSS para loading
+        return <div className="loading-container">Carregando conversas...</div>;
     }
 
     return (
-        <div className="chatlist-container">
+        // Container principal da página
+        <div className="chatlist-container"> 
             <h1 className="main-title">Minhas Conversas</h1>
             
             {chats.length === 0 ? (
-                <div className="empty-container">
+                // Container para mensagem de vazio
+                <div className="empty-container"> 
                     <p>Você ainda não tem conversas.</p>
+                    <p>Inicie uma pela tela de Agendamentos.</p>
                 </div>
             ) : (
-                <ul className="chat-list">
+                // Lista UL
+                <ul className="chat-list"> 
                     {chats.map(chat => (
-                        <li key={chat.id} className="chat-item">
-                            <Link to={`/chat/${chat.id}`}>
-                                {/* <img src={chat.otherUserAvatar || avatarPadrao} alt="avatar" /> */}
-                                <div className="chat-info">
+                        // Item LI
+                        <li key={chat.id} className="chat-item"> 
+                            {/* Link A */}
+                            <Link 
+                                to={`/chat/${chat.id}`} // CORRIGIDO: usa /chat/ em vez de /chatpage/
+                                state={{ 
+                                    recipientId: chat.otherUserId, 
+                                    recipientName: chat.otherUserName 
+                                }}
+                            >
+                                {/* Container do Avatar */}
+                                <div className="chat-avatar-container"> 
+                                    <img 
+                                        src={chat.otherUserAvatar || DEFAULT_AVATAR} 
+                                        alt="Avatar" 
+                                        className="chat-avatar" 
+                                        onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_AVATAR; }} 
+                                    />
+                                </div>
+                                {/* Container de Infos */}
+                                <div className="chat-info"> 
                                     <h3>{chat.otherUserName}</h3>
                                     <p>{chat.lastMessage}</p>
                                 </div>
+                                {/* Timestamp */}
+                                <span className="chat-timestamp"> 
+                                    {/* Formata a hora se lastMessageAt existir */}
+                                    {chat.lastMessageAt?.toDate()
+                                      ? chat.lastMessageAt.toDate().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) 
+                                      : ''}
+                                </span>
                             </Link>
                         </li>
                     ))}
@@ -79,3 +108,4 @@ export default function ChatList() {
         </div>
     );
 }
+const DEFAULT_AVATAR = avatarPadrao;
