@@ -10,6 +10,9 @@ import Private from './Private';
 import Profile from '../pages/Profile';
 import ForgotPassword from '../pages/ForgotPassword';
 import ChatPage from '../pages/Chat/index.';
+import ChatList from '../pages/ChatList';
+import ChatRoom from '../pages/ChatRoom';
+
 // 1. Importe os ícones que você vai usar nos títulos
 import { FiHome, FiUser, FiSettings } from 'react-icons/fi';
 
@@ -20,8 +23,10 @@ function RoutesApp() {
             <Route path="/" element={<SignIn />} />
             <Route path="/faxinei" element={<SignIn />} />
             <Route path="/cadastrar" element={<SignUp />} /> {/* Corrigi para SignUp */}
-            <Route path="/recuperar-senha" element={ <ForgotPassword/> } />
+            <Route path="/recuperar-senha" element={<ForgotPassword />} />
             <Route path="/chat/:chatId" element={<Private><ChatPage /></Private>} />
+            <Route path="/chat" element={<Private><ChatList /></Private>} />
+            <Route path="/chat/:id" element={<Private><ChatRoom /></Private>} />
             {/* --- Rotas Privadas (com layout) --- */}
             <Route
                 path="/home"
@@ -49,7 +54,6 @@ function RoutesApp() {
                     </Private>
                 }
             />
-            
 
             <Route path="*" element={<h1>Página não encontrada.</h1>} />
         </Routes>

@@ -4,8 +4,8 @@ import avatarImg from '../../assets/avatar.png';
 import { Link, useLocation } from 'react-router-dom';
 
 import { AuthContext } from '../../contexts/auth';
-import { FiUser, FiSettings, FiLogOut, FiHome } from 'react-icons/fi';
-import './header.css'; 
+import { FiUser, FiSettings, FiLogOut, FiHome, FiMessageSquare } from 'react-icons/fi';
+import './header.css';
 
 export default function Header({ isOpen }) {
     const { user, logout } = useContext(AuthContext);
@@ -20,7 +20,7 @@ export default function Header({ isOpen }) {
     async function handleConfirmLogout() {
         await logout();
     }
-    
+
     // 4. Crie a função para abrir o modal
     // Usamos 'e.preventDefault()' para impedir o <Link> de navegar para "/"
     function handleOpenModal(e) {
@@ -33,9 +33,9 @@ export default function Header({ isOpen }) {
         <>
             <div className={sidebarClasses}>
                 <div>
-                    <img 
-                        src={user.avatarUrl === null ? avatarImg : user.avatarUrl} 
-                        alt="Foto do usuário" 
+                    <img
+                        src={user.avatarUrl === null ? avatarImg : user.avatarUrl}
+                        alt="Foto do usuário"
                         className="sidebar-avatar"
                     />
                 </div>
@@ -63,7 +63,16 @@ export default function Header({ isOpen }) {
                     <FiSettings color="#FFF" size={24} />
                     <span>Perfil</span>
                 </Link>
-                
+
+                <Link
+                    to="/chat"
+                    // Lógica corrigida: fica ativo em qualquer URL que COMECE com /chat
+                    className={location.pathname.startsWith('/chat') ? 'active' : ''}
+                >
+                    {/* Ícone corrigido para um de chat */}
+                    <FiMessageSquare color="#FFF" size={24} />
+                    <span>Chat</span>
+                </Link>
                 {/* 5. Mude o onClick para abrir o modal */}
                 <Link to="/" onClick={handleOpenModal}>
                     <FiLogOut color="#FFF" size={24} />
@@ -77,15 +86,15 @@ export default function Header({ isOpen }) {
                     <div className="modal-content">
                         <h2>Confirmar Saída</h2>
                         <p>Você tem certeza que deseja sair da sua conta?</p>
-                        
+
                         <div className="modal-actions">
-                            <button 
-                                className="btn-cancelar" 
+                            <button
+                                className="btn-cancelar"
                                 onClick={() => setShowLogoutModal(false)}
                             >
                                 Cancelar
                             </button>
-                            <button 
+                            <button
                                 className="btn-confirmar-perigo" // Botão vermelho
                                 onClick={handleConfirmLogout}
                             >

@@ -1,4 +1,5 @@
-import { useContext, useState, useEffect } from "react";
+// 1. useRef FOI IMPORTADO AQUI
+import { useContext, useState, useEffect, useRef } from "react";
 import { FiUpload } from "react-icons/fi";
 import avatar from '../../assets/avatar.png';
 import { AuthContext } from "../../contexts/auth";
@@ -7,12 +8,12 @@ import { db, storage } from '../../services/FirebaseConnection';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import './profile.css';
 import { toast } from 'react-toastify';
-import InputMask from 'react-input-mask'; // Você já estava importando!
+import InputMask from 'react-input-mask'; 
 
 export default function Profile() {
     const { user, setUser, storageUser } = useContext(AuthContext);
 
-    // Seus 'states' (estão corretos)
+    // ... (Seus states continuam iguais) ...
     const [avatarUrl, setAvatarUrl] = useState(user && user.avatarUrl);
     const [imagemAvatar, setImagemAvatar] = useState(null);
     const [nome, setNome] = useState(user && user.nome);
@@ -30,7 +31,12 @@ export default function Profile() {
     const [sobreDomicilio, setSobreDomicilio] = useState((user && user.sobreDomicilio) || "");
     const [servicos, setServicos] = useState((user && user.servicos) || "");
 
-    // ... (seu useEffect está aqui, tudo certo) ...
+    // 2. REFS ADICIONADOS AQUI
+    const cpfRef = useRef(null);
+    const telefoneRef = useRef(null);
+    const cepRef = useRef(null);
+
+    // ... (Seu useEffect continua igual) ...
     useEffect(() => {
         if (user && user.genero) {
             setGenero(user.genero);
@@ -40,10 +46,8 @@ export default function Profile() {
         }
     }, [user]);
 
-    // ... (suas funções mudarFoto, uploadFoto, atualizarDados, salvar, alternarDisponibilidade estão aqui) ...
-    // ... (não vou colar todas para economizar espaço, elas estão corretas) ...
-
-    function mudarFoto(e) {
+    // ... (Suas funções (mudarFoto, uploadFoto, etc) continuam iguais) ...
+    function mudarFoto(e) {
         if (e.target.files[0]) {
             const image = e.target.files[0];
             if (image.type === 'image/jpeg' || image.type === 'image/png') {
@@ -125,58 +129,35 @@ export default function Profile() {
         setDisponivel(novaDisponibilidade);
         await atualizarDados({ disponivel: novaDisponibilidade });
     }
-
-
-    // ==========================================================
-    // ======> 1. ADIÇÃO: FUNÇÃO DE BUSCAR CEP
-    // ==========================================================
     const handleCepBlur = async (e) => {
-        // Pega o valor do CEP do state, que já foi atualizado pelo onChange
-        const cepLimpo = cep.replace(/\D/g, ''); 
-
-        if (cepLimpo.length !== 8) {
-          // Se o CEP (sem máscara) não tiver 8 dígitos, não faz nada
-          return; 
-        }
-
-        try {
-          // Faz a chamada para a API ViaCEP
-          const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
-          const data = await response.json();
-
-          if (data.erro) {
-            toast.error("CEP não encontrado.");
-            // Limpa os campos caso o CEP seja inválido
-            setEndereco('');
-            setBairro('');
-            setEstado('');
-            return;
-          }
-
-          // Atualiza os states do seu componente com os dados da API
-          // Os nomes já batem: setEndereco, setBairro, setEstado
-          setEndereco(data.logradouro);
-          setBairro(data.bairro);
-          setEstado(data.uf);
-          
-          // Opcional: focar no campo de endereço após o preenchimento
-          // document.getElementById('endereco-input').focus(); 
-          // (Para isso, adicione o id="endereco-input" no input de Endereço)
-
-        } catch (error) {
-          console.error("Erro ao buscar o CEP:", error);
-          toast.error("Erro ao buscar o CEP. Tente novamente.");
-        }
-      };
+        const cepLimpo = cep.replace(/\D/g, ''); 
+        if (cepLimpo.length !== 8) {
+          return; 
+        }
+        try {
+          const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+          const data = await response.json();
+          if (data.erro) {
+            toast.error("CEP não encontrado.");
+            setEndereco('');
+            setBairro('');
+            setEstado('');
+            return;
+          }
+          setEndereco(data.logradouro);
+          setBairro(data.bairro);
+          setEstado(data.uf);
+        } catch (error) {
+          console.error("Erro ao buscar o CEP:", error);
+          toast.error("Erro ao buscar o CEP. Tente novamente.");
+        }
+    };
 
 
-    // --- SEU JSX (COM A PEQUENA MUDANÇA NO CAMPO CEP) ---
+    // --- SEU JSX (COM AS CORREÇÕES) ---
     return (
         <div>
-            
             <div className="profile-container">
-                
-                {/* COLUNA DA ESQUERDA: FOTO */}
                 <div className="profile-sidebar">
                     <label className="label-avatar">
                         <span>
@@ -205,10 +186,8 @@ export default function Profile() {
                     )}
                 </div>
 
-                {/* COLUNA DA DIREITA: FORMULÁRIO */}
                 <div className="profile-form-container">
                     <form className="form-profile" onSubmit={salvar}>
-                        
                         <div className="form-grid">
                             
                             <div className="field-group">
@@ -229,6 +208,8 @@ export default function Profile() {
                             <div className="field-group">
                                 <label>CPF</label>
                                 <InputMask
+                                    // 3. PROP ADICIONADA
+                                    inputRef={cpfRef} 
                                     className="styled-mask"
                                     mask="999.999.999-99" 
                                     value={cpf} 
@@ -239,6 +220,8 @@ export default function Profile() {
                             <div className="field-group">
                                 <label>Telefone</label>
                                 <InputMask 
+                                    // 3. PROP ADICIONADA
+                                    inputRef={telefoneRef}
                                     className="styled-mask"
                                     mask="(99) 99999-9999"
                                     value={telefone}
@@ -261,25 +244,22 @@ export default function Profile() {
                                 </select>
                             </div>
 
-                            {/* Campos de Endereço (Exemplo para objetivo "1") */}
                             {user.objetivo === "1" && (
                                 <>
-                                    {/* ========================================================== */}
-                                    {/* ======> 2. MUDANÇA: CAMPO CEP COM MÁSCARA E ONBLUR
-                                    {/* ========================================================== */}
                                     <div className="field-group">
                                         <label>CEP</label>
                                         <InputMask 
+                                            // 3. PROP ADICIONADA
+                                            inputRef={cepRef}
                                             className="styled-mask"
                                             mask="99999-999"
                                             value={cep} 
                                             onChange={(e) => setCep(e.target.value)}
-                                            onBlur={handleCepBlur} // <-- ISSO FOI ADICIONADO
+                                            onBlur={handleCepBlur} 
                                         />
                                     </div>
                                     <div className="field-group">
                                         <label>Bairro</label>
-                                        {/* O 'value' e 'onChange' já estavam corretos! */}
                                         <input type="text" value={bairro} onChange={(e) => setBairro(e.target.value)} />
                                     </div>
                                     <div className="field-group">
@@ -297,7 +277,6 @@ export default function Profile() {
                                 </>
                             )}
                             
-                            {/* Campos de Serviços (Exemplo para objetivo "2") */}
                             {user.objetivo === "2" && (
                                 <div className="field-group full-width">
                                     <label>Serviços</label>

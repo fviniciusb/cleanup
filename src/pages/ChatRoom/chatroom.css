@@ -1,13 +1,20 @@
-
-
+/* Em: src/pages/ChatRoom/chatroom.css */
 .chat-page-container {
   display: flex;
   flex-direction: column;
-  height: 88vh; 
+  /* Altura total - header mobile */
+  height: calc(100vh - 70px); /* Ajuste 70px para a altura do seu header mobile */
   max-width: 800px;
   margin: 0 auto;
   background-color: #f0f2f5; 
   box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+}
+
+/* No desktop, o sidebar da esquerda existe, então a altura é 100% */
+@media (min-width: 769px) {
+  .chat-page-container {
+    height: 100vh;
+  }
 }
 
 /* --- Cabeçalho do Chat --- */
@@ -42,6 +49,7 @@
   background-color: #f1f1f1;
 }
 
+/* --- Lista de Mensagens --- */
 .message-list {
   flex-grow: 1; 
   overflow-y: auto; 
@@ -56,34 +64,19 @@
   max-width: 100%;
 }
 
-/* Mensagem Enviada (Direita) */
-.message.sent {
-  align-self: flex-end; /* <-- ESTA É A LINHA QUE JOGA PRA DIREITA */
-}
-/* 
-/* Mensagem Recebida (Esquerda) */
-.message.received {
-  align-self: flex-start; /* <-- ESTA É A LINHA QUE JOGA PRA ESQUERDA */
-} */
-
-.loading-chat {
-  text-align: center;
-  color: #888;
-  font-size: 1rem;
-  padding: 20px;
-}
-
 .message-bubble {
   padding: 10px 15px;
   border-radius: 18px;
-  line-height: 1.4;
-  overflow-wrap: break-word;
-  max-width: 100%;
-  min-width: 40px;
+  line-height: 1.4; /* Espaçamento de linha */
+  
+  /* --- A CORREÇÃO DA QUEBRA DE LINHA --- */
+  max-width: 75%;         /* 1. Tamanho máximo */
+  min-width: 40px;          /* 2. Tamanho mínimo */
+  overflow-wrap: break-word; /* 3. A regra de quebra correta */
 }
 
 .message-bubble p {
-  margin: auto;
+  margin: 0;
   color: #000;
 }
 
@@ -93,7 +86,7 @@
 }
 
 .message.sent .message-bubble {
-  background-color: #0d6efd; /* Azul (nosso padrão) */
+  background-color: #0d6efd; 
   border-bottom-right-radius: 4px;
 }
 
@@ -104,19 +97,12 @@
 /* Mensagem Recebida (Esquerda) */
 .message.received {
   align-self: flex-start; /* Alinha à esquerda */
-  background-color: #e0dfdf;
-  border-radius: 18px;
-  color: #000;
-  border-bottom-right-radius: 4px;
 }
 
 .message.received .message-bubble {
-  padding: 10px 15px;
-  border-radius: 18px;
-  line-height: 1.4;
-  overflow-wrap: break-word;
-  max-width: 100%;
-  min-width: 40px;
+  background-color: #fff; /* Branca */
+  border: 1px solid #e9ecef;
+  border-bottom-left-radius: 4px;
 }
 
 /* --- Formulário de Input --- */
@@ -127,6 +113,7 @@
     border-top: 1px solid #ddd;
     flex-direction: row;
     width: 100%;
+    box-sizing: border-box; /* Garante que o padding não quebre o layout */
 }
 
 .chat-input-form input {
