@@ -5,9 +5,6 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../../contexts/auth';
 import { toast } from 'react-toastify';
 
-//Adicionados imports do Firestore para a verificação do e-mail
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from '../../services/FirebaseConnection'; 
 
 export default function SignUp() {
   const [nome, setNome] = useState('');
@@ -40,27 +37,18 @@ export default function SignUp() {
   
     // --- VERIFICAR SE O E-MAIL JÁ EXISTE ---
     try {
-      const usuariosRef = collection(db, 'usuarios');
-      // Cria uma query que busca na coleção 'usuarios' onde o campo 'email' é igual ao e-mail digitado
-      const q = query(usuariosRef, where("email", "==", email));
-      
-      const querySnapshot = await getDocs(q);
+    await signUp(nome, sobrenome, email, senha, objetivo);
+    
+    // Se chegou aqui, o cadastro foi um sucesso
+    // toast.success("Conta criada com sucesso!");
+    // redirecionar...
 
-      // Se 'querySnapshot.empty' for 'false', significa que encontrou pelo menos um documento
-      if (!querySnapshot.empty) {
-        toast.error("Este e-mail já está em uso. Faça login ou tente recuperar sua senha.");
-        return; // Impede a continuação do cadastro
-      }
-
-    } catch (error) {
-      console.error("Erro ao verificar e-mail no Firestore:", error);
-      toast.error("Não foi possível verificar o e-mail. Tente novamente.");
+  } catch (error) {
+    // O NOVO CATCH: captura erros do Firebase AUTH
+    console.error("Erro no processo de cadastro:", error.code);
+      // toast.error("Não foi possível verificar o e-mail. Tente novamente.");
       return; // Impede o cadastro se a verificação falhar
     }
-    
-
-    // 3. Se passou por todas as validações, chama a função de cadastro do contexto
-    await signUp(nome, sobrenome, email, senha, objetivo);
   }
 
   // Função para cadastro com o Google 

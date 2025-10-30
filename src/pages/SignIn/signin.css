@@ -1,17 +1,11 @@
-/* src/pages/SignIn/signin.css */
 
-/* ================================================== */
-
-/* SEU CSS EXISTENTE DE LOGIN (EXEMPLO) */
-
-/* ================================================== */
 .container-center {
-  height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background: radial-gradient(circle, #5EA1BD, #1A4A5F);
-  padding: 0 12px;
+  margin: 0;
 }
 
 .login {

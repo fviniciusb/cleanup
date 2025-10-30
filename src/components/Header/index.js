@@ -57,14 +57,6 @@ export default function Header({ isOpen }) {
                 </Link>
 
                 <Link
-                    to="/perfil"
-                    className={location.pathname === '/perfil' ? 'active' : ''}
-                >
-                    <FiSettings color="#FFF" size={24} />
-                    <span>Perfil</span>
-                </Link>
-
-                <Link
                     to="/chat"
                     // Lógica corrigida: fica ativo em qualquer URL que COMECE com /chat
                     className={location.pathname.startsWith('/chat') ? 'active' : ''}
@@ -73,6 +65,15 @@ export default function Header({ isOpen }) {
                     <FiMessageSquare color="#FFF" size={24} />
                     <span>Chat</span>
                 </Link>
+
+                <Link
+                    to="/perfil"
+                    className={location.pathname === '/perfil' ? 'active' : ''}
+                >
+                    <FiSettings color="#FFF" size={24} />
+                    <span>Perfil</span>
+                </Link>
+                
                 {/* 5. Mude o onClick para abrir o modal */}
                 <Link to="/" onClick={handleOpenModal}>
                     <FiLogOut color="#FFF" size={24} />
