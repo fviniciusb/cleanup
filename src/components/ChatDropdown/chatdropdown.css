@@ -1,0 +1,116 @@
+/* Em: src/components/ChatDropdown/chatdropdown.css */
+
+.chat-menu-container {
+  position: relative;
+}
+
+.nav-icon-btn {
+  background: none;
+  border: none;
+  color: #FFF;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+.nav-icon-btn:hover {
+  background-color: var(--navbar-link-hover);
+}
+
+/* O Menu flutuante */
+.chat-dropdown-menu {
+  /* --- A CORREÇÃO ESTÁ AQUI --- */
+  display: none; /* 1. Escondido por padrão */
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 320px;
+  z-index: 1001;
+  overflow: hidden;
+  
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* 2. Mostra o menu quando o JS adiciona a classe .open */
+.chat-dropdown-menu.open {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- O RESTO DO CSS --- */
+
+.chat-dropdown-header {
+  padding: 12px 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.chat-dropdown-header strong {
+  font-size: 1rem;
+  color: #333;
+}
+
+.chat-dropdown-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.chat-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+.chat-dropdown-item:hover {
+  background-color: #f4f4f4;
+}
+
+.chat-dropdown-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.chat-dropdown-info {
+  width: 100%;
+  overflow: hidden;
+}
+
+.chat-dropdown-info strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.chat-dropdown-info small {
+  display: block;
+  font-size: 0.85rem;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-dropdown-timestamp {
+  font-size: 0.75rem;
+  color: #999;
+  margin-left: auto;
+}
+
+.chat-dropdown-message {
+  padding: 20px;
+  text-align: center;
+  color: #777;
+}

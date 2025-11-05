@@ -296,7 +296,7 @@ export default function Profile() {
                                     mask={99999 - 999}
                                     value={cep}
                                     onChange={(e) => setCep(e.target.value)}
-                                    onBluir={handleCepBlur}
+                                    onBlur={handleCepBlur}
                                 />
                             </div>
 

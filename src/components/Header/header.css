@@ -1,7 +1,5 @@
-/* Em: src/components/Header/header.css */
-
 :root {
-  --navbar-bg: #5EA1BD; /* Cor de fundo da navbar (seu azul) */
+  --navbar-bg: #5EA1BD;
   --navbar-height: 60px;
   --navbar-link-hover: rgba(0, 0, 0, 0.1);
   --navbar-link-active: rgba(0, 0, 0, 0.2);
@@ -15,8 +13,6 @@
   justify-content: center;
   align-items: center;
   padding: 0 20px;
-  
-  /* Fixo no topo */
   position: fixed;
   top: 0;
   left: 0;
@@ -27,13 +23,12 @@
 
 .nav-container {
   display: flex;
-  justify-content: space-between; /* Brand à esquerda, Menu à direita */
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1500px; /* Limita a largura (bom para telas grandes) */
+  max-width: 1500px;
 }
 
-/* --- O Logo/Brand --- */
 .nav-brand {
   font-size: 1.5rem;
   font-weight: bold;
@@ -41,62 +36,153 @@
   text-decoration: none;
 }
 
-/* --- O Menu Principal (Desktop) --- */
-.nav-menu {
+/* --- 1. MENU DESKTOP --- */
+.nav-menu-desktop {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* --- Links de Navegação --- */
-.nav-menu a {
+.nav-menu-desktop a {
   display: flex;
   align-items: center;
-  gap: 8px; /* Espaço entre ícone e texto */
+  gap: 8px;
   padding: 10px 15px;
   color: #FFF;
   text-decoration: none;
   border-radius: 4px;
   transition: background-color 0.2s ease;
 }
-
-.nav-menu a:hover {
+.nav-menu-desktop a:hover {
   background-color: var(--navbar-link-hover);
 }
-
-.nav-menu a.active {
+.nav-menu-desktop a.active {
   background-color: var(--navbar-link-active);
 }
 
-/* Botão de Sair (no menu) */
-.logout-btn {
+/* --- 2. BOTÕES DE ÍCONE (Sino e Chat) --- */
+.nav-icon-btn {
   background: none;
   border: none;
+  color: #FFF;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 15px;
-  color: #FFF;
-  font-size: 14px;
-  font-family: inherit;
-  border-radius: 4px;
-  cursor: pointer;
+  justify-content: center;
   transition: background-color 0.2s ease;
+  position: relative;
 }
-
-.logout-btn:hover {
+.nav-icon-btn:hover {
   background-color: var(--navbar-link-hover);
 }
 
-/* --- Itens que SÓ aparecem no Mobile --- */
-.nav-user-info-mobile {
-  display: none; /* Escondido no desktop */
+/* --- 3. MENU DROPDOWN DO PERFIL (Click-to-toggle) --- */
+.user-menu-container {
+  position: relative;
+  margin-left: 10px;
 }
+
+/* Botão do Avatar (reset) */
+.nav-avatar-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.nav-avatar-desktop {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #FFF;
+  transition: transform 0.2s ease;
+}
+.nav-avatar-btn:hover .nav-avatar-desktop,
+.nav-avatar-btn:focus .nav-avatar-desktop {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* O Menu flutuante (escondido por padrão) */
+.user-dropdown-menu {
+  display: none; /* Escondido */
+  position: absolute;
+  top: calc(100% + 10px); /* 10px abaixo do avatar */
+  right: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 220px; /* Largura maior */
+  z-index: 1001;
+  overflow: hidden;
+  padding: 8px 0;
+  
+  /* Animação */
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Mostrar o menu quando o JS adicionar a classe .open */
+.user-dropdown-menu.open {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Cabeçalho do Dropdown */
+.dropdown-user-info {
+  padding: 10px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 8px;
+}
+.dropdown-user-info strong {
+  display: block;
+  font-size: 1rem;
+  color: #333;
+}
+.dropdown-user-info small {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+/* Links dentro do menu flutuante */
+.user-dropdown-menu a,
+.user-dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
+  text-align: left;
+  color: #333; 
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  background: none;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+.user-dropdown-menu a:hover,
+.user-dropdown-menu button:hover {
+  background-color: #f4f4f4;
+}
+.user-dropdown-menu button {
+  color: #dc3545; /* Vermelho para "Sair" */
+}
+
+/* --- 4. MENU MOBILE (Ocultos no Desktop) --- */
 .nav-toggle {
-  display: none; /* Escondido no desktop */
+  display: none;
   background: none;
   border: none;
   cursor: pointer;
+}
+.nav-menu-mobile {
+  display: none;
 }
 
 
@@ -106,45 +192,58 @@
 
 @media screen and (max-width: 768px) {
   
-  /* 1. Mostra o botão hambúrguer */
+  /* 1. Esconde o menu de desktop */
+  .nav-menu-desktop {
+    display: none;
+  }
+
+  /* 2. Mostra o botão hambúrguer */
   .nav-toggle {
     display: block;
   }
 
-  /* 2. Esconde o menu de desktop */
-  .nav-menu {
-    display: none; /* Esconde o menu */
-    
-    /* Quando ele for aberto... */
+  /* 3. Lógica para o menu mobile flutuante */
+  .nav-menu-mobile {
+    display: none; 
     &.open {
-      display: flex; /* ...ele reaparece */
-      flex-direction: column; /* ...empilhado verticalmente */
-      align-items: flex-start; /* ...alinhado à esquerda */
-      
-      /* ...e ocupa a tela toda */
+      display: flex; 
+      flex-direction: column; 
+      align-items: flex-start;
       position: fixed;
-      top: var(--navbar-height); /* Começa abaixo da navbar */
+      top: var(--navbar-height);
       left: 0;
       width: 100%;
-      height: calc(100vh - var(--navbar-height)); /* Ocupa o resto da altura */
+      height: calc(100vh - var(--navbar-height));
       background-color: var(--navbar-bg);
       padding: 20px;
       gap: 15px;
     }
   }
-
-  /* 3. Ajusta os links dentro do menu mobile */
-  .nav-menu.open a,
-  .nav-menu.open .logout-btn {
-    width: 100%; /* Ocupa a largura toda */
+  
+  /* (Estilos para os links dentro do menu mobile) */
+  .nav-menu-mobile a,
+  .nav-menu-mobile .logout-btn {
+    width: 100%; 
     padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #FFF;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
   }
-  .nav-menu.open a:hover,
-  .nav-menu.open .logout-btn:hover {
+  .nav-menu-mobile a:hover,
+  .nav-menu-mobile .logout-btn:hover {
     background-color: var(--navbar-link-hover);
   }
-
-  /* 4. Mostra as informações do usuário no menu mobile */
+  .nav-menu-mobile .logout-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+  }
   .nav-user-info-mobile {
     display: flex;
     align-items: center;
