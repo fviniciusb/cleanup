@@ -197,7 +197,7 @@
   display: flex;
   justify-content: flex-end;
   /* Alinha o botão à direita */
-  margin-top: 32px;
+  margin-top: 10px;
   border-top: 1px solid #eee;
   padding-top: 24px;
 }
@@ -207,9 +207,10 @@
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 14px 28px;
-  font-size: 1.1rem;
+  padding: 10px 10px;
+  font-size: 14.5px;
   font-weight: 600;
+  margin-left: 16px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -268,13 +269,13 @@
 
 /* --- NOVO ESTILO PARA O BOTÃO DE ALTERAR SENHA --- */
 .btn-change-password {
-  background-color: var(--text-light);
+  background-color: rgb(63, 69, 79);
   /* Cor de "perigo" secundária */
-  color: var(--text-medium);
+  color: white;
   border: 1px solid var(--border-color);
-  border-radius: var(--input-radius);
-  padding: 14px 28px;
-  font-size: 1rem;
+  border-radius: 6px;
+  padding: 10px 10px;
+  font-size: 14.5px;
   /* Um pouco menor que o principal */
   font-weight: 600;
   cursor: pointer;
@@ -282,8 +283,8 @@
 }
 
 .btn-change-password:hover {
-  background-color: var(--background-medium);
-  border-color: #aaa;
+  background-color: #52575d;
+  border-color: #3f3f3f;
 }
 
 /* Ajustes finos para celulares bem pequenos */
@@ -303,4 +304,162 @@
     font-size: 1rem;
     padding: 12px;
   }
+}
+
+.profile-tabs-nav {
+    display: flex;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 24px;
+}
+.tab-button {
+    padding: 12px 20px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #667;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px; 
+    transition: color 0.2s, border-color 0.2s;
+}
+.tab-button:hover { color: #333; }
+.tab-button.active {
+    color: #007bff; 
+    font-weight: 600;
+    border-bottom-color: #007bff;
+}
+.tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+.tab-content.active { display: block; }
+
+/* ... (seu CSS do .availability-section e .unavailable-day) ... */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.servicos-section {
+    margin-bottom: 32px; /* Espaço antes da seção do calendário */
+}
+
+.servicos-section h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.servicos-section p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.servicos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+    max-height: 250px; /* Altura máxima para a lista */
+    overflow-y: auto; /* Adiciona scroll se a lista for longa */
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 10px;
+    background-color: #fcfcfc;
+}
+
+.servico-item-empty {
+    text-align: center;
+    color: #999;
+    padding: 20px 0;
+}
+
+.servico-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+}
+
+.servico-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.servico-item-info strong {
+    font-weight: 600;
+    color: #333;
+}
+
+.servico-item-info span {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.btn-remover-servico {
+    background: transparent;
+    border: none;
+    color: #dc3545; /* Vermelho */
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-remover-servico:hover {
+    background-color: #f8d7da; /* Fundo vermelho claro */
+    color: #721c24; /* Vermelho escuro */
+}
+
+/* --- ESTILO "LADO A LADO" PARA O FORMULÁRIO DE ADICIONAR --- */
+.servico-add-form {
+    display: grid;
+    /* 2 colunas de tamanho igual + 1 coluna de tamanho automático */
+    grid-template-columns: 1fr 1fr auto; 
+    gap: 15px;
+    align-items: flex-end; /* Alinha o botão com a base dos inputs */
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.btn-add-servico {
+    background-color: #0d6efd; /* Azul */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 15px; /* Mesmo padding dos inputs */
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s;
+    height: 47px; /* Força a altura para alinhar com os inputs */
+    box-sizing: border-box;
+}
+
+.btn-add-servico:hover {
+    background-color: #0b5ed7;
+}
+
+/* --- Responsividade para o formulário de adicionar serviço --- */
+@media (max-width: 768px) {
+    /* No mobile, o grid do formulário de adicionar vira 1 coluna */
+    .servico-add-form {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .btn-add-servico {
+        justify-content: center; /* Centraliza o texto e ícone do botão */
+    }
 }

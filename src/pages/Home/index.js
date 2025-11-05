@@ -146,7 +146,23 @@ export default function Home() {
                                             ({faxineira.totalAvaliacoes} {faxineira.totalAvaliacoes === 1 ? 'avaliação' : 'avaliações'})
                                         </span>
                                     </div>
-                                    <p><strong>Serviços:</strong> {faxineira.servicos || "Não informado"}</p>
+                                    <div className="servicos-preview">
+                                            <strong>Serviços:</strong>
+                                            {/* Verifica se 'servicos' é um array e tem itens */}
+                                            {Array.isArray(faxineira.servicos) && faxineira.servicos.length > 0 ? (
+                                                <ul className="servicos-preview-list">
+                                                    {/* Mostra os 2 primeiros serviços */}
+                                                    {faxineira.servicos.slice(0, 2).map((servico, index) => (
+                                                        <li key={index}>{servico.nome} {servico.preco && `(${servico.preco})`}</li>
+                                                    ))}
+                                                    {/* Mostra "e mais..." se houver mais de 2 */}
+                                                    {faxineira.servicos.length > 2 && <li>e mais...</li>}
+                                                </ul>
+                                            ) : (
+                                                // Fallback se 'servicos' for antigo (texto) ou vazio
+                                                <span> {typeof faxineira.servicos === 'string' ? faxineira.servicos : "Não informado"}</span>
+                                            )}
+                                        </div>
                                     <p><strong>Contato:</strong> {faxineira.telefone}</p>
                                 </div>
                                 {user.objetivo === "1" && (

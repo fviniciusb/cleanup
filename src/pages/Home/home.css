@@ -205,3 +205,75 @@
     width: 100%;
   }
 }
+.servicos-preview {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 8px; /* Espaçamento */
+    padding-top: 8px; /* Linha de separação */
+    border-top: 1px solid #f0f0f0;
+}
+.servicos-preview strong {
+    color: #333;
+    display: block; /* Faz o "Serviços:" ficar em linha própria */
+    margin-bottom: 4px;
+}
+
+/* Esconde marcadores da lista e ajusta padding */
+.servicos-preview-list {
+    list-style-type: none; 
+    padding-left: 0;
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+.servicos-preview-list li {
+    padding: 2px 0;
+    font-size: 0.85rem;
+    color: #666;
+    display: flex; /* Para alinhar o "bullet" */
+    align-items: center;
+}
+.servicos-preview-list li:before {
+    content: "•"; /* Adiciona um "bullet" simples */
+    color: #007bff; /* Cor azul */
+    margin-right: 6px;
+    font-size: 1.2rem; /* Tamanho do bullet */
+}
+
+
+/* --- ESTILOS PARA O DATEPICKER NO MODAL --- */
+
+/* Estiliza o input do DatePicker para parecer com os outros */
+.datepicker-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  box-sizing: border-box; 
+  background-color: #f9f9f9;
+}
+.datepicker-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+  background-color: #fff;
+}
+
+/* Estiliza os dias indisponíveis (bloqueados) */
+.react-datepicker__day--disabled,
+.react-datepicker__day--excluded {
+  background-color: #f8d7da !important; 
+  color: #721c24 !important; 
+  text-decoration: line-through; 
+  cursor: not-allowed;
+}
+.react-datepicker__day--disabled:hover,
+.react-datepicker__day--excluded:hover {
+    background-color: #f1c0c4 !important; 
+}
+
+/* Garante que o calendário pop-up apareça sobre o modal */
+.react-datepicker-popper {
+    z-index: 1001; 
+}

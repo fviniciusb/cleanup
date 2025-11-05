@@ -4,12 +4,15 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  margin: 1px 0;
   padding: 1rem;
   background-color: #FFF;
-  /* Fundo branco (como na sua foto) */
   border-bottom: 1px solid #DDD;
+  position: relative;
+  bottom: 10px;
   width: 100%;
   box-sizing: border-box;
+  height: 60px;
 }
 
 .page-title-container {

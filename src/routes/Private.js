@@ -1,6 +1,6 @@
 // Em: src/routes/Private.js
 
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { AuthContext } from '../contexts/auth';
 import { Navigate } from 'react-router-dom';
 
