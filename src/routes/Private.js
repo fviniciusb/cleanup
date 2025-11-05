@@ -4,50 +4,37 @@ import { useState, useContext } from 'react';
 import { AuthContext } from '../contexts/auth';
 import { Navigate } from 'react-router-dom';
 
-// 1. IMPORTE OS COMPONENTES DE LAYOUT
-import Header from '../components/Header';       // Sua Sidebar (Header.js)
-import PageHeader from '../components/PageHeader'; // A barra do topo (nova)
-import Title from '../components/Title';         // Seu componente de Título
-        
-// 2. IMPORTE O CSS DO LAYOUT
+// 1. REMOVEMOS O PageHeader e o Title dos imports
+import Header from '../components/Header'; // Sua Navbar azul
 import './layout.css'; 
 
-// 3. Receba { children, title, icon } como props
-export default function Private({ children, title, icon }) {
+// 2. REMOVEMOS as props 'title' e 'icon'
+export default function Private({ children }) {
   const { signed, loading } = useContext(AuthContext);
 
-  // 4. O ESTADO DE 'ABRIR/FECHAR' VIVE AQUI
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  // 3. REMOVEMOS o estado 'isSidebarOpen' e a função 'toggleSidebar'
+  // O novo Header.jsx cuida disso sozinho
 
   if (loading) {
-    // É bom ter um loading aqui
     return <div>Carregando...</div>; 
   }
 
   if (!signed) {
-    return <Navigate to="/" />; // Redireciona para o login
+    return <Navigate to="/" />;
   }
 
-  // 5. SE ESTIVER LOGADO, RENDERIZA O LAYOUT COMPLETO
+  // 4. SE ESTIVER LOGADO, RENDERIZA O LAYOUT CORRIGIDO
   return (
-    <div className={`app-layout ${isSidebarOpen ? 'open' : ''}`}>
+    // A classe 'open' não é mais necessária aqui
+    <div className="app-layout"> 
       
-      {/* Sua Sidebar (components/Header) */}
-      <Header isOpen={isSidebarOpen} />
+      {/* Renderiza a Navbar azul */}
+      <Header />
 
       {/* O Conteúdo Principal */}
       <div className="main-content">
         
-        {/* A Barra do Topo (PageHeader) */}
-        <PageHeader toggleSidebar={toggleSidebar}>
-            <Title nome={title}>
-                {icon}
-            </Title>
-        </PageHeader>
+        {/* 5. REMOVEMOS O <PageHeader> E O <Title> DAQUI */}
         
         {/* O conteúdo da página (Home, Perfil, etc) */}
         <div className="page-content-area">

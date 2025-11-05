@@ -245,6 +245,24 @@
   }
 }
 
+/* --- NOVO ESTILO PARA O BOTÃO DE ALTERAR SENHA --- */
+.btn-change-password {
+  background-color: var(--text-light); /* Cor de "perigo" secundária */
+  color: var(--text-medium);
+  border: 1px solid var(--border-color);
+  border-radius: var(--input-radius);
+  padding: 14px 28px;
+  font-size: 1rem; /* Um pouco menor que o principal */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-change-password:hover {
+  background-color: var(--background-medium);
+  border-color: #aaa;
+}
+
 /* Ajustes finos para celulares bem pequenos */
 @media (max-width: 480px) {
   .profile-form-container {

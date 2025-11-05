@@ -1,26 +1,26 @@
 /* Em: src/routes/layout.css */
 
-.app-layout {
-  display: flex;
+/* Pega a altura da navbar que definimos no header.css */
+:root {
+  --navbar-height: 60px; 
 }
+
+/* 1. REMOVEMOS .app-layout e .app-layout.open */
 
 .main-content {
   flex-grow: 1;
-  height: 100vh;
-  overflow-y: auto;
+  /* 2. ADICIONAMOS padding-top para empurrar o conteúdo */
+  padding-top: var(--navbar-height); 
+  
+  /* 3. REMOVEMOS margin-left e transition */
 
-  /* ESTA É A LINHA IMPORTANTE: */
-
-  /* ELA EMPURRA O CONTEÚDO PARA DEPOIS DA SIDEBAR FECHADA */
-  margin-left: 80px; 
-  transition: margin-left 0.3s ease;
-}
-
-/* E ESTA EMPURRA MAIS QUANDO A SIDEBAR ABRE */
-.app-layout.open .main-content {
-  margin-left: 240px; 
+  background-color: #efefef;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .page-content-area {
   padding: 20px;
 }
+
+/* 4. REMOVEMOS a @media query, ela não é mais necessária aqui */
