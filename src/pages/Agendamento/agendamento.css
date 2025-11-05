@@ -49,7 +49,8 @@
 .agendamento-list {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Espaço entre os cards */
+  gap: 16px;
+  /* Espaço entre os cards */
 }
 
 /* O card individual (novo design) */
@@ -57,12 +58,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap; /* Permite quebrar em telas pequenas */
+  flex-wrap: wrap;
+  /* Permite quebrar em telas pequenas */
   padding: 20px 24px;
-  border: 1px solid #e9ecef; /* Borda suave */
+  border: 1px solid #e9ecef;
+  /* Borda suave */
   border-radius: 8px;
   transition: box-shadow 0.2s, border-color 0.2s;
-  gap: 16px; /* Espaço entre infos e botão */
+  gap: 16px;
+  /* Espaço entre infos e botão */
 }
 
 .agendamento-card:hover {
@@ -72,7 +76,8 @@
 
 /* Informações (Nome, data, hora) */
 .card-info {
-  flex-grow: 1; /* Ocupa o espaço disponível */
+  flex-grow: 1;
+  /* Ocupa o espaço disponível */
 }
 
 .card-info h3 {
@@ -84,8 +89,10 @@
 
 .card-details {
   display: flex;
-  gap: 24px; /* Espaço entre data e hora */
-  flex-wrap: wrap; /* Permite quebrar em telas pequenas */
+  gap: 24px;
+  /* Espaço entre data e hora */
+  flex-wrap: wrap;
+  /* Permite quebrar em telas pequenas */
   color: #555;
   font-size: 0.95rem;
 }
@@ -97,12 +104,14 @@
 
 /* Ações (Botão) */
 .card-actions {
-  flex-shrink: 0; /* Impede que o botão encolha */
+  flex-shrink: 0;
+  /* Impede que o botão encolha */
 }
 
 /* Botão de excluir (novo design) */
 .btn-excluir {
-  background-color: #d9534f; /* O seu vermelho original */
+  background-color: #d9534f;
+  /* O seu vermelho original */
   color: #fff;
   font-size: 0.9rem;
   font-weight: 600;
@@ -114,27 +123,31 @@
 }
 
 .btn-excluir:hover {
-  background-color: #c9302c; /* Vermelho mais escuro */
+  background-color: #c9302c;
+  /* Vermelho mais escuro */
 }
 
 
 /* Responsividade para telas pequenas */
-@media (width <= 600px) {
+@media (width <=600px) {
   .agendamentos-container {
     padding: 20px;
   }
-  
+
   .agendamento-card {
-    flex-direction: column; /* Empilha os itens */
-    align-items: flex-start; /* Alinha tudo à esquerda */
+    flex-direction: column;
+    /* Empilha os itens */
+    align-items: flex-start;
+    /* Alinha tudo à esquerda */
   }
-  
+
   .card-actions {
     width: 100%;
   }
 
   .btn-excluir {
-    width: 100%; /* Botão ocupa 100% da largura */
+    width: 100%;
+    /* Botão ocupa 100% da largura */
     text-align: center;
   }
 }
@@ -144,13 +157,16 @@
 /* 1. Alinha os botões */
 .card-actions {
   flex-shrink: 0;
-  display: flex; /* Adiciona flexbox */
-  gap: 12px;      /* Adiciona espaço entre os botões */
+  display: flex;
+  /* Adiciona flexbox */
+  gap: 12px;
+  /* Adiciona espaço entre os botões */
 }
 
 /* 2. Estilo para o novo botão de chat */
 .btn-chat {
-  background-color: #0d6efd; /* Azul (padrão do design) */
+  background-color: #0d6efd;
+  /* Azul (padrão do design) */
   color: #fff;
   font-size: 0.9rem;
   font-weight: 600;
@@ -162,14 +178,16 @@
 }
 
 .btn-chat:hover {
-  background-color: #0b5ed7; /* Azul mais escuro */
+  background-color: #0b5ed7;
+  /* Azul mais escuro */
 }
 
 /* Em: src/pages/Agendamento/agendamento.css */
 
 /* --- BOTÃO FINALIZAR --- */
 .btn-finalizar {
-  background-color: #198754; /* Verde */
+  background-color: #198754;
+  /* Verde */
   color: #fff;
   font-size: 0.9rem;
   font-weight: 600;
@@ -179,8 +197,10 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
+
 .btn-finalizar:hover {
-  background-color: #157347; /* Verde mais escuro */
+  background-color: #157347;
+  /* Verde mais escuro */
 }
 
 /* --- ESTILOS DO MODAL DE AVALIAÇÃO --- */
@@ -207,7 +227,8 @@
   padding: 24px 30px;
   width: 100%;
   max-width: 500px;
-  text-align: center; /* Centraliza o conteúdo do modal */
+  text-align: center;
+  /* Centraliza o conteúdo do modal */
 }
 
 .modal-content h2 {
@@ -216,21 +237,24 @@
   font-size: 1.5rem;
   color: #333;
 }
+
 .modal-content p {
-    margin-bottom: 24px;
-    color: #555;
+  margin-bottom: 24px;
+  color: #555;
 }
 
 .modal-stars {
-    display: flex;
-    justify-content: center; /* Centraliza as estrelas */
-    gap: 5px;
-    margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  /* Centraliza as estrelas */
+  gap: 5px;
+  margin-bottom: 30px;
 }
 
 .modal-actions {
   display: flex;
-  justify-content: center; /* Centraliza os botões */
+  justify-content: center;
+  /* Centraliza os botões */
   gap: 12px;
   margin-top: 24px;
 }
@@ -247,6 +271,7 @@
   color: #555;
   transition: background-color 0.2s;
 }
+
 .btn-cancelar:hover {
   background-color: #e9ecef;
 }
@@ -258,28 +283,37 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  background-color: #0d6efd; /* Azul */
+  background-color: #0d6efd;
+  /* Azul */
   color: white;
   transition: background-color 0.2s;
 }
+
 .btn-confirmar:hover {
   background-color: #0b5ed7;
 }
+
 .btn-confirmar:disabled {
-    background-color: #a0c7f1; /* Azul claro quando desabilitado */
-    cursor: not-allowed;
+  background-color: #a0c7f1;
+  /* Azul claro quando desabilitado */
+  cursor: not-allowed;
 }
 
 /* Ajuste no mobile para o botão finalizar */
-@media (width <= 600px) {
+@media (width <=600px) {
   .btn-finalizar {
-      flex-grow: 1; /* Faz ocupar espaço */
-      text-align: center;
+    flex-grow: 1;
+    /* Faz ocupar espaço */
+    text-align: center;
   }
+
   .modal-actions {
-      flex-direction: column; /* Empilha botões no mobile */
+    flex-direction: column;
+    /* Empilha botões no mobile */
   }
-  .btn-cancelar, .btn-confirmar {
-      width: 100%;
+
+  .btn-cancelar,
+  .btn-confirmar {
+    width: 100%;
   }
 }

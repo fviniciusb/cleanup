@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 export default function SignIn() {
   const [email, setEmail] = useState('');
   // 1. CORREÇÃO: 'setSenha' mudou para 'setPassword'
-  const [password, setPassword] = useState(''); 
+  const [password, setPassword] = useState('');
 
   // 2. CORREÇÃO: 'handleGoogleSignUp' mudou para 'signUpWithGoogle'
   const { signIn, loadingAuth, signUpWithGoogle } = useContext(AuthContext);
@@ -17,7 +17,7 @@ export default function SignIn() {
   // Função de login com email/senha (mudei 'logar' para 'handleSignIn' por clareza)
   async function handleSignIn(e) {
     e.preventDefault();
-    
+
     if (email !== '' && password !== '') {
       await signIn(email, password); // 'await' é bom aqui
     } else {
@@ -28,7 +28,7 @@ export default function SignIn() {
   // 3. NOVA FUNÇÃO: Chama a função do Google do seu contexto
   async function handleGoogleSignIn() {
     // A função no seu AuthContext já define 'objetivo = "1"' como padrão
-    await signUpWithGoogle(); 
+    await signUpWithGoogle();
   }
 
   return (
@@ -40,29 +40,29 @@ export default function SignIn() {
 
         <form onSubmit={handleSignIn}>
           <h1>Bem-vindo (a)</h1>
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder="usuario@email.com"
             value={email}
-            onChange={ (e) => setEmail(e.target.value) }
+            onChange={(e) => setEmail(e.target.value)}
           />
 
-          <input 
-            type="password" 
+          <input
+            type="password"
             placeholder="********"
             value={password}
             // 4. CORREÇÃO: 'setSenha' mudou para 'setPassword'
-            onChange={ (e) => setPassword(e.target.value) } 
+            onChange={(e) => setPassword(e.target.value)}
           />
 
           <button type="submit" className='botaoLogin' disabled={loadingAuth}>
-              {loadingAuth ? 'Carregando...' : 'Entrar'}
+            {loadingAuth ? 'Carregando...' : 'Entrar'}
           </button>
         </form>
 
         {/* --- 5. BOTÃO DO GOOGLE ADICIONADO AQUI --- */}
-        <button 
-          className="gsi-material-button" 
+        <button
+          className="gsi-material-button"
           onClick={handleGoogleSignIn} // Chama a nova função
           type="button" // Impede o envio do formulário
           disabled={loadingAuth} // Desativa se estiver carregando

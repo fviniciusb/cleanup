@@ -1,8 +1,8 @@
 // Em: src/components/Title/Title.jsx
 import './title.css';
 
-export default function Title({ children, nome }){
-  return(
+export default function Title({ children, nome }) {
+  return (
     <div className="title">
       {children}
       <span>{nome}</span>

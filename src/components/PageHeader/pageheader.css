@@ -5,7 +5,8 @@
   align-items: center;
   gap: 1.5rem;
   padding: 1rem;
-  background-color: #FFF; /* Fundo branco (como na sua foto) */
+  background-color: #FFF;
+  /* Fundo branco (como na sua foto) */
   border-bottom: 1px solid #DDD;
   width: 100%;
   box-sizing: border-box;
@@ -14,4 +15,3 @@
 .page-title-container {
   width: 100%;
 }
-

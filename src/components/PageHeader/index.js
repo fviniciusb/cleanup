@@ -5,7 +5,7 @@ import './pageheader.css';
 export default function PageHeader({ children }) {
   return (
     <header className="page-header">
-      
+
       <div className="page-title-container">
         {children}
       </div>

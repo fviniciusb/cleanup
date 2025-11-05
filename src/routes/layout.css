@@ -2,7 +2,7 @@
 
 /* Pega a altura da navbar que definimos no header.css */
 :root {
-  --navbar-height: 60px; 
+  --navbar-height: 60px;
 }
 
 /* 1. REMOVEMOS .app-layout e .app-layout.open */
@@ -10,8 +10,8 @@
 .main-content {
   flex-grow: 1;
   /* 2. ADICIONAMOS padding-top para empurrar o conteúdo */
-  padding-top: var(--navbar-height); 
-  
+  padding-top: var(--navbar-height);
+
   /* 3. REMOVEMOS margin-left e transition */
 
   background-color: #efefef;

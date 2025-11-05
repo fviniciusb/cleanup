@@ -24,17 +24,17 @@ function RoutesApp() {
             {/* Agora elas estão muito mais limpas */}
             <Route
                 path="/home"
-                element={ <Private> <Home /> </Private> }
+                element={<Private> <Home /> </Private>}
             />
 
             <Route
                 path="/perfil"
-                element={ <Private> <Profile /> </Private> }
+                element={<Private> <Profile /> </Private>}
             />
 
             <Route
                 path="/agendamentos"
-                element={ <Private> <Agendamento /> </Private> }
+                element={<Private> <Agendamento /> </Private>}
             />
 
             <Route path="*" element={<h1>Página não encontrada.</h1>} />

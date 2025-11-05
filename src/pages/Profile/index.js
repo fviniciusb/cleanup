@@ -18,14 +18,14 @@ import { sendPasswordResetEmail } from "firebase/auth";
 // Outras Bibliotecas
 import axios from 'axios'; // Para o upload no Cloudinary
 import { toast } from 'react-toastify';
-import InputMask from 'react-input-mask'; 
+import InputMask from 'react-input-mask';
 
 // Componentes de Layout
-import PageHeader from '../../components/PageHeader'; 
-import Title from '../../components/Title'; 
+import PageHeader from '../../components/PageHeader';
+import Title from '../../components/Title';
 
 // CSS da Página
-import './profile.css'; 
+import './profile.css';
 
 // --- FIM DOS IMPORTS ---
 export default function Profile() {
@@ -96,13 +96,13 @@ export default function Profile() {
     // --- 3. CORREÇÃO DO BUG DA FOTO (Usando Cloudinary) ---
     const uploadFoto = useCallback(async () => {
         // Cloudinary
-        const CLOUD_NAME = "dy11aoczl"; 
+        const CLOUD_NAME = "dy11aoczl";
         const UPLOAD_PRESET = "CleanUp";
         // ----------------------------------------
 
         if (!CLOUD_NAME || !UPLOAD_PRESET || CLOUD_NAME === "SEU_CLOUD_NAME_AQUI") {
-          toast.error("Credenciais do Cloudinary não configuradas.");
-          return null;
+            toast.error("Credenciais do Cloudinary não configuradas.");
+            return null;
         }
 
         const formData = new FormData();
@@ -125,7 +125,7 @@ export default function Profile() {
     // Função principal de salvar (COM FEEDBACK DE "SALVANDO")
     const salvar = useCallback(async (e) => {
         e.preventDefault();
-        
+
         if (!formData.cpf) {
             toast.error("Por favor, preencha seu CPF.");
             return;
@@ -134,21 +134,21 @@ export default function Profile() {
         setIsSaving(true); // 👈 Inicia o loading
 
         try {
-            const atualizacoes = { ...formData }; 
+            const atualizacoes = { ...formData };
 
             if (user.objetivo === "2") {
                 atualizacoes.disponivel = disponivel;
             }
 
             if (imagemAvatar) {
-                const novaAvatarUrl = await uploadFoto(); 
+                const novaAvatarUrl = await uploadFoto();
                 if (novaAvatarUrl) {
                     atualizacoes.avatarUrl = novaAvatarUrl;
                 } else {
                     throw new Error("Falha no upload da imagem."); // Para o salvamento
                 }
             }
-            await atualizarDados(atualizacoes); 
+            await atualizarDados(atualizacoes);
 
         } catch (error) {
             // O toast de erro já é mostrado dentro das funções (atualizarDados/uploadFoto)
@@ -168,7 +168,7 @@ export default function Profile() {
 
     // Busca o CEP (otimizado)
     const handleCepBlur = useCallback(async () => {
-        const cepLimpo = formData.cep.replace(/\D/g, ''); 
+        const cepLimpo = formData.cep.replace(/\D/g, '');
         if (cepLimpo.length !== 8) return;
         try {
             const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
@@ -210,13 +210,13 @@ export default function Profile() {
         <div>
             {/* Cabeçalho da Página */}
             <PageHeader>
-              <Title nome="Meu Perfil">
-                <FiSettings size={25} />
-              </Title>
+                <Title nome="Meu Perfil">
+                    <FiSettings size={25} />
+                </Title>
             </PageHeader>
-            
+
             <div className="profile-container">
-                
+
                 {/* Coluna da Esquerda (Sidebar do Perfil) */}
                 <div className="profile-sidebar">
                     <label className="label-avatar">
@@ -246,39 +246,39 @@ export default function Profile() {
                 <div className="profile-form-container">
                     <form className="form-profile" onSubmit={salvar}>
                         <div className="form-grid">
-                            
+
                             {/* --- Todos os seus campos de formulário --- */}
-                            
+
                             <div className="field-group">
                                 <label>Nome</label>
                                 <input type="text" name="nome" value={formData.nome} onChange={handleInputChange} />
                             </div>
-                            
+
                             <div className="field-group">
                                 <label>Sobrenome</label>
                                 <input type="text" name="sobrenome" value={formData.sobrenome} onChange={handleInputChange} />
                             </div>
 
-                           <div className="field-group full-width">
+                            <div className="field-group full-width">
                                 <label>Email</label>
                                 <input type="text" value={user.email} disabled={true} />
                             </div>
 
                             <div className="field-group">
                                 <label>CPF</label>
-                                <InputMask 
-                                    inputRef={cpfRef} 
+                                <InputMask
+                                    inputRef={cpfRef}
                                     className="styled-mask"
-                                    mask="999.999.999-99" 
+                                    mask="999.999.999-99"
                                     name="cpf"
-                                    value={formData.cpf} 
+                                    value={formData.cpf}
                                     onChange={handleInputChange}
                                 />
                             </div>
 
                             <div className="field-group">
                                 <label>Telefone</label>
-                                <InputMask 
+                                <InputMask
                                     inputRef={telefoneRef}
                                     className="styled-mask"
                                     mask="(99) 99999-9999"
@@ -291,12 +291,12 @@ export default function Profile() {
                             <div className="field-group">
                                 <label>CEP</label>
                                 <InputMask
-                                inputRef={cepRef}
-                                className="styled-mask"
-                                mask={99999-999}
-                                value={cep}
-                                onChange={(e) => setCep(e.target.value)}
-                                onBluir={handleCepBlur}
+                                    inputRef={cepRef}
+                                    className="styled-mask"
+                                    mask={99999 - 999}
+                                    value={cep}
+                                    onChange={(e) => setCep(e.target.value)}
+                                    onBluir={handleCepBlur}
                                 />
                             </div>
 
@@ -319,14 +319,14 @@ export default function Profile() {
                                 <>
                                     <div className="field-group">
                                         <label>CEP</label>
-                                        <InputMask 
+                                        <InputMask
                                             inputRef={cepRef}
                                             className="styled-mask"
                                             mask="99999-999"
                                             name="cep"
-                                            value={formData.cep} 
+                                            value={formData.cep}
                                             onChange={handleInputChange}
-                                            onBlur={handleCepBlur} 
+                                            onBlur={handleCepBlur}
                                         />
                                     </div>
                                     <div className="field-group">
@@ -347,7 +347,7 @@ export default function Profile() {
                                     </div>
                                 </>
                             )}
-                            
+
                             {user.objetivo === "2" && (
                                 <div className="field-group full-width">
                                     <label>Serviços</label>
@@ -356,20 +356,20 @@ export default function Profile() {
                             )}
 
                         </div> {/* Fim do .form-grid */}
-                        
+
                         {/* --- 6. BOTÕES ATUALIZADOS --- */}
                         <div className="form-actions">
-                            
-                            <button 
-                                type="button" 
+
+                            <button
+                                type="button"
                                 className="btn-change-password"
                                 onClick={handleChangePassword}
                             >
                                 Alterar Senha
                             </button>
-                            
-                            <button 
-                                className="btn-atualizar" 
+
+                            <button
+                                className="btn-atualizar"
                                 type="submit"
                                 disabled={isSaving}
                             >

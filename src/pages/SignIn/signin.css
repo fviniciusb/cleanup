@@ -1,4 +1,3 @@
-
 .container-center {
   height: 100%;
   display: flex;
@@ -19,7 +18,8 @@
 }
 
 .login-area img {
-  max-width: 100px; /* Ajuste o tamanho do seu logo */
+  max-width: 100px;
+  /* Ajuste o tamanho do seu logo */
   margin-bottom: 20px;
 }
 
@@ -43,14 +43,15 @@
   font-size: 1rem;
 
   /* Adiciona esta linha para o <select> parecer um input */
-  appearance: none; 
+  appearance: none;
 }
 
 .botaoLogin {
   height: 40px;
   border: 0;
   border-radius: 6px;
-  background-color: #0d6efd; /* Azul */
+  background-color: #0d6efd;
+  /* Azul */
   color: #FFF;
   font-size: 1rem;
   font-weight: 600;
@@ -106,8 +107,10 @@
   min-width: min-content;
 
   /* --- AJUSTE PARA O SEU LAYOUT --- */
-  width: 100%; /* Faz ocupar 100% da largura, igual o botão 'Acessar' */
-  margin-top: 12px; /* Adiciona um espaço acima dele */
+  width: 100%;
+  /* Faz ocupar 100% da largura, igual o botão 'Acessar' */
+  margin-top: 12px;
+  /* Adiciona um espaço acima dele */
 }
 
 .gsi-material-button .gsi-material-button-icon {
@@ -162,7 +165,7 @@
   opacity: 0.38;
 }
 
-.gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+.gsi-material-button:not(:disabled):active .gsi-material-button-state,
 .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
   background-color: #303030;
   opacity: 0.12;

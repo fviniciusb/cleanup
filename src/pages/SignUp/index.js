@@ -18,34 +18,34 @@ export default function SignUp() {
 
   async function handleEmailSignUp(e) {
     e.preventDefault();
-  
+
     // 1. Validação dos campos do formulário
     if (nome === '' || sobrenome === '' || email === '' || senha === '' || objetivo === '') {
       toast.info('Preencha todos os campos.');
       return;
     }
-  
+
     if (senha !== confirmarSenha) {
       toast.error('As senhas não correspondem.');
       return;
     }
-  
+
     if (senha.length < 8) {
       toast.info('A senha deve ter pelo menos 8 caracteres.');
       return;
     }
-  
+
     // --- VERIFICAR SE O E-MAIL JÁ EXISTE ---
     try {
-    await signUp(nome, sobrenome, email, senha, objetivo);
-    
-    // Se chegou aqui, o cadastro foi um sucesso
-    // toast.success("Conta criada com sucesso!");
-    // redirecionar...
+      await signUp(nome, sobrenome, email, senha, objetivo);
 
-  } catch (error) {
-    // O NOVO CATCH: captura erros do Firebase AUTH
-    console.error("Erro no processo de cadastro:", error.code);
+      // Se chegou aqui, o cadastro foi um sucesso
+      // toast.success("Conta criada com sucesso!");
+      // redirecionar...
+
+    } catch (error) {
+      // O NOVO CATCH: captura erros do Firebase AUTH
+      console.error("Erro no processo de cadastro:", error.code);
       // toast.error("Não foi possível verificar o e-mail. Tente novamente.");
       return; // Impede o cadastro se a verificação falhar
     }
@@ -59,7 +59,7 @@ export default function SignUp() {
     }
     await signUpWithGoogle(objetivo);
   }
-  
+
   return (
     <div className="container-center">
       <div className="login">
@@ -105,7 +105,7 @@ export default function SignUp() {
             onChange={(e) => setConfirmarSenha(e.target.value)}
           />
 
-          <select 
+          <select
             className='select-profile'
             value={objetivo}
             onChange={(e) => setObjetivo(e.target.value)}
@@ -124,8 +124,8 @@ export default function SignUp() {
           <span>OU</span>
         </div>
 
-<button 
-          className="gsi-material-button" 
+        <button
+          className="gsi-material-button"
           onClick={handleGoogleSignUp} // Chama a nova função
           type="button" // Impede o envio do formulário
           disabled={loadingAuth} // Desativa se estiver carregando

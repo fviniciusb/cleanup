@@ -5,7 +5,7 @@ import { db } from "../../services/FirebaseConnection";
 import { AuthContext } from "../../contexts/auth";
 import { toast } from "react-toastify";
 import { FaStar } from "react-icons/fa";
-import { getFunctions, httpsCallable } from "firebase/functions"; 
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 // Importe os componentes de Título
 import PageHeader from '../../components/PageHeader';
@@ -18,7 +18,7 @@ export default function Home() {
     const { user } = useContext(AuthContext);
     const [faxineiras, setFaxineiras] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     // States do Modal
     const [selectedFaxineira, setSelectedFaxineira] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -94,7 +94,7 @@ export default function Home() {
             };
 
             const functions = getFunctions();
-            const criarAgendamento = httpsCallable(functions, "criarAgendamento"); 
+            const criarAgendamento = httpsCallable(functions, "criarAgendamento");
 
             toast.info("Verificando disponibilidade...");
 
@@ -113,9 +113,9 @@ export default function Home() {
         <div>
             {/* --- ADICIONADO O CABEÇALHO DA PÁGINA --- */}
             <PageHeader>
-              <Title nome="Encontre Profissionais">
-                <FiHome size={25} />
-              </Title>
+                <Title nome="Encontre Profissionais">
+                    <FiHome size={25} />
+                </Title>
             </PageHeader>
 
             {/* --- O RESTO DA SUA PÁGINA --- */}
