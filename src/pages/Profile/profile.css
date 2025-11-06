@@ -1,3 +1,27 @@
+/* --- DEFINIÇÃO DO TEMA E VARIÁVEIS --- */
+:root {
+  --primary-color: #5EA1BD;
+  --primary-hover: #4b90a5;
+  --success-color: #28a745;
+  --success-hover: #218838;
+  --danger-color: #dc3545;
+  --danger-hover: #c82333;
+  --background-light: #fff;
+  --background-medium: #f9f9f9;
+  --background-disabled: #e9ecef;
+  --text-dark: #333;
+  --text-medium: #555;
+  --text-light: #777;
+  --border-color: #ccc;
+  --border-light: #eee;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --focus-ring: 0 0 0 3px rgba(94, 161, 189, 0.25);
+  /* Sombra de foco azul */
+  --card-radius: 8px;
+  --input-radius: 6px;
+}
+
+
 /* --- LAYOUT PRINCIPAL (2 COLUNAS) --- */
 .profile-container {
   display: flex;
@@ -8,21 +32,22 @@
   padding: 0 16px;
   gap: 32px;
   align-items: flex-start;
-  /* Alinha o topo das colunas */
 }
 
 /* --- COLUNA DA ESQUERDA (SIDEBAR) --- */
 .profile-sidebar {
   width: 300px;
   flex-shrink: 0;
-  /* Impede que a sidebar encolha */
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: var(--background-light);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
   padding: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: sticky;
+  top: 80px;
+  /* (altura da navbar + 20px) */
 }
 
 .label-avatar {
@@ -46,8 +71,8 @@
   position: absolute;
   bottom: 10px;
   right: 10px;
-  background-color: #007bff;
-  /* Azul */
+  background-color: var(--primary-color);
+  /* Cor do tema */
   color: white;
   width: 40px;
   height: 40px;
@@ -59,25 +84,27 @@
 }
 
 .label-avatar:hover span {
-  background-color: #0056b3;
+  background-color: var(--primary-hover);
+  /* Cor do tema */
 }
 
 .sidebar-info {
   text-align: center;
   word-wrap: break-word;
   width: 100%;
+  word-break: break-all;
 }
 
 .sidebar-info h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-dark);
   margin: 0;
 }
 
 .sidebar-info p {
   font-size: 0.95rem;
-  color: #777;
+  color: var(--text-light);
   margin-top: 4px;
 }
 
@@ -86,7 +113,7 @@
   width: 100%;
   padding: 12px;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--input-radius);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -95,46 +122,94 @@
 }
 
 .btn-disponibilidade.disponivel {
-  background-color: #28a745;
-  /* Verde */
+  background-color: var(--success-color);
   color: white;
 }
 
 .btn-disponibilidade.disponivel:hover {
-  background-color: #218838;
+  background-color: var(--success-hover);
 }
 
 .btn-disponibilidade.indisponivel {
-  background-color: #dc3545;
-  /* Vermelho */
+  background-color: var(--danger-color);
   color: white;
 }
 
 .btn-disponibilidade.indisponivel:hover {
-  background-color: #c82333;
+  background-color: var(--danger-hover);
 }
 
 
 /* --- COLUNA DA DIREITA (FORMULÁRIO) --- */
 .profile-form-container {
   flex-grow: 1;
-  /* Faz o formulário ocupar o resto do espaço */
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: var(--background-light);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
   padding: 32px;
 }
+
+/* --- ABAS (TABS) --- */
+.profile-tabs-nav {
+  display: flex;
+  border-bottom: 2px solid var(--border-light);
+  margin-bottom: 24px;
+}
+
+.tab-button {
+  padding: 12px 20px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-light);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-button:hover {
+  color: var(--text-dark);
+}
+
+.tab-button.active {
+  color: var(--primary-color);
+  font-weight: 600;
+  border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- FIM DAS ABAS --- */
+
 
 /* O grid do formulário */
 .form-grid {
   display: grid;
-  /* Cria 2 colunas de tamanho igual */
   grid-template-columns: 1fr 1fr;
   gap: 17px;
-  /* Espaço entre os campos */
 }
 
-/* Grupo de campo individual (label + input) */
 .field-group {
   display: flex;
   flex-direction: column;
@@ -143,25 +218,22 @@
 .field-group label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #555;
+  color: var(--text-medium);
   margin-bottom: 8px;
 }
 
-/* Estilo base para todos os inputs, selects e textareas */
 .field-group input,
 .field-group select,
 .field-group textarea,
 .styled-mask {
-  /* Alvo para o InputMask */
   width: 100%;
   padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--input-radius);
   font-size: 1rem;
   font-family: inherit;
   box-sizing: border-box;
-  /* Importante! */
-  background-color: #f9f9f9;
+  background-color: var(--background-medium);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -170,14 +242,14 @@
 .field-group textarea:focus,
 .styled-mask:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--focus-ring);
   background-color: #fff;
 }
 
 .field-group input[disabled] {
-  background-color: #e9ecef;
-  color: #777;
+  background-color: var(--background-disabled);
+  color: var(--text-light);
   cursor: not-allowed;
 }
 
@@ -186,27 +258,183 @@
   resize: vertical;
 }
 
-/* Classe para fazer um campo ocupar o grid inteiro */
 .field-group.full-width {
   grid-column: 1 / -1;
-  /* Ocupa da primeira à última coluna */
 }
 
-/* Botão de salvar */
+/* --- SEÇÃO DE SERVIÇOS --- */
+.servicos-section {
+  margin-bottom: 32px;
+}
+
+.servicos-section h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-dark);
+}
+
+.servicos-section p {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.servicos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid var(--border-light);
+  border-radius: var(--input-radius);
+  padding: 10px;
+  background-color: var(--background-medium);
+}
+
+.servico-item-empty {
+  text-align: center;
+  color: var(--text-light);
+  padding: 20px 0;
+}
+
+.servico-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: var(--background-light);
+  border: 1px solid #e9ecef;
+  border-radius: var(--input-radius);
+}
+
+.servico-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.servico-item-info strong {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.servico-item-info span {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.btn-remover-servico {
+  background: transparent;
+  border: none;
+  color: var(--danger-color);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-remover-servico:hover {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Formulário de adicionar serviço */
+.servico-add-form {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 15px;
+  align-items: flex-end;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-light);
+}
+
+.btn-add-servico {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--input-radius);
+  padding: 12px 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s;
+  height: 47px;
+  box-sizing: border-box;
+}
+
+.btn-add-servico:hover {
+  background-color: var(--primary-hover);
+}
+
+/* --- SEÇÃO CALENDÁRIO --- */
+.availability-section {
+  margin-top: 32px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 24px;
+}
+
+.availability-section h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.availability-section p {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin: 10px 0 20px 0;
+}
+
+.calendar-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Estilo customizado para o react-calendar */
+.react-calendar {
+  width: 100%;
+  border: 1px solid var(--border-light);
+  border-radius: var(--card-radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.react-calendar__tile:disabled {
+  background-color: #f0f0f0;
+  color: #ccc;
+}
+
+.unavailable-day {
+  background-color: var(--danger-color) !important;
+  color: white !important;
+  border-radius: 50%;
+}
+
+/* --- BOTÕES DE AÇÃO --- */
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  /* Alinha o botão à direita */
+  gap: 12px;
   margin-top: 32px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-light);
   padding-top: 24px;
 }
 
 .btn-atualizar {
-  background-color: #007bff;
+  background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--input-radius);
   padding: 14px 28px;
   font-size: 1.1rem;
   font-weight: 600;
@@ -215,67 +443,21 @@
 }
 
 .btn-atualizar:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-hover);
 }
 
-@media (max-width: 768px) {
-
-  /* 1. Faz o container principal empilhar as colunas */
-  .profile-container {
-    flex-direction: column;
-    /* Empilha a sidebar e o form */
-    gap: 24px;
-    /* Reduz o espaço entre eles */
-  }
-
-  /* 2. Faz a sidebar ocupar a largura total */
-  .profile-sidebar {
-    width: 100%;
-    /* Ocupa a largura total */
-
-    /* (Opcional) Limita a largura máxima em tablets e centraliza */
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  /* 3. Faz o formulário ocupar a largura total */
-  .profile-form-container {
-    width: 100%;
-    padding: 24px;
-    /* Reduz o padding interno no mobile */
-  }
-
-  /* 4. Faz o grid do formulário ter apenas 1 coluna */
-  .form-grid {
-    grid-template-columns: 1fr;
-    /* Apenas 1 coluna */
-    gap: 16px;
-    /* Reduz o espaço entre os campos */
-  }
-
-  /* 5. Faz o avatar ficar um pouco menor */
-  .label-avatar {
-    width: 150px;
-    height: 150px;
-  }
-
-  /* 6. Ajusta o botão de salvar para centralizar */
-  .form-actions {
-    justify-content: center;
-    /* Centraliza o botão no mobile */
-  }
+.btn-atualizar:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
 }
 
-/* --- NOVO ESTILO PARA O BOTÃO DE ALTERAR SENHA --- */
 .btn-change-password {
-  background-color: var(--text-light);
-  /* Cor de "perigo" secundária */
+  background-color: var(--background-light);
   color: var(--text-medium);
   border: 1px solid var(--border-color);
   border-radius: var(--input-radius);
   padding: 14px 28px;
   font-size: 1rem;
-  /* Um pouco menor que o principal */
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -286,21 +468,77 @@
   border-color: #aaa;
 }
 
-/* Ajustes finos para celulares bem pequenos */
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 768px) {
+  .profile-container {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .profile-sidebar {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    position: static;
+  }
+
+  .profile-form-container {
+    width: 100%;
+    padding: 24px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .label-avatar {
+    width: 150px;
+    height: 150px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .btn-atualizar,
+  .btn-change-password {
+    width: 100%;
+  }
+
+  .servico-add-form {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-add-servico {
+    justify-content: center;
+  }
+
+  .profile-tabs-nav {
+    flex-wrap: wrap;
+    /* Permite que as abas quebrem a linha */
+  }
+}
+
 @media (max-width: 480px) {
   .profile-form-container {
     padding: 16px;
-    /* Menos padding ainda */
   }
 
   .sidebar-info h2 {
     font-size: 1.25rem;
   }
 
-  .btn-atualizar {
-    width: 100%;
-    /* Botão ocupa a largura toda */
-    font-size: 1rem;
-    padding: 12px;
+  .profile-tabs-nav {
+    gap: 0;
+  }
+
+  .tab-button {
+    padding: 10px 8px;
+    font-size: 0.85rem;
+    flex-grow: 1;
+    /* Faz as abas ocuparem o espaço */
+    text-align: center;
   }
 }

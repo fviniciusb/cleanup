@@ -1,9 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import avatar from '../../assets/avatar.png';
-import { collection, getDocs } from "firebase/firestore";
-import { db, functions } from "../../services/FirebaseConnection"; // 1. Import 'functions'
+import { collection, getDocs, query, where } from "firebase/firestore"; // Import 'query' e 'where'
+import { db, functions } from "../../services/FirebaseConnection"; // Import 'functions'
 import { AuthContext } from "../../contexts/auth";
-import { toast } from "react-toastify"; // 2. IMPORT DO TOAST (estava faltando)
+import { toast } from "react-toastify"; // 1. IMPORT DO TOAST (estava faltando)
 import { FaStar } from "react-icons/fa";
 import { httpsCallable } from "firebase/functions";
 
@@ -14,25 +14,33 @@ import { FiHome } from 'react-icons/fi';
 
 import "./home.css"; // CSS com os cards e o modal
 
-// --- 3. FUNÇÃO DE AJUDA PARA CORRIGIR O BUG ---
-// Esta função verifica o que é a variável 'servicos' e a formata
+// --- 2. FUNÇÃO 'renderServicos' ATUALIZADA ---
+// Esta função agora sabe lidar com ARRAYS
 function renderServicos(servicos) {
   if (!servicos) {
     return "Não informado";
   }
-  // Se for um texto (string), apenas retorne o texto
+
+  // A. Se for um array (o novo formato)
+  if (Array.isArray(servicos) && servicos.length > 0) {
+    // Pega o nome do primeiro serviço como exemplo
+    return servicos[0].nome; 
+  }
+
+  // B. Se for um texto (o formato antigo)
   if (typeof servicos === 'string') {
     return servicos;
   }
-  // Se for um objeto (como {nome, preco}), formate-o
-  if (typeof servicos === 'object' && servicos.nome) {
-    let precoFormatado = servicos.preco ? ` - R$ ${servicos.preco}` : '';
+  
+  // C. Se for um objeto (o formato antigo que quebrou)
+  if (typeof servicos === 'object' && !Array.isArray(servicos) && servicos.nome) {
+    let precoFormatado = servicos.preco ? ` - ${servicos.preco}` : '';
     return `${servicos.nome}${precoFormatado}`;
   }
-  // Se for qualquer outra coisa, avise que o formato é inválido
-  return "Formato de serviço inválido";
+
+  return "Não informado";
 }
-// --- FIM DA FUNÇÃO DE AJUDA ---
+// --- FIM DA FUNÇÃO ---
 
 
 export default function Home() {
@@ -49,21 +57,27 @@ export default function Home() {
     useEffect(() => {
         async function fetchFaxineiras() {
             try {
-                const querySnapshot = await getDocs(collection(db, "usuarios"));
+                const usuariosRef = collection(db, "usuarios");
+                // 3. Query corrigida para buscar apenas prestadores disponíveis
+                const q = query(usuariosRef, 
+                  where("objetivo", "==", "2"), 
+                  where("disponivel", "==", true)
+                );
+                
+                const querySnapshot = await getDocs(q);
                 const listaFaxineiras = [];
+                
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    if (data.objetivo === "2" && data.disponivel) {
-                        listaFaxineiras.push({
-                            id: doc.id,
-                            nome: `${data.nome} ${data.sobrenome}`,
-                            servicos: data.servicos, // data.servicos pode ser string OU objeto
-                            avatarUrl: data.avatarUrl || "",
-                            telefone: data.telefone || "Não informado",
-                            mediaAvaliacoes: data.mediaAvaliacoes || 0,
-                            totalAvaliacoes: data.totalAvaliacoes || 0,
-                        });
-                    }
+                    listaFaxineiras.push({
+                        id: doc.id,
+                        nome: `${data.nome} ${data.sobrenome}`,
+                        servicos: data.servicos, // data.servicos pode ser string, objeto ou array
+                        avatarUrl: data.avatarUrl || "",
+                        telefone: data.telefone || "Não informado",
+                        mediaAvaliacoes: data.mediaAvaliacoes || 0,
+                        totalAvaliacoes: data.totalAvaliacoes || 0,
+                    });
                 });
                 setFaxineiras(listaFaxineiras);
             } catch (error) {
