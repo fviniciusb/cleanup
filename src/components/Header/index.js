@@ -1,87 +1,86 @@
 // Em: src/components/Header/index.js
-import { useContext, useState } from 'react'; // 1. Importe o useState
-import avatarImg from '../../assets/avatar.png';
-import { Link, useLocation } from 'react-router-dom';
 
+import { useContext, useState } from 'react'; // 1. ERRO DE DIGITAÇÃO CORRIGIDO AQUI
+import avatarImg from '../../assets/avatar.png';
+import { NavLink, Link } from 'react-router-dom';
 import { AuthContext } from '../../contexts/auth';
-import { FiUser, FiSettings, FiLogOut, FiHome, FiMessageSquare } from 'react-icons/fi';
+import { FiUser, FiSettings, FiLogOut, FiHome, FiMenu, FiX } from 'react-icons/fi';
 import './header.css';
 
-export default function Header({ isOpen }) {
-    const { user, logout } = useContext(AuthContext);
-    const location = useLocation();
+const navLinks = [
+    { to: "/home", icon: <FiHome color="#FFF" size={24} />, text: "Home" },
+    { to: "/agendamentos", icon: <FiUser color="#FFF" size={24} />, text: "Agendamentos" },
+    { to: "/perfil", icon: <FiSettings color="#FFF" size={24} />, text: "Perfil" },
+];
 
-    // 2. Adicione o estado para controlar o modal
+export default function Header() {
+    const { user, logout } = useContext(AuthContext);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    // 2. ADICIONA O ESTADO PARA CONTROLAR O MODAL
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-    const sidebarClasses = `sidebar ${isOpen ? 'open' : ''}`;
-
-    // 3. Crie a função que realmente faz o logout
-    async function handleConfirmLogout() {
-        await logout();
+    const closeMobileMenu = () => {
+        setIsMobileMenuOpen(false);
     }
 
-    // 4. Crie a função para abrir o modal
-    // Usamos 'e.preventDefault()' para impedir o <Link> de navegar para "/"
-    function handleOpenModal(e) {
-        e.preventDefault();
-        setShowLogoutModal(true);
+    // 3. FUNÇÕES PARA CONTROLAR O MODAL DE LOGOUT
+    const handleConfirmLogout = () => {
+        logout(); // Desloga o usuário
+        closeMobileMenu(); // Fecha o menu mobile (se estiver aberto)
+        setShowLogoutModal(false); // Fecha o modal
+    }
+
+    const handleCancelLogout = () => {
+        setShowLogoutModal(false); // Apenas fecha o modal
     }
 
     return (
-        // O 'div' container principal precisa de um fragmento <> para o modal
+        // 4. USA UM FRAGMENT <> PARA CONTER A NAVBAR E O MODAL
         <>
-            <div className={sidebarClasses}>
-                <div>
-                    <img
-                        src={user.avatarUrl === null ? avatarImg : user.avatarUrl}
-                        alt="Foto do usuário"
-                        className="sidebar-avatar"
-                    />
+            <nav className="navbar">
+                <div className="nav-container">
+
+                    <Link to="/home" className="nav-brand">
+                        CleanUp
+                    </Link>
+
+                    <div className={`nav-menu ${isMobileMenuOpen ? 'open' : ''}`}>
+
+                        <div className="nav-user-info-mobile">
+                            <img
+                                src={user?.avatarUrl || avatarImg}
+                                alt="Foto do usuário"
+                                className="nav-avatar"
+                            />
+                            <span>Olá, {user?.nome}</span>
+                        </div>
+
+                        {navLinks.map((link) => (
+                            <NavLink to={link.to} key={link.to} onClick={closeMobileMenu}>
+                                {link.icon}
+                                <span>{link.text}</span>
+                            </NavLink>
+                        ))}
+
+                        {/* 5. BOTÃO DE SAIR AGORA ABRE O MODAL */}
+                        <button className="logout-btn" onClick={() => {
+                            setShowLogoutModal(true); // Abre o modal
+                            closeMobileMenu(); // Fecha o menu (se estiver no mobile)
+                        }}>
+                            <FiLogOut color="#FFF" size={24} />
+                            <span>Sair</span>
+                        </button>
+                        _           </div>
+
+                    <button className="nav-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                        {isMobileMenuOpen ? <FiX size={28} color="#FFF" /> : <FiMenu size={28} color="#FFF" />}
+                    </button>
+
                 </div>
+            </nav>
 
-                <Link
-                    to="/home"
-                    className={location.pathname === '/home' ? 'active' : ''}
-                >
-                    <FiHome color="#FFF" size={24} />
-                    <span>Home</span>
-                </Link>
-
-                <Link
-                    to="/agendamentos"
-                    className={location.pathname === '/agendamentos' ? 'active' : ''}
-                >
-                    <FiUser color="#FFF" size={24} />
-                    <span>Agendamentos</span>
-                </Link>
-
-                <Link
-                    to="/chat"
-                    // Lógica corrigida: fica ativo em qualquer URL que COMECE com /chat
-                    className={location.pathname.startsWith('/chat') ? 'active' : ''}
-                >
-                    {/* Ícone corrigido para um de chat */}
-                    <FiMessageSquare color="#FFF" size={24} />
-                    <span>Chat</span>
-                </Link>
-
-                <Link
-                    to="/perfil"
-                    className={location.pathname === '/perfil' ? 'active' : ''}
-                >
-                    <FiSettings color="#FFF" size={24} />
-                    <span>Perfil</span>
-                </Link>
-                
-                {/* 5. Mude o onClick para abrir o modal */}
-                <Link to="/" onClick={handleOpenModal}>
-                    <FiLogOut color="#FFF" size={24} />
-                    <span>Sair</span>
-                </Link>
-            </div>
-
-            {/* --- 6. ADICIONE O JSX DO MODAL --- */}
+            {/* --- 6. JSX DO MODAL ADICIONADO AQUI --- */}
             {showLogoutModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -91,7 +90,7 @@ export default function Header({ isOpen }) {
                         <div className="modal-actions">
                             <button
                                 className="btn-cancelar"
-                                onClick={() => setShowLogoutModal(false)}
+                                onClick={handleCancelLogout}
                             >
                                 Cancelar
                             </button>
@@ -105,7 +104,6 @@ export default function Header({ isOpen }) {
                     </div>
                 </div>
             )}
-            {/* --- FIM DO MODAL --- */}
         </>
     );
 }

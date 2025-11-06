@@ -1,20 +1,15 @@
+/* Em: src/components/PageHeader/pageheader.css */
+
 .page-header {
   display: flex;
   align-items: center;
-  gap: 1px;
-  padding: 1px;
-  position: relative;
-  bottom: 5px;
-  background-color: #FFF; /* Fundo branco */
+  gap: 1.5rem;
+  padding: 1rem;
+  background-color: #FFF;
+  /* Fundo branco (como na sua foto) */
   border-bottom: 1px solid #DDD;
   width: 100%;
-}
-
-.toggle-btn {
-  padding: 10px;
-  background: none;
-  border: none;
-  cursor: pointer;
+  box-sizing: border-box;
 }
 
 .page-title-container {

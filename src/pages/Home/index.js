@@ -1,17 +1,25 @@
-import avatar from '../../assets/avatar.png';
 import { useEffect, useState, useContext } from "react";
-import { collection, getDocs, doc, updateDoc, getDoc } from "firebase/firestore";
+import avatar from '../../assets/avatar.png';
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../services/FirebaseConnection";
 import { AuthContext } from "../../contexts/auth";
 import { toast } from "react-toastify";
 import { FaStar } from "react-icons/fa";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
-import "../Home/home.css";
+// Importe os componentes de Título
+import PageHeader from '../../components/PageHeader';
+import Title from '../../components/Title';
+import { FiHome } from 'react-icons/fi';
+
+import "./home.css"; // CSS com os cards e o modal
 
 export default function Home() {
-    const { user, setUser, storageUser } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const [faxineiras, setFaxineiras] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // States do Modal
     const [selectedFaxineira, setSelectedFaxineira] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [selectedDate, setSelectedDate] = useState("");
@@ -22,10 +30,8 @@ export default function Home() {
             try {
                 const querySnapshot = await getDocs(collection(db, "usuarios"));
                 const listaFaxineiras = [];
-
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    // Apenas faxineiras disponíveis
                     if (data.objetivo === "2" && data.disponivel) {
                         listaFaxineiras.push({
                             id: doc.id,
@@ -38,7 +44,6 @@ export default function Home() {
                         });
                     }
                 });
-
                 setFaxineiras(listaFaxineiras);
             } catch (error) {
                 console.error("Erro ao buscar faxineiras:", error);
@@ -46,7 +51,6 @@ export default function Home() {
                 setLoading(false);
             }
         }
-
         fetchFaxineiras();
     }, []);
 
@@ -61,177 +65,152 @@ export default function Home() {
         setSelectedTime("");
     };
 
+    // A FUNÇÃO DE AGENDAMENTO QUE CHAMA A CLOUD FUNCTION
 const handleSchedule = async () => {
-    // Validação de campos vazios (continua igual)
-    if (!selectedDate || !selectedTime) {
-        toast.error("Por favor, selecione uma data e horário.");
-        return;
-    }
-    try {
-        // --- INÍCIO DA NOVA LÓGICA DE VALIDAÇÃO ---
-
-        // 'selectedDate' (do type="date") vem como "aaaa-mm-dd"
-        // 'selectedTime' (do type="time") vem como "HH:mm"
-        const combinedString = `${selectedDate}T${selectedTime}`;
-
-        const selectDataTime = new Date(combinedString);
-
-        // Pega a data e hora atuais, também no fuso local
-        const now = new Date();
-        now.setSeconds(0, 0);
-
-        // 5. Compare as datas
-        if (selectDataTime < now) {
-            toast.error("Não é possível agendar em uma data ou horário passados.");
-            return; // Bloqueia o agendamento
+        if (!selectedDate || !selectedTime) {
+            toast.error("Por favor, selecione uma data e horário.");
+            return;
         }
 
-        // 6. Crie o objeto de agendamento
-        const agendamento = {
-            timestamp: selectDataTime, 
-            faxineiraId: selectedFaxineira.id,
-            faxineiraNome: selectedFaxineira.nome,
-            contratanteId: user.uid,
-            contratanteNome: `${user.nome} ${user.sobrenome}`,
-        };
+        try {
+            const combinedString = `${selectedDate}T${selectedTime}`;
+            const selectDataTime = new Date(combinedString);
+            const now = new Date();
+            now.setSeconds(0, 0);
 
-        // Salva no banco de dados
-        const contratanteRef = doc(db, "usuarios", user.uid);
-        const contratanteSnapshot = await getDoc(contratanteRef);
-        const agendamentosAtualizadosContratante =
-            contratanteSnapshot.exists() && contratanteSnapshot.data().agendamentos
-                ? [...contratanteSnapshot.data().agendamentos, agendamento]
-                : [agendamento];
+            if (selectDataTime < now) {
+                toast.error("Não é possível agendar em uma data ou horário passados.");
+                return;
+            }
 
-        await updateDoc(contratanteRef, {
-            agendamentos: agendamentosAtualizadosContratante,
-        });
+            const dadosAgendamento = {
+                prestadorId: selectedFaxineira.id,
+                prestadorNome: selectedFaxineira.nome,
+                prestadorAvatar: selectedFaxineira.avatarUrl,
+                clienteNome: `${user.nome} ${user.sobrenome}`,
+                clienteAvatar: user.avatarUrl,
+                dataAgendamento: selectedDate,
+                horarioAgendamento: selectedTime,
+            };
 
-        const faxineiraRef = doc(db, "usuarios", selectedFaxineira.id);
-        const faxineiraSnapshot = await getDoc(faxineiraRef);
-        const agendamentosAtualizadosFaxineira =
-            faxineiraSnapshot.exists() && faxineiraSnapshot.data().agendamentos
-                ? [...faxineiraSnapshot.data().agendamentos, agendamento]
-                : [agendamento];
+            const functions = getFunctions();
+            const criarAgendamento = httpsCallable(functions, "criarAgendamento");
 
-        await updateDoc(faxineiraRef, {
-            agendamentos: agendamentosAtualizadosFaxineira,
-        });
+            toast.info("Verificando disponibilidade...");
 
-        const updatedUser = {
-            ...user,
-            agendamentos: agendamentosAtualizadosContratante,
-        };
-        setUser(updatedUser);
-        storageUser(updatedUser);
+            const result = await criarAgendamento(dadosAgendamento);
 
-        toast.success("Agendamento realizado com sucesso!");
-        closeModal();
+            toast.success(result.data.message);
+            closeModal();
 
-    // exibe os erros de validação ou de salvamento
-    } catch (error) {
-        console.error("Erro ao salvar agendamento:", error);
-        // Pode ser um erro na combinação da data (se estiver inválida)
-        // ou um erro do Firestore.
-        toast.error("Erro ao salvar agendamento. Verifique os dados.");
-    }
-};
+        } catch (error) {
+            console.error("Erro do servidor:", error);
+            toast.error(error.message);
+        }
+    };
 
-// No seu arquivo Home.js
-// SUBSTITUA TODO O SEU 'return (...)' POR ISTO:
+    return (
+        <div>
+            {/* --- ADICIONADO O CABEÇALHO DA PÁGINA --- */}
+            <PageHeader>
+                <Title nome="Encontre Profissionais">
+                    <FiHome size={25} />
+                </Title>
+            </PageHeader>
 
-return (
-    <div>
-        <h1 className="main-title">Encontre Profissionais</h1>
-
-        {loading ? (
-            <div className="loading-container">Carregando...</div>
-        
-        ) : faxineiras.length === 0 ? (
-            <div className="empty-container">
-                <p>Nenhum profissional disponível no momento.</p>
-            </div>
-
-        ) : (
-            // O container principal para os cards
-            <div className="home-container">
-                <div className="cards-container">
-                    
-                    {faxineiras.map((faxineira) => (
-                        <div className="card" key={faxineira.id}>
-                            <img
-                                src={faxineira.avatarUrl || avatar} // Use o avatar padrão
-                                alt={faxineira.nome}
-                                className="avatar"
-                            />
-                            
-                            <div className="info">
-                                <h2>{faxineira.nome}</h2>
-
-                                <div className="rating">
-                                    <FaStar color="#F5B50A" size={14} />
-                                    <strong>
-                                        {faxineira.mediaAvaliacoes > 0 ? faxineira.mediaAvaliacoes.toFixed(1) : 'N/A'}
-                                    </strong>
-                                    <span>
-                                        ({faxineira.totalAvaliacoes} {faxineira.totalAvaliacoes === 1 ? 'avaliação' : 'avaliações'})
-                                    </span>
+            {/* --- O RESTO DA SUA PÁGINA --- */}
+            {loading ? (
+                <div className="loading-container">Carregando...</div>
+            ) : faxineiras.length === 0 ? (
+                <div className="empty-container">
+                    <p>Nenhum profissional disponível no momento.</p>
+                </div>
+            ) : (
+                <div className="home-container">
+                    <div className="cards-container">
+                        {faxineiras.map((faxineira) => (
+                            <div className="card" key={faxineira.id}>
+                                <img
+                                    src={faxineira.avatarUrl || avatar}
+                                    alt={faxineira.nome}
+                                    className="avatar"
+                                />
+                                <div className="info">
+                                    <h2>{faxineira.nome}</h2>
+                                    <div className="rating">
+                                        <FaStar color="#F5B50A" size={14} />
+                                        <strong>
+                                            {faxineira.mediaAvaliacoes > 0 ? faxineira.mediaAvaliacoes.toFixed(1) : 'N/A'}
+                                        </strong>
+                                        <span>
+                                            ({faxineira.totalAvaliacoes} {faxineira.totalAvaliacoes === 1 ? 'avaliação' : 'avaliações'})
+                                        </span>
+                                    </div>
+                                    <div className="servicos-preview">
+                                            <strong>Serviços:</strong>
+                                            {/* Verifica se 'servicos' é um array e tem itens */}
+                                            {Array.isArray(faxineira.servicos) && faxineira.servicos.length > 0 ? (
+                                                <ul className="servicos-preview-list">
+                                                    {/* Mostra os 2 primeiros serviços */}
+                                                    {faxineira.servicos.slice(0, 2).map((servico, index) => (
+                                                        <li key={index}>{servico.nome} {servico.preco && `(${servico.preco})`}</li>
+                                                    ))}
+                                                    {/* Mostra "e mais..." se houver mais de 2 */}
+                                                    {faxineira.servicos.length > 2 && <li>e mais...</li>}
+                                                </ul>
+                                            ) : (
+                                                // Fallback se 'servicos' for antigo (texto) ou vazio
+                                                <span> {typeof faxineira.servicos === 'string' ? faxineira.servicos : "Não informado"}</span>
+                                            )}
+                                        </div>
+                                    <p><strong>Contato:</strong> {faxineira.telefone}</p>
                                 </div>
-                                
-                                <p><strong>Serviços:</strong> {faxineira.servicos || "Não informado"}</p>
-                                <p><strong>Contato:</strong> {faxineira.telefone}</p>
+                                {user.objetivo === "1" && (
+                                    <button
+                                        className="btn-agendar"
+                                        onClick={() => openModal(faxineira)}
+                                    >
+                                        Agendar Faxina
+                                    </button>
+                                )}
                             </div>
-                            
-                            {user.objetivo === "1" && (
-                                <button
-                                    className="btn-agendar"
-                                    onClick={() => openModal(faxineira)}
-                                >
-                                    Agendar Faxina
-                                </button>
-                            )}
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* --- MODAL DE AGENDAMENTO --- */}
+            {showModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2>Agendar com {selectedFaxineira.nome}</h2>
+                        <div className="modal-field">
+                            <label>Data:</label>
+                            <input
+                                type="date"
+                                value={selectedDate}
+                                onChange={(e) => setSelectedDate(e.target.value)}
+                            />
                         </div>
-                    ))}
-                </div>
-            </div>
-        )}
-
-        {/* --- MODAL DE AGENDAMENTO --- */}
-        {/* O modal não muda, mas o estilo dele será atualizado no CSS */}
-        {showModal && (
-            <div className="modal-overlay">
-                <div className="modal-content"> {/* Mudei de 'modal' para 'modal-content' */ }
-                    <h2>Agendar com {selectedFaxineira.nome}</h2>
-                    
-                    <div className="modal-field">
-                        <label>Data:</label>
-                        <input
-                            type="date"
-                            value={selectedDate}
-                            onChange={(e) => setSelectedDate(e.target.value)}
-                        />
-                    </div>
-                    
-                    <div className="modal-field">
-                        <label>Horário:</label>
-                        <input
-                            type="time"
-                            value={selectedTime}
-                            onChange={(e) => setSelectedTime(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="modal-actions">
-                        <button className="btn-cancelar" onClick={closeModal}>
-                            Cancelar
-                        </button>
-                        <button className="btn-confirmar" onClick={handleSchedule}>
-                            Confirmar
-                        </button>
+                        <div className="modal-field">
+                            <label>Horário:</label>
+                            <input
+                                type="time"
+                                value={selectedTime}
+                                onChange={(e) => setSelectedTime(e.target.value)}
+                            />
+                        </div>
+                        <div className="modal-actions">
+                            <button className="btn-cancelar" onClick={closeModal}>
+                                Cancelar
+                            </button>
+                            <button className="btn-confirmar" onClick={handleSchedule}>
+                                Confirmar
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        )}
-    </div>
-);
+            )}
+        </div>
+    );
 }

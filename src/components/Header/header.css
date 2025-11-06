@@ -1,145 +1,198 @@
 /* Em: src/components/Header/header.css */
 
-/* --- ESTADO DESKTOP (PADRÃO) --- */
-.sidebar {
-  width: 80px; /* Largura fechado */
-  height: 100vh;
-  background-color: #5EA1BD;
-  transition: width 0.3s ease;
-  overflow-x: hidden; 
+:root {
+  --navbar-bg: #5ea1bd; /* Cor de fundo da navbar (seu azul) */
+  --navbar-height: 60px;
+  --navbar-link-hover: rgba(0, 0, 0, 0.1);
+  --navbar-link-active: rgba(0, 0, 0, 0.2);
+}
+
+.navbar {
+  height: var(--navbar-height);
+  background-color: var(--navbar-bg);
+  color: #fff;
   display: flex;
-  flex-direction: column;
-  padding: 15px;
-  
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+
+  /* Fixo no topo */
   position: fixed;
-  left: 0;
   top: 0;
-  z-index: 100;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.sidebar.open {
-  width: 240px; /* Largura aberto */
+.nav-container {
+  display: flex;
+  justify-content: space-between; /* Brand à esquerda, Menu à direita */
+  align-items: center;
+  width: 100%;
+  max-width: 1500px; /* Limita a largura (bom para telas grandes) */
 }
 
-/* --- LINKS (Desktop) --- */
-.sidebar a {
+/* --- O Logo/Brand --- */
+.nav-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* --- O Menu Principal (Desktop) --- */
+.nav-menu {
   display: flex;
   align-items: center;
-  gap: 15px;
-  color: #FFF;
+  gap: 10px;
+}
+
+/* --- Links de Navegação --- */
+.nav-menu a {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espaço entre ícone e texto */
+  padding: 10px 15px;
+  color: #fff;
   text-decoration: none;
-  padding: 10px;
   border-radius: 4px;
-  white-space: nowrap; 
+  transition: background-color 0.2s ease;
 }
 
-.sidebar a svg {
-  display: block;
-  opacity: 1;
-  flex-shrink: 0; 
+.nav-menu a:hover {
+  background-color: var(--navbar-link-hover);
 }
 
-.sidebar a span {
-  opacity: 0; 
-  transition: opacity 0.2s ease;
+.nav-menu a.active {
+  background-color: var(--navbar-link-active);
 }
 
-.sidebar.open a span {
-  opacity: 1;
+/* Botão de Sair (no menu) */
+.logout-btn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-.sidebar a.active {
-  background-color: rgb(0 0 0 / 20%);
+.logout-btn:hover {
+  background-color: var(--navbar-link-hover);
 }
 
-/* --- AVATAR (Desktop) --- */
-.sidebar-avatar {
-  width: 50px; 
-  height: 50px;
-  border-radius: 50%;
-  border: 2px solid #FFF;
-  margin: 10px auto 30px;
-  transition: all 0.3s ease;
+/* --- Itens que SÓ aparecem no Mobile --- */
+.nav-user-info-mobile {
+  display: none; /* Escondido no desktop */
+}
+.nav-toggle {
+  display: none; /* Escondido no desktop */
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.sidebar.open .sidebar-avatar {
-  width: 90px;
-  height: 90px;
-}
-
-/* ======================================================== */
-/* === RESPONSIVIDADE (A CORREÇÃO SIMPLES) === */
-/* ======================================================== */
+/* ###################################### */
+/* --- RESPONSIVIDADE (MOBILE) --- */
+/* ###################################### */
 
 @media screen and (max-width: 768px) {
-  
-  /* Simplesmente esconde o sidebar da esquerda no mobile,
-    pois você JÁ TEM um header mobile (o cinza escuro).
-  */
-  .sidebar {
-    display: none;
+  /* 1. Mostra o botão hambúrguer */
+  .nav-toggle {
+    display: block;
   }
-  
-}.btn-cancelar {
 
-  font-size: 0.95rem;
+  /* 2. Esconde o menu de desktop */
+  .nav-menu {
+    display: none; /* Esconde o menu */
 
-  font-weight: 600;
+    /* Quando ele for aberto... */
+    &.open {
+      display: flex; /* ...ele reaparece */
+      flex-direction: column; /* ...empilhado verticalmente */
+      align-items: flex-start; /* ...alinhado à esquerda */
 
-  padding: 10px 20px;
+      /* ...e ocupa a tela toda */
+      position: fixed;
+      top: var(--navbar-height); /* Começa abaixo da navbar */
+      left: 0;
+      width: 100%;
+      height: calc(100vh - var(--navbar-height)); /* Ocupa o resto da altura */
+      background-color: var(--navbar-bg);
+      padding: 20px;
+      gap: 15px;
+    }
+  }
 
-  border-radius: 6px;
+  /* 3. Ajusta os links dentro do menu mobile */
+  .nav-menu.open a,
+  .nav-menu.open .logout-btn {
+    width: 100%; /* Ocupa a largura toda */
+    padding: 15px;
+  }
+  .nav-menu.open a:hover,
+  .nav-menu.open .logout-btn:hover {
+    background-color: var(--navbar-link-hover);
+  }
 
-  border: 1px solid #ddd;
-
-  background-color: #f1f1f1;
-
-  color: #555;
-
-  cursor: pointer;
-
-  transition: background-color 0.2s;
-
+  /* 4. Mostra as informações do usuário no menu mobile */
+  .nav-user-info-mobile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+  }
+  .nav-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+  }
+  .nav-user-info-mobile span {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
 }
-
-
+.btn-cancelar {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background-color: #f1f1f1;
+  color: #555;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
 
 .btn-cancelar:hover {
-
   background-color: #e9ecef;
-
 }
-
-
 
 /* Botão Confirmar Perigo (Vermelho) */
 
 .btn-confirmar-perigo {
-
   font-size: 0.95rem;
-
   font-weight: 600;
-
   padding: 10px 20px;
-
   border-radius: 6px;
-
   border: none;
-
   cursor: pointer;
-
   transition: background-color 0.2s;
-
   background-color: #d9534f; /* Vermelho */
-
   color: #fff;
-
 }
 
-
-
 .btn-confirmar-perigo:hover {
-
   background-color: #8b4f4d; /* Vermelho mais escuro */
-
 }

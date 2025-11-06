@@ -129,75 +129,75 @@ export default function Agendamento() {
   };
 
   // --- handleRating ATUALIZADO ---
-const handleRating = async () => {
-        const agendamentoParaAvaliar = ratingTarget;
-        const rating = modalRating;
+  const handleRating = async () => {
+    const agendamentoParaAvaliar = ratingTarget;
+    const rating = modalRating;
 
-        if (!agendamentoParaAvaliar || rating === 0) {
-            toast.warn("Por favor, selecione uma nota de 1 a 5 estrelas.");
-            return;
-        }
+    if (!agendamentoParaAvaliar || rating === 0) {
+      toast.warn("Por favor, selecione uma nota de 1 a 5 estrelas.");
+      return;
+    }
 
-        const timestampParaAvaliar = agendamentoParaAvaliar.timestamp;
-        const faxineiraId = agendamentoParaAvaliar.faxineiraId;
+    const timestampParaAvaliar = agendamentoParaAvaliar.timestamp;
+    const faxineiraId = agendamentoParaAvaliar.faxineiraId;
 
-        if (!timestampParaAvaliar || !faxineiraId) {
-            toast.error("Não é possível avaliar (dados incompletos).");
-            closeRatingModal(); 
-            return;
-        }
+    if (!timestampParaAvaliar || !faxineiraId) {
+      toast.error("Não é possível avaliar (dados incompletos).");
+      closeRatingModal();
+      return;
+    }
 
-        try {
-            // 1. Atualiza Faxineira (igual antes)
-            const faxineiraRef = doc(db, "usuarios", faxineiraId);
-            const faxineiraSnap = await getDoc(faxineiraRef);
-            if (faxineiraSnap.exists()) {
-                // ... (cálculo de novaMedia) ...
-                const faxineiraData = faxineiraSnap.data();
-                const novoTotal = (faxineiraData.totalAvaliacoes || 0) + 1;
-                const novaSoma = (faxineiraData.somaAvaliacoes || 0) + rating;
-                const novaMedia = novaSoma / novoTotal;
-                await updateDoc(faxineiraRef, {
-                    totalAvaliacoes: increment(1),
-                    somaAvaliacoes: increment(rating),
-                    mediaAvaliacoes: novaMedia
-                });
-            } else { throw new Error("Profissional não encontrado."); }
+    try {
+      // 1. Atualiza Faxineira (igual antes)
+      const faxineiraRef = doc(db, "usuarios", faxineiraId);
+      const faxineiraSnap = await getDoc(faxineiraRef);
+      if (faxineiraSnap.exists()) {
+        // ... (cálculo de novaMedia) ...
+        const faxineiraData = faxineiraSnap.data();
+        const novoTotal = (faxineiraData.totalAvaliacoes || 0) + 1;
+        const novaSoma = (faxineiraData.somaAvaliacoes || 0) + rating;
+        const novaMedia = novaSoma / novoTotal;
+        await updateDoc(faxineiraRef, {
+          totalAvaliacoes: increment(1),
+          somaAvaliacoes: increment(rating),
+          mediaAvaliacoes: novaMedia
+        });
+      } else { throw new Error("Profissional não encontrado."); }
 
-            // 2. Marca Agendamento no Contratante (igual antes)
-            const contratanteRef = doc(db, "usuarios", user.uid);
-            const contratanteSnap = await getDoc(contratanteRef);
-            if (contratanteSnap.exists()) {
-                const contratanteData = contratanteSnap.data();
-                const agendamentosAtuais = Array.isArray(contratanteData.agendamentos) ? contratanteData.agendamentos : [];
-                const agendamentosAtualizados = agendamentosAtuais.map(item => {
-                    if (item.timestamp?.isEqual(timestampParaAvaliar)) {
-                        return { ...item, avaliacao: rating };
-                    } return item;
-                });
-                // ATUALIZA O DOCUMENTO NO FIRESTORE
-                await updateDoc(contratanteRef, { agendamentos: agendamentosAtualizados });
+      // 2. Marca Agendamento no Contratante (igual antes)
+      const contratanteRef = doc(db, "usuarios", user.uid);
+      const contratanteSnap = await getDoc(contratanteRef);
+      if (contratanteSnap.exists()) {
+        const contratanteData = contratanteSnap.data();
+        const agendamentosAtuais = Array.isArray(contratanteData.agendamentos) ? contratanteData.agendamentos : [];
+        const agendamentosAtualizados = agendamentosAtuais.map(item => {
+          if (item.timestamp?.isEqual(timestampParaAvaliar)) {
+            return { ...item, avaliacao: rating };
+          } return item;
+        });
+        // ATUALIZA O DOCUMENTO NO FIRESTORE
+        await updateDoc(contratanteRef, { agendamentos: agendamentosAtualizados });
 
-                // ATUALIZA O ESTADO LOCAL (PARA AVALIAÇÃO APARECER)
-                // Note: Não removeremos daqui ainda, o handleDelete fará isso.
-                setAgendamentos(agendamentosAtualizados); 
+        // ATUALIZA O ESTADO LOCAL (PARA AVALIAÇÃO APARECER)
+        // Note: Não removeremos daqui ainda, o handleDelete fará isso.
+        setAgendamentos(agendamentosAtualizados);
 
-                toast.success(`Avaliação (${rating} estrelas) registrada!`);
-                closeRatingModal(); // Fecha o modal
+        toast.success(`Avaliação (${rating} estrelas) registrada!`);
+        closeRatingModal(); // Fecha o modal
 
-                // --- 3. ADICIONE ESTA LINHA ---
-                // Chama a função de exclusão APÓS salvar a avaliação
-                await handleDelete(agendamentoParaAvaliar); 
-                // --- FIM DA ADIÇÃO ---
-            }
+        // --- 3. ADICIONE ESTA LINHA ---
+        // Chama a função de exclusão APÓS salvar a avaliação
+        await handleDelete(agendamentoParaAvaliar);
+        // --- FIM DA ADIÇÃO ---
+      }
 
-        } catch (error) {
-            console.error("Erro ao salvar avaliação/excluir:", error);
-            toast.error("Erro ao registrar avaliação.");
-            // Fecha o modal mesmo se der erro
-            closeRatingModal(); 
-        }
-    };
+    } catch (error) {
+      console.error("Erro ao salvar avaliação/excluir:", error);
+      toast.error("Erro ao registrar avaliação.");
+      // Fecha o modal mesmo se der erro
+      closeRatingModal();
+    }
+  };
 
   // --- JSX PRINCIPAL ---
   return (
@@ -219,9 +219,9 @@ const handleRating = async () => {
                 : "Inválida";
               const horaFormatada = dataHora
                 ? dataHora.toLocaleTimeString("pt-BR", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
                 : "--:--";
               const isPast = dataHora ? dataHora < new Date() : false;
               const isRated = agendamento.avaliacao > 0;
