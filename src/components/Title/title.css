@@ -1,5 +1,4 @@
-/* Em: src/components/Title/title.css */
-/* Esta versão não tem fundo, para se misturar com o PageHeader */
+
 .title {
   display: flex;
   flex-direction: row;
@@ -7,8 +6,11 @@
   margin: 0;
   border-radius: 5px;
   background-color: transparent;
-  padding: 0.8em;
+  position: relative;
+  left: 70px;
+  padding: 10px 0;
   gap: 0.8em;
+
 }
 
 .title span {

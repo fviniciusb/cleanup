@@ -3,15 +3,20 @@
 .page-header {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1rem;
   background-color: #FFF;
-  /* Fundo branco (como na sua foto) */
   border-bottom: 1px solid #DDD;
   width: 100%;
-  box-sizing: border-box;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  bottom: 30px;
 }
 
 .page-title-container {
   width: 100%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }

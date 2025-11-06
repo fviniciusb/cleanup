@@ -2,7 +2,7 @@
 import { useContext, useState, useRef, useCallback } from "react"; // Adicionado useEffect
 
 // Ícones (Adicionados FiPlus e FiTrash2)
-import { FiUpload, FiSettings, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiUpload, FiPlus, FiSettings, FiTrash2 } from "react-icons/fi";
 
 // Imagem Padrão
 import avatar from "../../assets/avatar.png";
@@ -313,6 +313,7 @@ export default function Profile() {
       </PageHeader>
 
       <div className="profile-container">
+        {/* Profile sidebar with avatar and basic info */}
         <div className="profile-sidebar">
           <label className="label-avatar">
             <span>
@@ -322,10 +323,10 @@ export default function Profile() {
             <input type="file" accept="image/*" onChange={mudarFoto} hidden />
           </label>
           <div className="sidebar-info">
-            <h2>
+            <div className="user-name">
               {formData.nome} {formData.sobrenome}
-            </h2>
-            <p>{user.email}</p>
+            </div>
+            <p className="user-email">{user.email}</p>
           </div>
           {user.objetivo === "2" && (
             <button
@@ -527,7 +528,7 @@ export default function Profile() {
 
                 {/* --- 5. JSX ATUALIZADO (SUBSTITUIÇÃO DO TEXTAREA) --- */}
                 <div className="servicos-section">
-                    <h3>Meus Serviços</h3>
+                    <div className="section-title">Meus Serviços</div>
                     <p>Liste os serviços que você oferece e o preço (opcional).</p>
                     
                     {/* Lista de serviços já adicionados */}
@@ -593,7 +594,7 @@ export default function Profile() {
 
 
                 <div className="availability-section">
-                  <h3>Gerenciar Dias Indisponíveis</h3>
+                  <div className="section-title">Gerenciar Dias Indisponíveis</div>
                   <p>
                     Clique nos dias para marcá-los como indisponíveis. As
                     alterações são salvas ao clicar em "Atualizar Perfil".

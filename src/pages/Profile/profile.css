@@ -1,28 +1,51 @@
+/* Variáveis globais para facilitar ajustes rápidos */
+:root {
+  --bg: #fff;
+  --muted: #777;
+  --border: #e9ecef;
+  --accent: #007bff;
+  --success: #28a745;
+  --danger: #dc3545;
+  --card-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
 /* --- LAYOUT PRINCIPAL (2 COLUNAS) --- */
 .profile-container {
   display: flex;
-  max-width: 1500px;
-  margin: 10px auto;
-  position: relative;
-  bottom: 10px;
-  padding: 0 16px;
-  gap: 32px;
   align-items: flex-start;
-  /* Alinha o topo das colunas */
+  max-width: 1000px;
+  width: calc(100% - 32px);
+  margin: 24px auto;
+  position: relative;
+  padding: 8px 16px;
+  gap: 24px;
+  justify-content: center;
+  animation: floatUp 320ms ease both;
+}
+
+/* Pequena animação de entrada para dar sensação de dinamismo */
+@keyframes floatUp {
+  from { opacity: 0; transform: translateY(12px) scale(0.995); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* --- COLUNA DA ESQUERDA (SIDEBAR) --- */
 .profile-sidebar {
-  width: 300px;
+  width: 280px;
   flex-shrink: 0;
-  /* Impede que a sidebar encolha */
-  background-color: #fff;
+  background-color: var(--bg);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 24px;
+  box-shadow: var(--card-shadow);
+  padding: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.profile-sidebar:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.09);
 }
 
 .label-avatar {
@@ -31,7 +54,9 @@
   border-radius: 50%;
   position: relative;
   cursor: pointer;
-  margin-bottom: 16px;
+  margin: 0 0 16px 0; /* remove margem superior, mantém inferior e garante alinhamento à esquerda */
+  overflow: hidden;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
 }
 
 .label-avatar img {
@@ -41,6 +66,8 @@
   object-fit: cover;
   border: 4px solid #f0f0f0;
 }
+
+.label-avatar:hover img { transform: scale(1.03); }
 
 .label-avatar span {
   position: absolute;
@@ -68,17 +95,19 @@
   width: 100%;
 }
 
-.sidebar-info h2 {
-  font-size: 1.5rem;
+.user-name {
+  font-size: 1.25rem;
   font-weight: 600;
   color: #333;
   margin: 0;
+  text-align: center;
 }
 
-.sidebar-info p {
-  font-size: 0.95rem;
+.user-email {
+  font-size: 0.9rem;
   color: #777;
   margin-top: 4px;
+  text-align: center;
 }
 
 /* Botão de Disponibilidade */
@@ -118,11 +147,16 @@
 /* --- COLUNA DA DIREITA (FORMULÁRIO) --- */
 .profile-form-container {
   flex-grow: 1;
-  /* Faz o formulário ocupar o resto do espaço */
-  background-color: #fff;
+  background-color: var(--bg);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 32px;
+  box-shadow: var(--card-shadow);
+  padding: 20px;
+  max-width: calc(100% - 280px - 24px);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.profile-form-container:focus-within {
+  box-shadow: 0 12px 34px rgba(0,0,0,0.08);
 }
 
 /* O grid do formulário */
@@ -312,14 +346,14 @@
     margin-bottom: 24px;
 }
 .tab-button {
-    padding: 12px 20px;
+    padding: 10px 16px;
     border: none;
     background-color: transparent;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 500;
     color: #667;
-    border-bottom: 3px solid transparent;
+    border-bottom: 2px solid transparent;
     margin-bottom: -2px; 
     transition: color 0.2s, border-color 0.2s;
 }
@@ -329,10 +363,55 @@
     font-weight: 600;
     border-bottom-color: #007bff;
 }
-.tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+.tab-content { display: none; animation: fadeIn 0.28s ease-in-out; }
 .tab-content.active { display: block; }
 
-/* ... (seu CSS do .availability-section e .unavailable-day) ... */
+/* Estilos para a seção de disponibilidade (calendário) */
+.availability-section {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: linear-gradient(180deg,#fff, #fbfbfb);
+}
+
+.availability-section .section-title {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.availability-section p { 
+  color: var(--muted); 
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.calendar-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Marca visual para dias indisponíveis no calendário (react-calendar usa .unavailable-day) */
+.unavailable-day {
+  background: rgba(220,53,69,0.12) !important;
+  border-radius: 6px !important;
+  color: #721c24 !important;
+  box-shadow: inset 0 0 0 1px rgba(220,53,69,0.14);
+}
+
+/* Pequenas melhorias para o calendário padrão importado */
+.react-calendar {
+  border: none;
+  box-shadow: none;
+}
+
+/* Reforça contraste em botões e inputs usando variáveis */
+.btn-atualizar { background-color: var(--accent); }
+.btn-atualizar:hover { background-color: #0056b3; }
+.btn-disponibilidade.disponivel { background-color: var(--success); }
+.btn-disponibilidade.indisponivel { background-color: var(--danger); }
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -342,18 +421,18 @@
     margin-bottom: 32px; /* Espaço antes da seção do calendário */
 }
 
-.servicos-section h3 {
-    font-size: 1.3rem;
+.servicos-section .section-title {
+    font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 8px;
     color: #333;
 }
 
 .servicos-section p {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: #666;
-    margin-bottom: 24px;
-    line-height: 1.6;
+    margin-bottom: 20px;
+    line-height: 1.5;
 }
 
 .servicos-list {

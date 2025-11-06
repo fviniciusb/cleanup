@@ -4,10 +4,11 @@
 
 /* Título principal (padrão do 'Meu Perfil') */
 .main-title {
-  color: #333;
-  margin-bottom: 24px;
-  font-size: 2rem;
-  font-weight: 700;
+  width: 100%;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 /* Container principal (padrão do 'Meu Perfil') */
@@ -117,18 +118,17 @@
   background-color: #c9302c; /* Vermelho mais escuro */
 }
 
-
 /* Responsividade para telas pequenas */
 @media (width <= 600px) {
   .agendamentos-container {
     padding: 20px;
   }
-  
+
   .agendamento-card {
     flex-direction: column; /* Empilha os itens */
     align-items: flex-start; /* Alinha tudo à esquerda */
   }
-  
+
   .card-actions {
     width: 100%;
   }
@@ -145,7 +145,7 @@
 .card-actions {
   flex-shrink: 0;
   display: flex; /* Adiciona flexbox */
-  gap: 12px;      /* Adiciona espaço entre os botões */
+  gap: 12px; /* Adiciona espaço entre os botões */
 }
 
 /* 2. Estilo para o novo botão de chat */
@@ -217,15 +217,15 @@
   color: #333;
 }
 .modal-content p {
-    margin-bottom: 24px;
-    color: #555;
+  margin-bottom: 24px;
+  color: #555;
 }
 
 .modal-stars {
-    display: flex;
-    justify-content: center; /* Centraliza as estrelas */
-    gap: 5px;
-    margin-bottom: 30px;
+  display: flex;
+  justify-content: center; /* Centraliza as estrelas */
+  gap: 5px;
+  margin-bottom: 30px;
 }
 
 .modal-actions {
@@ -266,20 +266,21 @@
   background-color: #0b5ed7;
 }
 .btn-confirmar:disabled {
-    background-color: #a0c7f1; /* Azul claro quando desabilitado */
-    cursor: not-allowed;
+  background-color: #a0c7f1; /* Azul claro quando desabilitado */
+  cursor: not-allowed;
 }
 
 /* Ajuste no mobile para o botão finalizar */
 @media (width <= 600px) {
   .btn-finalizar {
-      flex-grow: 1; /* Faz ocupar espaço */
-      text-align: center;
+    flex-grow: 1; /* Faz ocupar espaço */
+    text-align: center;
   }
   .modal-actions {
-      flex-direction: column; /* Empilha botões no mobile */
+    flex-direction: column; /* Empilha botões no mobile */
   }
-  .btn-cancelar, .btn-confirmar {
-      width: 100%;
+  .btn-cancelar,
+  .btn-confirmar {
+    width: 100%;
   }
 }

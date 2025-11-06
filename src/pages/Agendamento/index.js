@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import "./agendamento.css";
 import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+// Removidas importações não utilizadas
 
 export default function Agendamento() {
   const { user } = useContext(AuthContext);
@@ -160,23 +161,30 @@ export default function Agendamento() {
         await updateDoc(faxineiraRef, {
           totalAvaliacoes: increment(1),
           somaAvaliacoes: increment(rating),
-          mediaAvaliacoes: novaMedia
+          mediaAvaliacoes: novaMedia,
         });
-      } else { throw new Error("Profissional não encontrado."); }
+      } else {
+        throw new Error("Profissional não encontrado.");
+      }
 
       // 2. Marca Agendamento no Contratante (igual antes)
       const contratanteRef = doc(db, "usuarios", user.uid);
       const contratanteSnap = await getDoc(contratanteRef);
       if (contratanteSnap.exists()) {
         const contratanteData = contratanteSnap.data();
-        const agendamentosAtuais = Array.isArray(contratanteData.agendamentos) ? contratanteData.agendamentos : [];
-        const agendamentosAtualizados = agendamentosAtuais.map(item => {
+        const agendamentosAtuais = Array.isArray(contratanteData.agendamentos)
+          ? contratanteData.agendamentos
+          : [];
+        const agendamentosAtualizados = agendamentosAtuais.map((item) => {
           if (item.timestamp?.isEqual(timestampParaAvaliar)) {
             return { ...item, avaliacao: rating };
-          } return item;
+          }
+          return item;
         });
         // ATUALIZA O DOCUMENTO NO FIRESTORE
-        await updateDoc(contratanteRef, { agendamentos: agendamentosAtualizados });
+        await updateDoc(contratanteRef, {
+          agendamentos: agendamentosAtualizados,
+        });
 
         // ATUALIZA O ESTADO LOCAL (PARA AVALIAÇÃO APARECER)
         // Note: Não removeremos daqui ainda, o handleDelete fará isso.
@@ -190,7 +198,6 @@ export default function Agendamento() {
         await handleDelete(agendamentoParaAvaliar);
         // --- FIM DA ADIÇÃO ---
       }
-
     } catch (error) {
       console.error("Erro ao salvar avaliação/excluir:", error);
       toast.error("Erro ao registrar avaliação.");
@@ -202,7 +209,6 @@ export default function Agendamento() {
   // --- JSX PRINCIPAL ---
   return (
     <div>
-      <h1 className="main-title">Agendamentos</h1>
       {loading ? (
         <div className="loading-container">Carregando...</div>
       ) : agendamentos.length === 0 ? (
@@ -219,9 +225,9 @@ export default function Agendamento() {
                 : "Inválida";
               const horaFormatada = dataHora
                 ? dataHora.toLocaleTimeString("pt-BR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
                 : "--:--";
               const isPast = dataHora ? dataHora < new Date() : false;
               const isRated = agendamento.avaliacao > 0;

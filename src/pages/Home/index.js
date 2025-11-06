@@ -127,6 +127,7 @@ const handleSchedule = async () => {
                 </div>
             ) : (
                 <div className="home-container">
+                    {/* Cards grid for professionals */}
                     <div className="cards-container">
                         {faxineiras.map((faxineira) => (
                             <div className="card" key={faxineira.id}>

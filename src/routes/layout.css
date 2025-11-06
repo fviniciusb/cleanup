@@ -22,5 +22,8 @@
 }
 
 .page-content-area {
-  padding: 20px;
+    padding: 0px;
+    position: relative;
+    right: 100px;
+    margin: 60px
 }

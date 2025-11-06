@@ -3,6 +3,9 @@ import { AuthContext } from '../../contexts/auth';
 import { db } from '../../services/FirebaseConnection';
 import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
+import { FiMessageSquare } from 'react-icons/fi';
+import PageHeader from '../../components/PageHeader';
+import Title from '../../components/Title';
 import './chatlist.css';
 
 import avatarPadrao from '../../assets/avatar.png';
@@ -57,7 +60,12 @@ export default function ChatList() {
     return (
         // Container principal da página
         <div className="chatlist-container">
-            <h1 className="main-title">Minhas Conversas</h1>
+            {/* Using PageHeader component for consistent header styling */}
+            <PageHeader>
+                <Title nome="Minhas Conversas">
+                    <FiMessageSquare size={25} />
+                </Title>
+            </PageHeader>
 
             {chats.length === 0 ? (
                 // Container para mensagem de vazio
