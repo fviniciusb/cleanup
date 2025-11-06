@@ -1,0 +1,297 @@
+:root {
+  --primary-color: #5EA1BD;
+  --secondary-color: #1A4A5F;
+  --text-dark: #333;
+  --text-light: #ffffff;
+  --bg-light: #f8f8f8;
+  --bg-dark: #333;
+}
+
+.landing-container {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.landing-header {
+  background-color: var(--secondary-color);
+  color: var(--text-light);
+  padding: 1rem 2rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.landing-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.landing-logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color:#ffffff;
+}
+.landing-nav-links-desktop {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.landing-nav-links-desktop a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+.landing-nav-links-desktop a:hover {
+  opacity: 0.8;
+}
+.btn-login {
+  background-color: var(--primary-color);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: bold;
+}
+.btn-login:hover {
+  opacity: 1;
+  background-color: #4b90a5;
+}
+
+/* 👈 CORREÇÃO 1: Esconder o botão de menu mobile no desktop */
+.landing-nav-toggle { 
+  display: none; /* Esconde por padrão no desktop */
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 80vh;
+  padding: 2rem;
+  padding-top: 100px;
+  
+  /* 👈 CORREÇÃO 2: Mudar a cor do texto do hero para branco */
+  color: var(--text-light); 
+  
+  /* 👈 CORREÇÃO 3: Adicionar um overlay escuro para o texto aparecer melhor */
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+              url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=2070&auto=format&fit=crop');
+  
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+.btn-cta {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+.btn-cta:hover {
+  background-color: #4b90a5;
+}
+
+.carousel-section {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+.carousel-section h2 {
+  font-size: 2.5rem;
+  color: var(--text-dark);
+  margin-bottom: 2rem;
+}
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+.carousel-slide {
+  min-width: 100%;
+  position: relative;
+  height: 500px; 
+  background-color: var(--secondary-color);
+}
+.carousel-slide img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+.slide-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: var(--text-light);
+  padding: 2rem;
+  box-sizing: border-box;
+  z-index: 2; 
+}
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 10;
+}
+.carousel-btn.prev { left: 10px; }
+.carousel-btn.next { right: 10px; }
+.carousel-dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+.dot.active {
+  background-color: var(--text-light);
+}
+
+.footer-section {
+  background-color: var(--bg-dark);
+  color: #ccc;
+  padding: 3rem 2rem;
+}
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+}
+.footer-col h3 {
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+.footer-col p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+}
+.footer-bottom {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid #444;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+  }
+  .landing-nav-links-desktop {
+    display: none;
+  }
+  /* 👈 CORREÇÃO 4: Exibir o botão de menu mobile no mobile */
+  .landing-nav-toggle { 
+    display: block; /* Exibe no mobile */
+  }
+  .mobile-nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--secondary-color);
+    padding: 2rem;
+    z-index: 1001;
+    transition: left 0.3s ease-in-out;
+  }
+  .mobile-nav-menu.open {
+    left: 0;
+  }
+  .mobile-nav-close {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 2rem;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    cursor: pointer;
+  }
+  .mobile-nav-menu a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+  .carousel-slide {
+    height: 300px;
+  }
+}
+@media (max-width: 600px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+  .slide-caption {
+    padding: 1rem;
+  }
+  .slide-caption h3 {
+    font-size: 1.2rem;
+  }
+  .slide-caption p {
+    font-size: 0.9rem;
+  }
+}

@@ -1,11 +1,11 @@
 import { useEffect, useState, useContext } from "react";
 import avatar from '../../assets/avatar.png';
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../services/FirebaseConnection";
+import { db, functions } from "../../services/FirebaseConnection"; // 1. Import 'functions'
 import { AuthContext } from "../../contexts/auth";
-import { toast } from "react-toastify";
+import { toast } from "react-toastify"; // 2. IMPORT DO TOAST (estava faltando)
 import { FaStar } from "react-icons/fa";
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { httpsCallable } from "firebase/functions";
 
 // Importe os componentes de Título
 import PageHeader from '../../components/PageHeader';
@@ -13,6 +13,27 @@ import Title from '../../components/Title';
 import { FiHome } from 'react-icons/fi';
 
 import "./home.css"; // CSS com os cards e o modal
+
+// --- 3. FUNÇÃO DE AJUDA PARA CORRIGIR O BUG ---
+// Esta função verifica o que é a variável 'servicos' e a formata
+function renderServicos(servicos) {
+  if (!servicos) {
+    return "Não informado";
+  }
+  // Se for um texto (string), apenas retorne o texto
+  if (typeof servicos === 'string') {
+    return servicos;
+  }
+  // Se for um objeto (como {nome, preco}), formate-o
+  if (typeof servicos === 'object' && servicos.nome) {
+    let precoFormatado = servicos.preco ? ` - R$ ${servicos.preco}` : '';
+    return `${servicos.nome}${precoFormatado}`;
+  }
+  // Se for qualquer outra coisa, avise que o formato é inválido
+  return "Formato de serviço inválido";
+}
+// --- FIM DA FUNÇÃO DE AJUDA ---
+
 
 export default function Home() {
     const { user } = useContext(AuthContext);
@@ -36,7 +57,7 @@ export default function Home() {
                         listaFaxineiras.push({
                             id: doc.id,
                             nome: `${data.nome} ${data.sobrenome}`,
-                            servicos: data.servicos,
+                            servicos: data.servicos, // data.servicos pode ser string OU objeto
                             avatarUrl: data.avatarUrl || "",
                             telefone: data.telefone || "Não informado",
                             mediaAvaliacoes: data.mediaAvaliacoes || 0,
@@ -93,7 +114,6 @@ export default function Home() {
                 horarioAgendamento: selectedTime,
             };
 
-            const functions = getFunctions();
             const criarAgendamento = httpsCallable(functions, "criarAgendamento");
 
             toast.info("Verificando disponibilidade...");
@@ -111,7 +131,7 @@ export default function Home() {
 
     return (
         <div>
-            {/* --- ADICIONADO O CABEÇALHO DA PÁGINA --- */}
+            {/* --- CABEÇALHO DA PÁGINA --- */}
             <PageHeader>
                 <Title nome="Encontre Profissionais">
                     <FiHome size={25} />
@@ -146,7 +166,10 @@ export default function Home() {
                                             ({faxineira.totalAvaliacoes} {faxineira.totalAvaliacoes === 1 ? 'avaliação' : 'avaliações'})
                                         </span>
                                     </div>
-                                    <p><strong>Serviços:</strong> {faxineira.servicos || "Não informado"}</p>
+                                    
+                                    {/* --- 4. AQUI ESTÁ A CORREÇÃO --- */}
+                                    <p><strong>Serviços:</strong> {renderServicos(faxineira.servicos)}</p>
+                                    
                                     <p><strong>Contato:</strong> {faxineira.telefone}</p>
                                 </div>
                                 {user.objetivo === "1" && (

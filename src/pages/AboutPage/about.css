@@ -1,0 +1,87 @@
+.about-container {
+  width: 100%;
+}
+
+.about-main {
+  /* Garante que o conteúdo comece abaixo do header fixo */
+  padding-top: 60px; 
+}
+
+.about-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: var(--primary-color);
+  color: var(--text-light);
+}
+.about-hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+.about-hero p {
+  font-size: 1.2rem;
+  max-width: 600px;
+}
+
+.about-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  color: var(--text-dark);
+}
+.about-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.about-content h3 {
+  font-size: 1.8rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--primary-color);
+}
+.about-content p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.pilares-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.pilar-card {
+  text-align: center;
+  padding: 1.5rem;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fff;
+}
+.pilar-card svg {
+  margin-bottom: 1rem;
+}
+.pilar-card h4 {
+  font-size: 1.3rem;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer (puxado do landing.css) */
+.footer-section {
+  background-color: var(--bg-dark);
+  color: #ccc;
+  padding: 3rem 2rem;
+}
+
+@media (min-width: 768px) {
+  .pilares-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

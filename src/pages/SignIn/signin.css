@@ -1,92 +1,156 @@
+/* --- Variáveis Globais (Tema Principal) --- */
+:root {
+  --primary-color: #5EA1BD;
+  --primary-hover: #5ea0bdc2;
+  --gradient-start: #5EA1BD;
+  --gradient-end: #1A4A5F;
+  --card-background: #EAEAEC; /* Fundo cinza claro */
+  --text-dark: #181c2e;
+  --text-light: #ff0000;
+  --border-radius-pill: 20px;
+  --card-shadow: 15px 15px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Container de Tela Cheia (Login e Cadastro) --- */
 .container-center {
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(circle, #5EA1BD, #1A4A5F);
-  margin: 0;
+  background: radial-gradient(circle, var(--gradient-start), var(--gradient-end));
+  padding: 20px;
 }
 
+/* --- Card Central --- */
 .login {
-  background-color: #fff;
-  width: 90%;
-  max-width: 450px;
-  padding: 30px;
+  background-color: var(--card-background);
+  width: 100%;
+  max-width: 550px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: var(--card-shadow);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
-  text-align: center;
+  padding: 20px;
 }
 
-.login-area img {
-  max-width: 100px;
-  /* Ajuste o tamanho do seu logo */
-  margin-bottom: 20px;
+.login img {
+  width: 150px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
-.login form {
+/* --- Formulário --- */
+form {
+  margin-top: 0.5rem;
+  width: 90%;
   display: flex;
   flex-direction: column;
 }
 
-.login form h1 {
-  margin-bottom: 20px;
-  color: #333;
+form h1 {
+  font-size: 2rem;
+  text-align: center;
+  margin: 0rem 0rem 1.7rem 0rem;
+  color: #000000;
 }
 
-.login form input,
-.login form select {
-  margin-bottom: 15px;
+/* --- Inputs (Email, Senha, Nome) --- */
+.login input[type="text"],
+.login input[type="email"],
+.login input[type="password"] {
+  margin: auto;
+  margin-bottom: 1rem;
   height: 40px;
-  border-radius: 6px;
-  border: 1px solid #ced4da;
-  padding: 0 10px;
-  font-size: 1rem;
-
-  /* Adiciona esta linha para o <select> parecer um input */
-  appearance: none;
+  border-radius: var(--border-radius-pill);
+  padding: 8px 15px;
+  font-size: 15px;
+  background-color: white;
+  border: 0;
+  width: 70%;
+  box-sizing: border-box;
 }
 
+/* --- Botão Principal (Entrar / Cadastrar) --- */
 .botaoLogin {
+  margin: auto;
   height: 40px;
   border: 0;
-  border-radius: 6px;
-  background-color: #0d6efd;
-  /* Azul */
-  color: #FFF;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  border-radius: var(--border-radius-pill);
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  font-size: 1.2rem;
+  transition: background-color 0.3s ease;
+  width: 70%;
 }
-
+.botaoLogin:hover {
+  background-color: var(--primary-hover);
+}
 .botaoLogin:disabled {
   background-color: #aaa;
   cursor: not-allowed;
 }
 
+/* --- Links (Já possui conta? / Esqueci senha) --- */
 .login a {
-  display: block;
-  margin-top: 20px;
-  color: #555;
-  text-decoration: none;
+  margin: 1rem 0 1.5rem 0;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: color 0.3s;
+  font-size: 12px;
+  text-align: center;
+}
+.login a:hover {
+  color: var(--primary-color);
 }
 
-.login a .cadastre-se {
-  color: #0d6efd;
+.cadastre-se {
+  color: var(--primary-color);
+  transition: color 0.3s;
+  font-weight: bold;
+}
+
+.forgot-password-link {
+  margin-top: -10px;
+  margin-bottom: 15px;
+  font-size: 12px;
   font-weight: 600;
+  color: var(--text-dark);
 }
 
+/* --- Divisor "OU" (Tela de Login) --- */
+.divisor {
+  font-size: 15px;
+  margin: 10px 0 5px 0;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  color: #888;
+}
+.divisor::before,
+.divisor::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background-color: #ccc;
+}
+.divisor::before { left: 0; }
+.divisor::after { right: 0; }
+
+
+/* --- INÍCIO: CÓDIGO DO BOTÃO GOOGLE (CORRIGIDO) --- */
 .gsi-material-button {
-  user-select: none;
-  user-select: none;
   user-select: none;
   appearance: none;
   background-color: white;
   background-image: none;
   border: 1px solid #747775;
-  border-radius: 20px;
-  border-radius: 20px;
-  box-sizing: border-box;
+  border-radius: var(--border-radius-pill); /* Usa nossa variável */
   box-sizing: border-box;
   color: #1f1f1f;
   cursor: pointer;
@@ -100,17 +164,12 @@
   position: relative;
   text-align: center;
   transition: background-color .218s, border-color .218s, box-shadow .218s;
-  transition: background-color .218s, border-color .218s, box-shadow .218s;
   vertical-align: middle;
   white-space: nowrap;
   max-width: 400px;
   min-width: min-content;
-
-  /* --- AJUSTE PARA O SEU LAYOUT --- */
-  width: 100%;
-  /* Faz ocupar 100% da largura, igual o botão 'Acessar' */
-  margin-top: 12px;
-  /* Adiciona um espaço acima dele */
+  width: 40%; /* Usa a mesma largura dos inputs */
+  margin: 1rem auto 0 auto;
 }
 
 .gsi-material-button .gsi-material-button-icon {
@@ -120,12 +179,9 @@
   width: 20px;
 }
 
-/* ... (Cole o resto do CSS do Google aqui) ... */
 .gsi-material-button .gsi-material-button-content-wrapper {
   align-items: center;
-  align-items: center;
   display: flex;
-  flex-flow: row nowrap;
   flex-flow: row nowrap;
   height: 100%;
   justify-content: space-between;
@@ -135,16 +191,18 @@
 
 .gsi-material-button .gsi-material-button-contents {
   flex-grow: 1;
-  flex-grow: 1;
   font-family: Roboto, arial, sans-serif;
   font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: top;
+  /* Centraliza o texto com o ícone */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gsi-material-button .gsi-material-button-state {
-  transition: opacity .218s;
   transition: opacity .218s;
   inset: 0;
   opacity: 0;
@@ -165,7 +223,7 @@
   opacity: 0.38;
 }
 
-.gsi-material-button:not(:disabled):active .gsi-material-button-state,
+.gsi-material-button:not(:disabled):active .gsi-material-button-state, 
 .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
   background-color: #303030;
   opacity: 0.12;
@@ -173,22 +231,66 @@
 
 .gsi-material-button:not(:disabled):hover {
   box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
-  box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
 }
 
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
   background-color: #303030;
   opacity: 0.08;
 }
+/* --- FIM: CÓDIGO DO BOTÃO GOOGLE --- */
 
-.divisor {
-  font-size: 15px;
-  position: relative;
-  top: 6px;
+
+/* --- Seletor de Objetivo (Tela de Cadastro) --- */
+.select-profile {
+  display: flex;
+  gap: 12px;
+  width: 70%;
+  margin: 0 auto 1rem auto;
 }
 
-.gsi-material-button-contents {
-  margin: auto;
-  position: relative;
-  right: 12px;
+.select-profile input[type="radio"] {
+  display: none; 
+}
+
+.radio-label {
+  flex-grow: 1;
+  text-align: center;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius-pill);
+  cursor: pointer;
+  background-color: #f8f8f8;
+  color: #555;
+  transition: all 0.2s ease-in-out;
+}
+.radio-label:hover {
+  border-color: #999;
+}
+.select-profile input[type="radio"]:checked + .radio-label {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* --- RESPONSIVIDADE CORRETA --- */
+@media screen and (max-width: 700px) {
+  /* Inputs de texto, email, senha e botão do google ficam maiores */
+  .login input[type="text"],
+  .login input[type="email"],
+  .login input[type="password"],
+  .gsi-material-button,
+  .select-profile {
+    width: 90%;
+  }
+
+  /* Botões de rádio ficam empilhados */
+  .select-profile {
+    flex-direction: column;
+  }
+  
+  /* Botão principal fica maior */
+  .botaoLogin {
+    width: 50%;
+  }
 }

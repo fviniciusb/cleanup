@@ -6,8 +6,8 @@ import {
   signOut,
   sendPasswordResetEmail,
   GoogleAuthProvider, 
-  signInWithPopup,   
-  sendEmailVerification 
+  signInWithPopup, 
+  sendEmailVerification // 👈 A VÍRGULA QUE FALTAVA ESTAVA AQUI
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
@@ -39,16 +39,14 @@ function AuthProvider({ children }) {
     try {
       const value = await signInWithEmailAndPassword(auth, email, senha);
 
-      // --- 1. LÓGICA DE VERIFICAÇÃO ADICIONADA ---
       // Verifica se o e-mail do usuário foi verificado
       if (!value.user.emailVerified) {
         toast.error("Sua conta ainda não foi ativada. Por favor, verifique o link no seu e-mail.");
         await signOut(auth); // Desloga o usuário
         setLoadingAuth(false);
-        return false; // Retorna falha (para o <Link> "Esqueceu a senha?" aparecer)
+        return false; // Retorna falha
       }
-      // --- FIM DA VERIFICAÇÃO ---
-
+      
       const uid = value.user.uid;
       const docRef = doc(db, 'usuarios', uid);
       const docSnap = await getDoc(docRef);
@@ -61,7 +59,7 @@ function AuthProvider({ children }) {
       setUser(data);
       storageUser(data);
       toast.success('Bem-vindo(a) de volta!');
-      navigate('/perfil');
+      navigate('/home'); // Leva para a home após o login
       setLoadingAuth(false);
       return true; // Sucesso
 
@@ -73,14 +71,13 @@ function AuthProvider({ children }) {
     }
   }
 
-  // --- FUNÇÃO 'signUp' ATUALIZADA (O seu código já estava 99% correto) ---
+  // --- FUNÇÃO 'signUp' ATUALIZADA ---
   async function signUp(nome, sobrenome, email, senha, objetivo) {
     setLoadingAuth(true);
     try {
       const value = await createUserWithEmailAndPassword(auth, email, senha);
       const uid = value.user.uid;
 
-      // Envia o e-mail de verificação (como você já tinha feito)
       await sendEmailVerification(value.user);
 
       const userData = {
@@ -93,14 +90,13 @@ function AuthProvider({ children }) {
         telefone: '',
         dataNascimento: '',
         genero: '',
-        emailVerified: false // Salva o status de verificação no Firestore
+        emailVerified: false
       };
       
       await setDoc(doc(db, 'usuarios', uid), userData);
       
-      // Envia o usuário para a tela de login para esperar a verificação
       toast.success('Cadastro realizado! Por favor, verifique sua caixa de entrada para ativar sua conta.');
-      navigate('/');
+      navigate('/login'); // Envia para o Login
     
     } catch (error) {
       console.error("ERRO AO CADASTRAR:", error);
@@ -136,7 +132,7 @@ function AuthProvider({ children }) {
           objetivo: objetivo,
           email: googleUser.email,
           avatarUrl: googleUser.photoURL,
-          emailVerified: true, // 👈 O GOOGLE JÁ VERIFICOU O E-MAIL
+          emailVerified: true, // O GOOGLE JÁ VERIFICOU
           cpf: '',
           telefone: '',
           dataNascimento: '',
@@ -151,7 +147,7 @@ function AuthProvider({ children }) {
       setUser(data);
       storageUser(data);
       toast.success(`Bem-vindo(a), ${data.nome}!`);
-      navigate('/perfil');
+      navigate('/home'); // Leva para a home após o login
     } catch (error) {
       console.error("ERRO COM O LOGIN DO GOOGLE: ", error);
       toast.error("Ocorreu um erro ao tentar login com Google.");
@@ -160,7 +156,6 @@ function AuthProvider({ children }) {
     }
   }
 
-  // --- O RESTO DAS SUAS FUNÇÕES (JÁ ESTAVAM CORRETAS) ---
   async function sendPasswordReset(email) {
     setLoadingAuth(true);
     try {
@@ -182,10 +177,12 @@ function AuthProvider({ children }) {
     localStorage.setItem('@sistema', JSON.stringify(data));
   }
 
+  // --- FUNÇÃO 'logout' ATUALIZADA ---
   async function logout() {
     await signOut(auth);
     localStorage.removeItem('@sistema');
     setUser(null);
+    navigate('/'); // Leva para a Landing Page
   }
 
   return (

@@ -3,24 +3,23 @@ import { AuthContext } from '../contexts/auth';
 import { Navigate } from 'react-router-dom';
 
 import Header from '../components/Header'; // A NOVA navbar azul
-import './layout.css'; // O CSS que acabamos de corrigir
+import './layout.css'; // O CSS que já corrigimos (com padding-top)
 
 export default function Private({ children }) {
   const { signed, loading } = useContext(AuthContext);
-
-  // REMOVEMOS os estados [isSidebarOpen] e a função 'toggleSidebar'
 
   if (loading) {
     return <div>Carregando...</div>; 
   }
 
   if (!signed) {
-    return <Navigate to="/" />;
+    // --- CORREÇÃO AQUI ---
+    // Se não estiver logado, redireciona para a NOVA página de login.
+    return <Navigate to="/login" />; 
   }
 
   // Renderiza o layout simplificado
   return (
-    // A classe 'open' não é mais necessária
     <div className="app-layout"> 
       
       <Header /> {/* A navbar azul */}

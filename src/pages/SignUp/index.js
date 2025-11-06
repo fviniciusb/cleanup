@@ -1,9 +1,14 @@
 import { useState, useContext } from 'react';
+import '../SignIn/signin.css';
 
 import logo from '../../assets/logo-feia.png';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../contexts/auth';
 import { toast } from 'react-toastify';
+
+// 1. IMPORTS ADICIONADOS PARA A VERIFICAÇÃO DE E-MAIL
+import { db } from '../../services/FirebaseConnection';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 
 export default function SignUp() {
@@ -16,42 +21,46 @@ export default function SignUp() {
 
   const { signUp, loadingAuth, signUpWithGoogle } = useContext(AuthContext);
 
+  // 2. FUNÇÃO ATUALIZADA COM A PRÉ-VERIFICAÇÃO
   async function handleEmailSignUp(e) {
     e.preventDefault();
 
-    // 1. Validação dos campos do formulário
+    // Validações de formulário (iguais)
     if (nome === '' || sobrenome === '' || email === '' || senha === '' || objetivo === '') {
       toast.info('Preencha todos os campos.');
       return;
     }
-
     if (senha !== confirmarSenha) {
       toast.error('As senhas não correspondem.');
       return;
     }
-
     if (senha.length < 8) {
       toast.info('A senha deve ter pelo menos 8 caracteres.');
       return;
     }
 
-    // --- VERIFICAR SE O E-MAIL JÁ EXISTE ---
+    // --- VERIFICAÇÃO DE E-MAIL EXISTENTE (RE-ADICIONADA) ---
     try {
+      const usuariosRef = collection(db, 'usuarios');
+      const q = query(usuariosRef, where("email", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        toast.error("Este e-mail já está em uso. Por favor, faça login.");
+        return; // Para o cadastro
+      }
+      
+      // Se o e-mail estiver livre, chama o signUp do contexto
       await signUp(nome, sobrenome, email, senha, objetivo);
 
-      // Se chegou aqui, o cadastro foi um sucesso
-      // toast.success("Conta criada com sucesso!");
-      // redirecionar...
-
     } catch (error) {
-      // O NOVO CATCH: captura erros do Firebase AUTH
-      console.error("Erro no processo de cadastro:", error.code);
-      // toast.error("Não foi possível verificar o e-mail. Tente novamente.");
-      return; // Impede o cadastro se a verificação falhar
+      console.error("Erro no processo de cadastro:", error);
+      toast.error("Ocorreu um erro ao verificar o e-mail.");
     }
+    // --- FIM DA VERIFICAÇÃO ---
   }
 
-  // Função para cadastro com o Google 
+  // Função para cadastro com o Google (igual)
   async function handleGoogleSignUp() {
     if (objetivo === '') {
       toast.info('Por favor, selecione seu objetivo (Cliente ou Prestador) antes de continuar.');
@@ -105,15 +114,33 @@ export default function SignUp() {
             onChange={(e) => setConfirmarSenha(e.target.value)}
           />
 
-          <select
-            className='select-profile'
-            value={objetivo}
-            onChange={(e) => setObjetivo(e.target.value)}
-          >
-            <option value="" hidden>Selecione seu objetivo</option>
-            <option value="1">Cliente</option>
-            <option value="2">Prestador</option>
-          </select>
+          {/* --- 3. MELHORIA VISUAL: <select> trocado por botões de rádio --- */}
+          {/* (Isto agora vai combinar com o seu 'signin.css') */}
+          <div className="select-profile">
+            <input 
+              type="radio" 
+              id="cliente" 
+              name="objetivo" 
+              value="1"
+              checked={objetivo === "1"}
+              onChange={(e) => setObjetivo(e.target.value)}
+            />
+            <label className="radio-label" htmlFor="cliente">
+              Sou Cliente
+            </label>
+
+            <input 
+              type="radio" 
+              id="prestador" 
+              name="objetivo" 
+              value="2" 
+              checked={objetivo === "2"}
+              onChange={(e) => setObjetivo(e.target.value)}
+            />
+            <label className="radio-label" htmlFor="prestador">
+              Sou Prestador
+            </label>
+          </div>
 
           <button type="submit" className='botaoLogin' disabled={loadingAuth}>
             {loadingAuth ? 'Carregando...' : 'Cadastrar-se'}
@@ -124,16 +151,16 @@ export default function SignUp() {
           <span>OU</span>
         </div>
 
+        {/* Botão do Google (igual) */}
         <button
           className="gsi-material-button"
-          onClick={handleGoogleSignUp} // Chama a nova função
-          type="button" // Impede o envio do formulário
-          disabled={loadingAuth} // Desativa se estiver carregando
+          onClick={handleGoogleSignUp}
+          type="button"
+          disabled={loadingAuth}
         >
           <div className="gsi-material-button-state"></div>
           <div className="gsi-material-button-content-wrapper">
             <div className="gsi-material-button-icon">
-              {/* Converti 'style' para o formato JSX */}
               <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" xmlnsXlink="http://www.w3.org/1999/xlink" style={{ display: 'block' }}>
                 <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
                 <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
@@ -142,14 +169,13 @@ export default function SignUp() {
                 <path fill="none" d="M0 0h48v48H0z"></path>
               </svg>
             </div>
-            {/* Converti 'class' para 'className' */}
             <span className="gsi-material-button-contents">Registrar com Google</span>
             <span style={{ display: 'none' }}>Entrar com Google</span>
           </div>
         </button>
-        {/* --- FIM DO BOTÃO DO GOOGLE --- */}
 
-        <Link to="/">Já possui uma conta? <span className="cadastre-se">Faça login</span></Link>
+        {/* --- 4. CORREÇÃO DO LINK --- */}
+        <Link to="/login">Já possui uma conta? <span className="cadastre-se">Faça login</span></Link>
       </div>
     </div>
   );

@@ -8,26 +8,32 @@ import { toast } from 'react-toastify';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
-  // 1. CORREÇÃO: 'setSenha' mudou para 'setPassword'
   const [password, setPassword] = useState('');
+  
+  // --- 1. ADICIONADO O ESTADO DE ERRO ---
+  const [loginError, setLoginError] = useState(false); 
 
-  // 2. CORREÇÃO: 'handleGoogleSignUp' mudou para 'signUpWithGoogle'
   const { signIn, loadingAuth, signUpWithGoogle } = useContext(AuthContext);
 
-  // Função de login com email/senha (mudei 'logar' para 'handleSignIn' por clareza)
+  // --- 2. FUNÇÃO handleSignIn ATUALIZADA ---
   async function handleSignIn(e) {
     e.preventDefault();
+    
+    setLoginError(false); // Reseta o erro a cada nova tentativa
 
     if (email !== '' && password !== '') {
-      await signIn(email, password); // 'await' é bom aqui
+      // O 'signIn' no seu auth.js já retorna true/false
+      const success = await signIn(email, password); 
+      
+      if (!success) {
+        setLoginError(true); // Ativa o erro se o login falhar
+      }
     } else {
       toast.info('Preencha todos os campos.');
     }
   }
 
-  // 3. NOVA FUNÇÃO: Chama a função do Google do seu contexto
   async function handleGoogleSignIn() {
-    // A função no seu AuthContext já define 'objetivo = "1"' como padrão
     await signUpWithGoogle();
   }
 
@@ -51,7 +57,6 @@ export default function SignIn() {
             type="password"
             placeholder="********"
             value={password}
-            // 4. CORREÇÃO: 'setSenha' mudou para 'setPassword'
             onChange={(e) => setPassword(e.target.value)}
           />
 
@@ -60,17 +65,16 @@ export default function SignIn() {
           </button>
         </form>
 
-        {/* --- 5. BOTÃO DO GOOGLE ADICIONADO AQUI --- */}
+        {/* --- 3. BOTÃO DO GOOGLE (Seu código original) --- */}
         <button
           className="gsi-material-button"
-          onClick={handleGoogleSignIn} // Chama a nova função
-          type="button" // Impede o envio do formulário
-          disabled={loadingAuth} // Desativa se estiver carregando
+          onClick={handleGoogleSignIn}
+          type="button"
+          disabled={loadingAuth}
         >
           <div className="gsi-material-button-state"></div>
           <div className="gsi-material-button-content-wrapper">
             <div className="gsi-material-button-icon">
-              {/* Converti 'style' para o formato JSX */}
               <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" xmlnsXlink="http://www.w3.org/1999/xlink" style={{ display: 'block' }}>
                 <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
                 <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
@@ -79,15 +83,21 @@ export default function SignIn() {
                 <path fill="none" d="M0 0h48v48H0z"></path>
               </svg>
             </div>
-            {/* Converti 'class' para 'className' */}
             <span className="gsi-material-button-contents">Entrar com Google</span>
             <span style={{ display: 'none' }}>Entrar com Google</span>
           </div>
         </button>
-        {/* --- FIM DO BOTÃO DO GOOGLE --- */}
 
+        {/* Link para /cadastrar (Já estava correto) */}
         <Link to="/cadastrar">Não possui uma conta? <span className='cadastre-se'>Cadastre-se</span></Link>
-        <Link to="/recuperar-senha"><span className='forgot-password'>Esqueci a senha</span></Link>
+        
+        {/* --- 4. LINK DE RECUPERAÇÃO CONDICIONAL --- */}
+        {/* Agora só aparece se o login falhar */}
+        {loginError && (
+          <Link to="/recuperar-senha" className="forgot-password-link">
+            Esqueceu sua senha?
+          </Link>
+        )}
 
       </div>
     </div>

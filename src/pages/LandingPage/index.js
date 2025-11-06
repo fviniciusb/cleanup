@@ -1,93 +1,78 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { db } from '../../services/FirebaseConnection';
-import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
-import { FiChevronLeft, FiChevronRight, FiStar, FiPhone, FiMail } from 'react-icons/fi';
-import avatarPadrao from '../../assets/avatar.png'; // Use seu avatar padrão
+import { FiChevronLeft, FiChevronRight, FiPhone, FiMail, FiMenu, FiX } from 'react-icons/fi';
+import './landing.css';
 
-import './landing.css'; // Criaremos este CSS no próximo passo
-
-// --- Configuração do Carrossel ---
 const carouselSlides = [
-  {
-    image: 'https://placehold.co/1200x500/5EA1BD/FFF?text=Limpeza+Residencial',
-    title: 'Limpeza Residencial Completa',
-    description: 'Deixe sua casa brilhando com nossos profissionais de confiança.'
-  },
-  {
-    image: 'https://placehold.co/1200x500/1A4A5F/FFF?text=Serviços+Comerciais',
-    title: 'Limpeza Para Seu Negócio',
-    description: 'Escritórios, lojas e consultórios limpos para receber seus clientes.'
-  },
-  {
-    image: 'https://placehold.co/1200x500/395e6e/FFF?text=Passar+Roupas',
-    title: 'Roupas Passadas',
-    description: 'Profissionais que também cuidam das suas roupas.'
-  }
+  { image: 'https://images.unsplash.com/photo-1596424222201-6c183b9c03b1?q=80&w=2070&auto=format&fit=crop', title: 'Limpeza Residencial Completa', description: 'Deixe sua casa brilhando com nossos profissionais de confiança.' },
+  { image: 'https://images.unsplash.com/photo-1621905251918-4841a19f39ad?q=80&w=1932&auto=format&fit=crop', title: 'Limpeza Para Seu Negócio', description: 'Escritórios, lojas e consultórios limpos para receber seus clientes.' },
+  { image: 'https://images.unsplash.com/photo-1626733981881-acb2b938002a?q=80&w=2070&auto=format&fit=crop', title: 'Cuidados com Roupas', description: 'Profissionais que também cuidam de lavar e passar suas roupas.' }
 ];
 
 export default function LandingPage() {
-  const [topPrestadores, setTopPrestadores] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const servicosRef = useRef(null);
 
-  // --- Lógica do Carrossel ---
-  const nextSlide = () => {
-    setCurrentSlide(currentSlide === carouselSlides.length - 1 ? 0 : currentSlide + 1);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide(currentSlide === 0 ? carouselSlides.length - 1 : currentSlide - 1);
-  };
-
-  // --- Lógica para Buscar Top Prestadores ---
   useEffect(() => {
-    async function fetchTopPrestadores() {
-      try {
-        const usuariosRef = collection(db, "usuarios");
-        // Query: Busca usuários que são "Prestadores" (objetivo 2),
-        // ordena pela maior nota (mediaAvaliacoes)
-        // e limita aos 3 primeiros.
-        const q = query(usuariosRef,
-          where("objetivo", "==", "2"),
-          orderBy("mediaAvaliacoes", "desc"),
-          limit(3)
-        );
-
-        const querySnapshot = await getDocs(q);
-        const lista = [];
-        querySnapshot.forEach((doc) => {
-          lista.push({ id: doc.id, ...doc.data() });
-        });
-
-        setTopPrestadores(lista);
-      } catch (error) {
-        console.error("Erro ao buscar top prestadores: ", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchTopPrestadores();
+    const slideInterval = setInterval(() => {
+      setCurrentSlide(prevSlide => 
+        prevSlide === carouselSlides.length - 1 ? 0 : prevSlide + 1
+      );
+    }, 5000);
+    return () => clearInterval(slideInterval);
   }, []);
 
+  const nextSlide = () => setCurrentSlide(currentSlide === carouselSlides.length - 1 ? 0 : currentSlide + 1);
+  const prevSlide = () => setCurrentSlide(currentSlide === 0 ? carouselSlides.length - 1 : currentSlide + 1);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      }, 
+      { threshold: 0.1 }
+    );
+    const currentRef = servicosRef.current;
+    if (currentRef) observer.observe(currentRef);
+    return () => {
+      if (currentRef) observer.unobserve(currentRef);
+    };
+  }, []);
 
   return (
     <div className="landing-container">
-      
-      {/* --- 1. Header (Barra de Navegação da Landing Page) --- */}
       <header className="landing-header">
         <nav className="landing-nav">
           <div className="landing-logo">CleanUp</div>
-          <div className="landing-nav-links">
+          <div className="landing-nav-links-desktop">
             <a href="#servicos">Serviços</a>
-            <a href="#prestadores">Destaques</a>
+            <Link to="/sobre">Sobre Nós</Link>
             <a href="#contato">Contato</a>
             <Link to="/login" className="btn-login">Entrar</Link>
           </div>
+          <button className="landing-nav-toggle" onClick={() => setIsMobileMenuOpen(true)}>
+            <FiMenu size={28} />
+          </button>
         </nav>
       </header>
 
-      {/* --- 2. Seção Hero (Principal) --- */}
+      <div className={`mobile-nav-menu ${isMobileMenuOpen ? 'open' : ''}`}>
+        <button className="mobile-nav-close" onClick={() => setIsMobileMenuOpen(false)}>
+          <FiX size={30} />
+        </button>
+        <a href="#servicos" onClick={() => setIsMobileMenuOpen(false)}>Serviços</a>
+        <Link to="/sobre" onClick={() => setIsMobileMenuOpen(false)}>Sobre Nós</Link>
+        <a href="#contato" onClick={() => setIsMobileMenuOpen(false)}>Contato</a>
+        <Link to="/login" className="btn-login" onClick={() => setIsMobileMenuOpen(false)}>
+          Entrar
+        </Link>
+      </div>
+
       <section className="hero-section">
         <div className="hero-content">
           <h1>A faxina que você precisa, com a confiança que você merece.</h1>
@@ -96,13 +81,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* --- 3. Seção Carrossel de Serviços --- */}
-      <section id="servicos" className="carousel-section">
+      <section id="servicos" className="carousel-section fade-in-section" ref={servicosRef}>
         <h2>Nossos Serviços</h2>
         <div className="carousel">
           <button onClick={prevSlide} className="carousel-btn prev"><FiChevronLeft size={30} /></button>
-          
-          {/* Slides */}
           <div className="carousel-track" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
             {carouselSlides.map((slide, index) => (
               <div className="carousel-slide" key={index}>
@@ -114,10 +96,7 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-
           <button onClick={nextSlide} className="carousel-btn next"><FiChevronRight size={30} /></button>
-          
-          {/* Bolinhas de navegação */}
           <div className="carousel-dots">
             {carouselSlides.map((_, index) => (
               <button 
@@ -130,34 +109,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* --- 4. Seção Top Prestadores --- */}
-      <section id="prestadores" className="prestadores-section">
-        <h2>Profissionais em Destaque</h2>
-        <div className="prestadores-grid">
-          {loading ? (
-            <p>Carregando profissionais...</p>
-          ) : (
-            topPrestadores.map(prestador => (
-              <div className="prestador-card" key={prestador.id}>
-                <img 
-                  src={prestador.avatarUrl || avatarPadrao} 
-                  alt={prestador.nome} 
-                  className="prestador-avatar"
-                />
-                <h3>{prestador.nome} {prestador.sobrenome}</h3>
-                <div className="prestador-rating">
-                  <FiStar color="#F5B50A" />
-                  <strong>{prestador.mediaAvaliacoes ? prestador.mediaAvaliacoes.toFixed(1) : 'N/A'}</strong>
-                  <span>({prestador.totalAvaliacoes || 0} avaliações)</span>
-                </div>
-                <p className="prestador-servicos">{prestador.servicos || "Serviços não informados."}</p>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-
-      {/* --- 5. Seção Contato / Footer --- */}
       <footer id="contato" className="footer-section">
         <div className="footer-content">
           <div className="footer-col">
@@ -179,7 +130,6 @@ export default function LandingPage() {
           <p>© 2025 CleanUp. Todos os direitos reservados.</p>
         </div>
       </footer>
-
     </div>
   );
 }
