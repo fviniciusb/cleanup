@@ -7,7 +7,7 @@ import {
   sendPasswordResetEmail,
   GoogleAuthProvider, 
   signInWithPopup, 
-  sendEmailVerification // 👈 A VÍRGULA QUE FALTAVA ESTAVA AQUI
+  sendEmailVerification 
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
