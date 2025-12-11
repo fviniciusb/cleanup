@@ -1,36 +1,36 @@
 // src/pages/ChatPage/index.js
 import { useState, useEffect, useContext, useRef } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { 
-    doc, collection, addDoc, query, 
-    orderBy, onSnapshot, serverTimestamp, 
+import {
+    doc, collection, addDoc, query,
+    orderBy, onSnapshot, serverTimestamp,
     setDoc, getDoc, updateDoc  // <-- Importe getDoc, updateDoc
 } from 'firebase/firestore';
 import { AuthContext } from '../../contexts/auth';
 import { db } from '../../services/FirebaseConnection';
 import { toast } from 'react-toastify';
 import { FiSend } from 'react-icons/fi';
-import './chat.css'; 
+import './chat.css';
 
 export default function ChatPage() {
     const { user } = useContext(AuthContext);
-    const { chatId } = useParams(); 
-    const location = useLocation(); 
+    const { chatId } = useParams();
+    const location = useLocation();
     const navigate = useNavigate();
 
     // Renomeei para 'chatInfo' para ser mais claro
-    const [chatInfo, setChatInfo] = useState(null); 
+    const [chatInfo, setChatInfo] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [loading, setLoading] = useState(true);
 
-    const messagesEndRef = useRef(null); 
+    const messagesEndRef = useRef(null);
 
     // --- ESTE É O NOVO useEffect MESTRE ---
     // Ele verifica se o chat existe e, se não, o cria.
     useEffect(() => {
         // Espera o usuário carregar
-        if (!user || !chatId) return; 
+        if (!user || !chatId) return;
 
         async function loadAndCreateChat() {
             setLoading(true);
@@ -52,11 +52,11 @@ export default function ChatPage() {
                     name: chatData.userNames[otherUserId] || 'Usuário',
                     id: otherUserId
                 });
-                
+
             } else {
                 // --- 2. CHAT NÃO EXISTE, VAMOS CRIAR ---
                 const recipientData = location.state;
-                
+
                 // Se não temos os dados (ex: F5 na página), não podemos criar
                 if (!recipientData || !recipientData.recipientId) {
                     toast.error("Erro ao carregar o chat. Inicie pela tela de agendamentos.");
@@ -79,7 +79,7 @@ export default function ChatPage() {
                         lastMessage: "Inicie a conversa!",
                         lastMessageAt: serverTimestamp() // Padronizado
                     });
-                    
+
                     // Define as informações para a tela
                     setChatInfo({
                         name: outroNome,
@@ -103,12 +103,12 @@ export default function ChatPage() {
     // SÓ RODA DEPOIS QUE O 'chatInfo' ESTIVER PRONTO
     useEffect(() => {
         // Se o chatInfo não carregou, não faça nada
-        if (!chatInfo) return; 
+        if (!chatInfo) return;
 
         // Agora é seguro ouvir as mensagens
         const messagesRef = collection(db, "chats", chatId, "messages");
         // Padronizado para 'createdAt'
-        const q = query(messagesRef, orderBy("createdAt", "asc")); 
+        const q = query(messagesRef, orderBy("createdAt", "asc"));
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const msgs = [];
@@ -139,7 +139,7 @@ export default function ChatPage() {
         if (newMessage.trim() === '') return;
 
         const messagesRef = collection(db, "chats", chatId, "messages");
-        
+
         try {
             // 1. Adiciona a nova mensagem
             await addDoc(messagesRef, {
@@ -164,7 +164,7 @@ export default function ChatPage() {
     }
 
     // Se o loading principal (o da criação) ainda está rodando
-    if (loading && !chatInfo) { 
+    if (loading && !chatInfo) {
         return <div className="loading-container">Carregando Chat...</div>;
     }
 
@@ -179,10 +179,10 @@ export default function ChatPage() {
             <div className="message-list">
                 {/* Mostra um loading secundário SÓ para as mensagens */}
                 {loading && messages.length === 0 && <div className="loading-chat">Carregando...</div>}
-                
+
                 {messages.map((msg) => (
-                    <div 
-                        key={msg.id} 
+                    <div
+                        key={msg.id}
                         className={`message ${msg.senderId === user.uid ? 'sent' : 'received'}`}
                     >
                         <div className="message-bubble">

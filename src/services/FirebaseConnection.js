@@ -2,19 +2,22 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-// 1. Import getDatabase
 import { getDatabase } from "firebase/database";
+import { getFunctions } from 'firebase/functions';
 
+// --- 1. MELHORIA DE SEGURANÇA (MUITO IMPORTANTE) ---
+// Suas chaves NUNCA devem ficar visíveis no código.
+// Elas devem ser lidas das Variáveis de Ambiente (arquivo .env).
+// Crie um arquivo .env na raiz do seu projeto e cole suas chaves lá.
 const firebaseConfig = {
-  apiKey: "AIzaSyDeNgrFUdLTeXyErl3g01tOh1AkLE1aP5c", // Consider using environment variables for keys
-  authDomain: "cleanup-af26e.firebaseapp.com",
-  projectId: "cleanup-af26e",
-  storageBucket: "cleanup-af26e.appspot.com", // Usually .appspot.com for storage
-  messagingSenderId: "72304199163",
-  appId: "1:72304199163:web:7f93b8f23062a0a3ba375e",
-  measurementId: "G-0W0W1TTWNM",
-  // 2. Make sure this URL is exactly as shown in your Firebase console
-  databaseURL: "https://cleanup-af26e-default-rtdb.firebaseio.com/"
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID,
+  databaseURL: process.env.REACT_APP_DATABASE_URL
 };
 
 // Initialize Firebase
@@ -24,8 +27,11 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 const storage = getStorage(firebaseApp);
-// 3. Initialize rtdb
 const rtdb = getDatabase(firebaseApp);
 
-// 4. Export rtdb along with the others
-export { auth, db, storage, rtdb };
+// --- 2. CORREÇÃO DO BUG ---
+// A variável se chama 'firebaseApp', e não 'app'.
+const functions = getFunctions(firebaseApp);
+
+// Export rtdb along with the others
+export { auth, db, storage, rtdb, functions };

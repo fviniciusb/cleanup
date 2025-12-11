@@ -1,59 +1,35 @@
-// Em: src/routes/Private.js
-
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { AuthContext } from '../contexts/auth';
 import { Navigate } from 'react-router-dom';
 
-// 1. IMPORTE OS COMPONENTES DE LAYOUT
-import Header from '../components/Header';       // Sua Sidebar (Header.js)
-import PageHeader from '../components/PageHeader'; // A barra do topo (nova)
-import Title from '../components/Title';         // Seu componente de Título
-        
-// 2. IMPORTE O CSS DO LAYOUT
-import './layout.css'; 
+import Header from '../components/Header'; // A NOVA navbar azul
+import './layout.css'; // O CSS que já corrigimos (com padding-top)
 
-// 3. Receba { children, title, icon } como props
-export default function Private({ children, title, icon }) {
+export default function Private({ children }) {
   const { signed, loading } = useContext(AuthContext);
 
-  // 4. O ESTADO DE 'ABRIR/FECHAR' VIVE AQUI
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   if (loading) {
-    // É bom ter um loading aqui
     return <div>Carregando...</div>; 
   }
 
   if (!signed) {
-    return <Navigate to="/" />; // Redireciona para o login
+    // --- CORREÇÃO AQUI ---
+    // Se não estiver logado, redireciona para a NOVA página de login.
+    return <Navigate to="/login" />; 
   }
 
-  // 5. SE ESTIVER LOGADO, RENDERIZA O LAYOUT COMPLETO
+  // Renderiza o layout simplificado
   return (
-    <div className={`app-layout ${isSidebarOpen ? 'open' : ''}`}>
+    <div className="app-layout"> 
       
-      {/* Sua Sidebar (components/Header) */}
-      <Header isOpen={isSidebarOpen} />
+      <Header /> {/* A navbar azul */}
 
-      {/* O Conteúdo Principal */}
-      <div className="main-content">
-        
-        {/* A Barra do Topo (PageHeader) */}
-        <PageHeader toggleSidebar={toggleSidebar}>
-            <Title nome={title}>
-                {icon}
-            </Title>
-        </PageHeader>
-        
-        {/* O conteúdo da página (Home, Perfil, etc) */}
+      <main className="main-content">
+        {/* O PageHeader e Title foram movidos para DENTRO de {children} */}
         <div className="page-content-area">
           {children}
         </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -9,12 +9,7 @@ import AuthProvider from './contexts/auth';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      {/* 2. "ABRACE" O <App/> COM O PROVIDER AQUI */}
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </BrowserRouter>
+    <App />
   </React.StrictMode>
 );
 
