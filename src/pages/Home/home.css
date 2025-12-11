@@ -3,7 +3,7 @@
   --primary-hover: #4b90a5;
   --secondary-color: #395e6e;
   --text-dark: #2a6179;
-  --text-light: #666;
+  --text-light: #ffffff;
   --warning-color: #F5B50A; 
   --background-light: white;
   --border-light: #ccc;
@@ -55,6 +55,7 @@
 .info {
     padding: 20px;
     text-align: center;
+    
 }
 
 .info h2 {
@@ -85,7 +86,7 @@
 
 .rating span {
   font-size: 0.8rem;
-  color: var(--text-light);
+  color: var(--text-dark);
 }
 
 .btn-agendar {
@@ -204,43 +205,4 @@
   .card {
     width: 100%;
   }
-}
-
-
-/* --- ESTILOS PARA O DATEPICKER NO MODAL --- */
-
-/* Estiliza o input do DatePicker para parecer com os outros */
-.datepicker-input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-family: inherit;
-  box-sizing: border-box; 
-  background-color: #f9f9f9;
-}
-.datepicker-input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
-  background-color: #fff;
-}
-
-/* Estiliza os dias indisponíveis (bloqueados) */
-.react-datepicker__day--disabled,
-.react-datepicker__day--excluded {
-  background-color: #f8d7da !important; 
-  color: #721c24 !important; 
-  text-decoration: line-through; 
-  cursor: not-allowed;
-}
-.react-datepicker__day--disabled:hover,
-.react-datepicker__day--excluded:hover {
-    background-color: #f1c0c4 !important; 
-}
-
-/* Garante que o calendário pop-up apareça sobre o modal */
-.react-datepicker-popper {
-    z-index: 1001; 
 }

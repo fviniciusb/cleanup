@@ -1,25 +1,46 @@
 import { useEffect, useState, useContext } from "react";
 import avatar from '../../assets/avatar.png';
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../services/FirebaseConnection";
+import { collection, getDocs, query, where } from "firebase/firestore";
+// 1. IMPORTANTE: Importamos 'functions' do nosso arquivo de conexão
+import { db, functions } from "../../services/FirebaseConnection"; 
 import { AuthContext } from "../../contexts/auth";
 import { toast } from "react-toastify";
 import { FaStar } from "react-icons/fa";
-import { getFunctions, httpsCallable } from "firebase/functions";
-
-// Importe os componentes de Título
+import { httpsCallable } from "firebase/functions";
 import PageHeader from '../../components/PageHeader';
 import Title from '../../components/Title';
 import { FiHome } from 'react-icons/fi';
 
-import "./home.css"; // CSS com os cards e o modal
+import "./home.css"; 
+
+function renderServicos(servicos) {
+  if (!servicos) return "Não informado";
+  if (Array.isArray(servicos)) {
+    if (servicos.length === 0) return "Nenhum serviço cadastrado";
+    const primeiroServico = servicos[0];
+    let texto = primeiroServico.nome;
+    if (primeiroServico.preco && primeiroServico.preco !== 'A combinar') {
+        texto += ` (${primeiroServico.preco})`;
+    }
+    if (servicos.length > 1) {
+        texto += ` e mais ${servicos.length - 1}...`;
+    }
+    return texto;
+  }
+  if (typeof servicos === 'string') return servicos;
+  if (typeof servicos === 'object') {
+     const nome = servicos.nome || "Serviço sem nome";
+     const preco = servicos.preco ? ` - ${servicos.preco}` : "";
+     return `${nome}${preco}`;
+  }
+  return "Formato inválido";
+}
 
 export default function Home() {
     const { user } = useContext(AuthContext);
     const [faxineiras, setFaxineiras] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // States do Modal
     const [selectedFaxineira, setSelectedFaxineira] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [selectedDate, setSelectedDate] = useState("");
@@ -28,21 +49,26 @@ export default function Home() {
     useEffect(() => {
         async function fetchFaxineiras() {
             try {
-                const querySnapshot = await getDocs(collection(db, "usuarios"));
+                const usuariosRef = collection(db, "usuarios");
+                const q = query(usuariosRef, 
+                  where("objetivo", "==", "2"), 
+                  where("disponivel", "==", true)
+                );
+                
+                const querySnapshot = await getDocs(q);
                 const listaFaxineiras = [];
+                
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    if (data.objetivo === "2" && data.disponivel) {
-                        listaFaxineiras.push({
-                            id: doc.id,
-                            nome: `${data.nome} ${data.sobrenome}`,
-                            servicos: data.servicos,
-                            avatarUrl: data.avatarUrl || "",
-                            telefone: data.telefone || "Não informado",
-                            mediaAvaliacoes: data.mediaAvaliacoes || 0,
-                            totalAvaliacoes: data.totalAvaliacoes || 0,
-                        });
-                    }
+                    listaFaxineiras.push({
+                        id: doc.id,
+                        nome: `${data.nome} ${data.sobrenome}`,
+                        servicos: data.servicos,
+                        avatarUrl: data.avatarUrl || "",
+                        telefone: data.telefone || "Não informado",
+                        mediaAvaliacoes: data.mediaAvaliacoes || 0,
+                        totalAvaliacoes: data.totalAvaliacoes || 0,
+                    });
                 });
                 setFaxineiras(listaFaxineiras);
             } catch (error) {
@@ -55,6 +81,8 @@ export default function Home() {
     }, []);
 
     const openModal = (faxineira) => {
+        // Garantir que a faxineira selecionada tem ID
+        console.log("Faxineira selecionada:", faxineira);
         setSelectedFaxineira(faxineira);
         setShowModal(true);
     };
@@ -65,10 +93,16 @@ export default function Home() {
         setSelectedTime("");
     };
 
-    // A FUNÇÃO DE AGENDAMENTO QUE CHAMA A CLOUD FUNCTION
-const handleSchedule = async () => {
+    // --- AQUI ESTÁ A MODIFICAÇÃO PRINCIPAL ---
+    const handleSchedule = async () => {
         if (!selectedDate || !selectedTime) {
             toast.error("Por favor, selecione uma data e horário.");
+            return;
+        }
+
+        // Verifica se o usuário está logado
+        if (!user || !user.uid) {
+            toast.error("Você precisa estar logado para agendar.");
             return;
         }
 
@@ -83,42 +117,56 @@ const handleSchedule = async () => {
                 return;
             }
 
+            // Montagem do Objeto de Dados
             const dadosAgendamento = {
                 prestadorId: selectedFaxineira.id,
-                prestadorNome: selectedFaxineira.nome,
-                prestadorAvatar: selectedFaxineira.avatarUrl,
-                clienteNome: `${user.nome} ${user.sobrenome}`,
-                clienteAvatar: user.avatarUrl,
+                prestadorNome: selectedFaxineira.nome || "Prestador",
+                prestadorAvatar: selectedFaxineira.avatarUrl || null,
+                clienteNome: user.nome ? `${user.nome} ${user.sobrenome || ''}`.trim() : "Cliente",
+                clienteAvatar: user.avatarUrl || null,
                 dataAgendamento: selectedDate,
                 horarioAgendamento: selectedTime,
             };
 
-            const functions = getFunctions();
+            // === ÁREA DE DEBUG ===
+            console.log("=== INICIANDO AGENDAMENTO ===");
+            console.log("Dados que serão enviados:", dadosAgendamento);
+            
+            // Verificação de segurança no Front antes de chamar o Back
+            if (!dadosAgendamento.prestadorId) {
+                console.error("ERRO CRÍTICO: ID do prestador está undefined ou null!");
+                toast.error("Erro interno: Identificação do prestador falhou. Tente recarregar a página.");
+                return; 
+            }
+            // ====================
+
             const criarAgendamento = httpsCallable(functions, "criarAgendamento");
 
             toast.info("Verificando disponibilidade...");
 
             const result = await criarAgendamento(dadosAgendamento);
 
+            console.log("Sucesso no agendamento:", result.data);
             toast.success(result.data.message);
             closeModal();
 
         } catch (error) {
-            console.error("Erro do servidor:", error);
-            toast.error(error.message);
+            console.error("Erro retornado pelo servidor:", error);
+            // Tenta pegar a mensagem de erro específica do Firebase Functions ou usa uma genérica
+            const mensagem = error.message || "Erro ao realizar agendamento.";
+            toast.error(mensagem);
         }
     };
+    // ----------------------------------------
 
     return (
         <div>
-            {/* --- ADICIONADO O CABEÇALHO DA PÁGINA --- */}
             <PageHeader>
                 <Title nome="Encontre Profissionais">
                     <FiHome size={25} />
                 </Title>
             </PageHeader>
 
-            {/* --- O RESTO DA SUA PÁGINA --- */}
             {loading ? (
                 <div className="loading-container">Carregando...</div>
             ) : faxineiras.length === 0 ? (
@@ -127,7 +175,6 @@ const handleSchedule = async () => {
                 </div>
             ) : (
                 <div className="home-container">
-                    {/* Cards grid for professionals */}
                     <div className="cards-container">
                         {faxineiras.map((faxineira) => (
                             <div className="card" key={faxineira.id}>
@@ -147,23 +194,9 @@ const handleSchedule = async () => {
                                             ({faxineira.totalAvaliacoes} {faxineira.totalAvaliacoes === 1 ? 'avaliação' : 'avaliações'})
                                         </span>
                                     </div>
-                                    <div className="servicos-preview">
-                                            <strong>Serviços:</strong>
-                                            {/* Verifica se 'servicos' é um array e tem itens */}
-                                            {Array.isArray(faxineira.servicos) && faxineira.servicos.length > 0 ? (
-                                                <ul className="servicos-preview-list">
-                                                    {/* Mostra os 2 primeiros serviços */}
-                                                    {faxineira.servicos.slice(0, 2).map((servico, index) => (
-                                                        <li key={index}>{servico.nome} {servico.preco && `(${servico.preco})`}</li>
-                                                    ))}
-                                                    {/* Mostra "e mais..." se houver mais de 2 */}
-                                                    {faxineira.servicos.length > 2 && <li>e mais...</li>}
-                                                </ul>
-                                            ) : (
-                                                // Fallback se 'servicos' for antigo (texto) ou vazio
-                                                <span> {typeof faxineira.servicos === 'string' ? faxineira.servicos : "Não informado"}</span>
-                                            )}
-                                        </div>
+                                    
+                                    <p><strong>Serviços:</strong> {renderServicos(faxineira.servicos)}</p>
+                                    
                                     <p><strong>Contato:</strong> {faxineira.telefone}</p>
                                 </div>
                                 {user.objetivo === "1" && (
@@ -180,7 +213,6 @@ const handleSchedule = async () => {
                 </div>
             )}
 
-            {/* --- MODAL DE AGENDAMENTO --- */}
             {showModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">

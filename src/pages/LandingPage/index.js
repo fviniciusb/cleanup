@@ -4,9 +4,24 @@ import { FiChevronLeft, FiChevronRight, FiPhone, FiMail, FiMenu, FiX } from 'rea
 import './Landing.css';
 
 const carouselSlides = [
-  { image: 'https://images.unsplash.com/photo-1596424222201-6c183b9c03b1?q=80&w=2070&auto=format&fit=crop', title: 'Limpeza Residencial Completa', description: 'Deixe sua casa brilhando com nossos profissionais de confiança.' },
-  { image: 'https://images.unsplash.com/photo-1621905251918-4841a19f39ad?q=80&w=1932&auto=format&fit=crop', title: 'Limpeza Para Seu Negócio', description: 'Escritórios, lojas e consultórios limpos para receber seus clientes.' },
-  { image: 'https://images.unsplash.com/photo-1626733981881-acb2b938002a?q=80&w=2070&auto=format&fit=crop', title: 'Cuidados com Roupas', description: 'Profissionais que também cuidam de lavar e passar suas roupas.' }
+  {
+    // Imagem: Sala de estar limpa e brilhante
+    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=2070&auto=format&fit=crop',
+    title: 'Limpeza Residencial Completa',
+    description: 'Deixe sua casa brilhando com nossos profissionais de confiança.'
+  },
+  {
+    // Imagem: Escritório moderno e limpo
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop',
+    title: 'Limpeza Para Seu Negócio',
+    description: 'Escritórios, lojas e consultórios limpos para receber seus clientes.'
+  },
+  {
+    // Imagem: Roupas passadas e organizadas
+    image: 'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?q=80&w=2070&auto=format&fit=crop',
+    title: 'Cuidados com Roupas',
+    description: 'Profissionais que também cuidam de lavar e passar suas roupas.'
+  }
 ];
 
 export default function LandingPage() {
