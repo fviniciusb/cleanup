@@ -1,4 +1,4 @@
-/* Variáveis globais para facilitar ajustes rápidos */
+/* Variáveis globais */
 :root {
   --bg: #fff;
   --muted: #777;
@@ -9,11 +9,12 @@
   --card-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
-/* --- LAYOUT PRINCIPAL (2 COLUNAS) --- */
+/* --- LAYOUT DESKTOP (Padrão) --- */
 .profile-container {
   display: flex;
   align-items: flex-start;
-  max-width: 1000px;
+  /* ATUALIZADO: Maior largura para desktop */
+  max-width: 1280px; 
   width: calc(100% - 32px);
   margin: 24px auto;
   position: relative;
@@ -23,13 +24,12 @@
   animation: floatUp 320ms ease both;
 }
 
-/* Pequena animação de entrada para dar sensação de dinamismo */
 @keyframes floatUp {
   from { opacity: 0; transform: translateY(12px) scale(0.995); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* --- COLUNA DA ESQUERDA (SIDEBAR) --- */
+/* Sidebar */
 .profile-sidebar {
   width: 280px;
   flex-shrink: 0;
@@ -40,12 +40,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.profile-sidebar:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.09);
 }
 
 .label-avatar {
@@ -54,9 +48,8 @@
   border-radius: 50%;
   position: relative;
   cursor: pointer;
-  margin: 0 0 16px 0; /* remove margem superior, mantém inferior e garante alinhamento à esquerda */
+  margin: 0 0 16px 0;
   overflow: hidden;
-  transition: box-shadow 0.18s ease, transform 0.18s ease;
 }
 
 .label-avatar img {
@@ -67,478 +60,182 @@
   border: 4px solid #f0f0f0;
 }
 
-.label-avatar:hover img { transform: scale(1.03); }
-
 .label-avatar span {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background-color: #007bff;
-  /* Azul */
-  color: white;
-  width: 40px;
-  height: 40px;
+  bottom: 10px; right: 10px;
+  background-color: #007bff; color: white;
+  width: 40px; height: 40px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
+  display: flex; align-items: center; justify-content: center;
 }
 
-.label-avatar:hover span {
-  background-color: #0056b3;
-}
+.sidebar-info { text-align: center; width: 100%; }
+.user-name { font-size: 1.25rem; font-weight: 600; color: #333; margin: 0; }
+.user-email { font-size: 0.9rem; color: #777; margin-top: 4px; }
 
-.sidebar-info {
-  text-align: center;
-  word-wrap: break-word;
-  width: 100%;
-}
-
-.user-name {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-  text-align: center;
-}
-
-.user-email {
-  font-size: 0.9rem;
-  color: #777;
-  margin-top: 4px;
-  text-align: center;
-}
-
-/* Botão de Disponibilidade */
 .btn-disponibilidade {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 24px;
-  transition: all 0.2s ease;
+  width: 100%; padding: 12px;
+  border: none; border-radius: 6px;
+  font-size: 1rem; font-weight: 600; cursor: pointer;
+  margin-top: 24px; transition: all 0.2s ease;
 }
+.btn-disponibilidade.disponivel { background-color: var(--success); color: white; }
+.btn-disponibilidade.indisponivel { background-color: var(--danger); color: white; }
 
-.btn-disponibilidade.disponivel {
-  background-color: #28a745;
-  /* Verde */
-  color: white;
-}
-
-.btn-disponibilidade.disponivel:hover {
-  background-color: #218838;
-}
-
-.btn-disponibilidade.indisponivel {
-  background-color: #dc3545;
-  /* Vermelho */
-  color: white;
-}
-
-.btn-disponibilidade.indisponivel:hover {
-  background-color: #c82333;
-}
-
-
-/* --- COLUNA DA DIREITA (FORMULÁRIO) --- */
-.profile-form-container {
+/* --- FORMULÁRIO (DIREITA) --- */
+.form-profile {
   flex-grow: 1;
+  /* Largura padrão Desktop */
+  max-width: calc(100% - 280px - 24px); 
+}
+
+.profile-form-container {
   background-color: var(--bg);
   border-radius: 8px;
   box-shadow: var(--card-shadow);
-  padding: 20px;
-  max-width: calc(100% - 280px - 24px);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.profile-form-container:focus-within {
-  box-shadow: 0 12px 34px rgba(0,0,0,0.08);
-}
-
-/* O grid do formulário */
-.form-grid {
-  display: grid;
-  /* Cria 2 colunas de tamanho igual */
-  grid-template-columns: 1fr 1fr;
-  gap: 17px;
-  /* Espaço entre os campos */
-}
-
-/* Grupo de campo individual (label + input) */
-.field-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.field-group label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #555;
-  margin-bottom: 8px;
-}
-
-/* Estilo base para todos os inputs, selects e textareas */
-.field-group input,
-.field-group select,
-.field-group textarea,
-.styled-mask {
-  /* Alvo para o InputMask */
+  padding: 24px; /* Mais padding no desktop para ficar bonito */
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-family: inherit;
-  box-sizing: border-box;
-  /* Importante! */
-  background-color: #f9f9f9;
-  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.field-group input:focus,
-.field-group select:focus,
-.field-group textarea:focus,
-.styled-mask:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-  background-color: #fff;
-}
-
-.field-group input[disabled] {
-  background-color: #e9ecef;
-  color: #777;
-  cursor: not-allowed;
-}
-
-.field-group textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-/* Classe para fazer um campo ocupar o grid inteiro */
-.field-group.full-width {
-  grid-column: 1 / -1;
-  /* Ocupa da primeira à última coluna */
-}
-
-/* Botão de salvar */
-.form-actions {
+/* Abas de Navegação (Desktop) */
+.profile-tabs-nav {
   display: flex;
-  justify-content: flex-end;
-  /* Alinha o botão à direita */
-  margin-top: 10px;
-  border-top: 1px solid #eee;
-  padding-top: 24px;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 24px;
+  gap: 15px; /* Espaço entre as abas */
 }
 
-.btn-atualizar {
-  background-color: #007bff;
-  color: white;
+.tab-button {
+  padding: 10px 20px; /* Botões maiores no desktop */
   border: none;
-  border-radius: 6px;
-  padding: 10px 10px;
-  font-size: 14.5px;
-  font-weight: 600;
-  margin-left: 16px;
+  background-color: transparent;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.btn-atualizar:hover {
-  background-color: #0056b3;
-}
-
-@media (max-width: 768px) {
-
-  /* 1. Faz o container principal empilhar as colunas */
-  .profile-container {
-    flex-direction: column;
-    /* Empilha a sidebar e o form */
-    gap: 24px;
-    /* Reduz o espaço entre eles */
-  }
-
-  /* 2. Faz a sidebar ocupar a largura total */
-  .profile-sidebar {
-    width: 100%;
-    /* Ocupa a largura total */
-
-    /* (Opcional) Limita a largura máxima em tablets e centraliza */
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  /* 3. Faz o formulário ocupar a largura total */
-  .profile-form-container {
-    width: 100%;
-    padding: 24px;
-    /* Reduz o padding interno no mobile */
-  }
-
-  /* 4. Faz o grid do formulário ter apenas 1 coluna */
-  .form-grid {
-    grid-template-columns: 1fr;
-    /* Apenas 1 coluna */
-    gap: 16px;
-    /* Reduz o espaço entre os campos */
-  }
-
-  /* 5. Faz o avatar ficar um pouco menor */
-  .label-avatar {
-    width: 150px;
-    height: 150px;
-  }
-
-  /* 6. Ajusta o botão de salvar para centralizar */
-  .form-actions {
-    justify-content: center;
-    /* Centraliza o botão no mobile */
-  }
-}
-
-/* --- NOVO ESTILO PARA O BOTÃO DE ALTERAR SENHA --- */
-.btn-change-password {
-  background-color: rgb(63, 69, 79);
-  /* Cor de "perigo" secundária */
-  color: white;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 10px 10px;
-  font-size: 14.5px;
-  /* Um pouco menor que o principal */
-  font-weight: 600;
-  cursor: pointer;
+  font-size: 1rem; /* Fonte legível */
+  color: #667;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Espaço entre ícone e texto */
   transition: all 0.2s ease;
 }
 
-.btn-change-password:hover {
-  background-color: #52575d;
-  border-color: #3f3f3f;
+.tab-button span {
+  display: block; /* Garante que o texto apareça no Desktop */
 }
 
-/* Ajustes finos para celulares bem pequenos */
-@media (max-width: 480px) {
-  .profile-form-container {
-    padding: 16px;
-    /* Menos padding ainda */
-  }
+.tab-button:hover { color: #333; background-color: #f8f9fa; border-radius: 6px 6px 0 0; }
 
-  .sidebar-info h2 {
-    font-size: 1.25rem;
-  }
-
-  .btn-atualizar {
-    width: 100%;
-    /* Botão ocupa a largura toda */
-    font-size: 1rem;
-    padding: 12px;
-  }
-}
-
-.profile-tabs-nav {
-    display: flex;
-    border-bottom: 2px solid #eee;
-    margin-bottom: 24px;
-}
-.tab-button {
-    padding: 10px 16px;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #667;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px; 
-    transition: color 0.2s, border-color 0.2s;
-}
-.tab-button:hover { color: #333; }
 .tab-button.active {
-    color: #007bff; 
-    font-weight: 600;
-    border-bottom-color: #007bff;
-}
-.tab-content { display: none; animation: fadeIn 0.28s ease-in-out; }
-.tab-content.active { display: block; }
-
-/* Estilos para a seção de disponibilidade (calendário) */
-.availability-section {
-  margin-top: 18px;
-  padding: 18px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: linear-gradient(180deg,#fff, #fbfbfb);
-}
-
-.availability-section .section-title {
-  margin: 0 0 8px 0;
-  font-size: 1.1rem;
+  color: #007bff; 
+  border-bottom-color: #007bff;
+  background-color: transparent;
   font-weight: 600;
-  color: #333;
+  border-radius: 50px;
 }
 
-.availability-section p { 
-  color: var(--muted); 
-  margin-bottom: 12px;
-  font-size: 0.9rem;
+/* Conteúdo */
+.tab-content { display: none; animation: fadeIn 0.3s; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Inputs e Grid */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.field-group { display: flex; flex-direction: column; }
+.field-group.full-width { grid-column: 1 / -1; }
+.field-group label { font-size: 0.9rem; font-weight: 600; color: #555; margin-bottom: 8px; }
+
+.field-group input, .field-group select, .field-group textarea, .styled-mask {
+  width: 100%; padding: 12px;
+  border: 1px solid #ccc; border-radius: 6px;
+  font-size: 1rem; background-color: #f9f9f9;
 }
 
-.calendar-container {
-  display: flex;
-  justify-content: center;
-}
+.form-actions { display: flex; justify-content: flex-end; margin-top: 24px; border-top: 1px solid #eee; padding-top: 24px; gap: 10px; }
+.btn-atualizar { background-color: var(--accent); color: white; padding: 12px 24px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; }
+.btn-change-password { background-color: #3f454f; color: white; padding: 12px 24px; border-radius: 6px; border: none; cursor: pointer; }
 
-/* Marca visual para dias indisponíveis no calendário (react-calendar usa .unavailable-day) */
-.unavailable-day {
-  background: rgba(220,53,69,0.12) !important;
-  border-radius: 6px !important;
-  color: #721c24 !important;
-  box-shadow: inset 0 0 0 1px rgba(220,53,69,0.14);
-}
+/* Serviços e Calendário */
+.servicos-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; border: 1px solid #eee; padding: 10px; border-radius: 6px; background: #fcfcfc; }
+.servico-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #fff; border: 1px solid #e9ecef; border-radius: 6px; }
+.btn-remover-servico { color: var(--danger); background: none; border: none; cursor: pointer; }
 
-/* Pequenas melhorias para o calendário padrão importado */
-.react-calendar {
-  border: none;
-  box-shadow: none;
-}
+.servico-add-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: flex-end; padding-top: 15px; border-top: 1px solid #eee; }
+.btn-add-servico { background-color: var(--accent); color: white; padding: 0 20px; height: 47px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: 600; }
 
-/* Reforça contraste em botões e inputs usando variáveis */
-.btn-atualizar { background-color: var(--accent); }
-.btn-atualizar:hover { background-color: #0056b3; }
-.btn-disponibilidade.disponivel { background-color: var(--success); }
-.btn-disponibilidade.indisponivel { background-color: var(--danger); }
+.availability-section { margin-top: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px; }
+.react-calendar { width: 100% !important; max-width: 100%; border: none; font-family: inherit; }
+.unavailable-day { background: rgba(220,53,69,0.15) !important; color: #721c24 !important; border-radius: 6px; }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.servicos-section {
-    margin-bottom: 32px; /* Espaço antes da seção do calendário */
-}
-
-.servicos-section .section-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #333;
-}
-
-.servicos-section p {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 20px;
-    line-height: 1.5;
-}
-
-.servicos-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 24px;
-    max-height: 250px; /* Altura máxima para a lista */
-    overflow-y: auto; /* Adiciona scroll se a lista for longa */
-    border: 1px solid #eee;
-    border-radius: 6px;
-    padding: 10px;
-    background-color: #fcfcfc;
-}
-
-.servico-item-empty {
-    text-align: center;
-    color: #999;
-    padding: 20px 0;
-}
-
-.servico-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 15px;
-    background-color: #fff;
-    border: 1px solid #e9ecef;
-    border-radius: 6px;
-}
-
-.servico-item-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.servico-item-info strong {
-    font-weight: 600;
-    color: #333;
-}
-
-.servico-item-info span {
-    font-size: 0.9rem;
-    color: #555;
-}
-
-.btn-remover-servico {
-    background: transparent;
-    border: none;
-    color: #dc3545; /* Vermelho */
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.btn-remover-servico:hover {
-    background-color: #f8d7da; /* Fundo vermelho claro */
-    color: #721c24; /* Vermelho escuro */
-}
-
-/* --- ESTILO "LADO A LADO" PARA O FORMULÁRIO DE ADICIONAR --- */
-.servico-add-form {
-    display: grid;
-    /* 2 colunas de tamanho igual + 1 coluna de tamanho automático */
-    grid-template-columns: 1fr 1fr auto; 
-    gap: 15px;
-    align-items: flex-end; /* Alinha o botão com a base dos inputs */
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-}
-
-.btn-add-servico {
-    background-color: #0d6efd; /* Azul */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 12px 15px; /* Mesmo padding dos inputs */
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: background-color 0.2s;
-    height: 47px; /* Força a altura para alinhar com os inputs */
-    box-sizing: border-box;
-}
-
-.btn-add-servico:hover {
-    background-color: #0b5ed7;
-}
-
-/* --- Responsividade para o formulário de adicionar serviço --- */
+/* --- RESPONSIVIDADE MOBILE (max-width: 768px) --- */
 @media (max-width: 768px) {
-    /* No mobile, o grid do formulário de adicionar vira 1 coluna */
-    .servico-add-form {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
+  
+  /* 1. Empilha Sidebar e Formulário */
+  .profile-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%; /* Garante largura total */
+  }
 
-    .btn-add-servico {
-        justify-content: center; /* Centraliza o texto e ícone do botão */
-    }
-}   
+  /* 2. Sidebar */
+  .profile-sidebar {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  /* 3. CORREÇÃO CRÍTICA DO FORMULÁRIO */
+  .form-profile {
+    max-width: 100%; /* Remove o limite do desktop */
+    width: 100%;
+  }
+  
+  .profile-form-container {
+    width: 100%;
+    padding: 16px; 
+  }
+
+  /* 4. Grid vira 1 coluna */
+  .form-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  /* 5. ABAS MOBILE (ESCONDE TEXTO, SÓ ÍCONE) */
+  .profile-tabs-nav {
+    justify-content: center; /* Centraliza */
+    gap: 15px;
+    border-bottom: none; /* Remove linha */
+    gap: 40px;
+    padding-bottom: 10px;
+  }
+  
+  .tab-button span {
+    display: none; /* AQUI ESTÁ A MÁGICA: Esconde o texto no mobile */
+  }
+
+  .tab-button {
+    flex: 0 0 auto;
+    width: 50px; 
+    height: 50px;
+    border-radius: 50%; /* Redondo */
+    background-color: #f1f3f5;
+    padding: 0;
+    border: none;
+    margin: 0;
+  }
+  
+  .tab-button.active {
+    background-color: var(--accent);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,123,255,0.3);
+  }
+  
+  .tab-button:hover { background-color: var(--accent); color: white; }
+
+  /* 6. Botões de ação */
+  .form-actions { flex-direction: column; }
+  .btn-atualizar, .btn-change-password { width: 100%; }
+
+  /* 7. Serviços */
+  .servico-add-form { grid-template-columns: 1fr; }
+  .btn-add-servico { width: 100%; justify-content: center; }
+}

@@ -1,8 +1,8 @@
 // Hooks do React
-import { useContext, useState, useRef, useCallback } from "react"; // Adicionado useEffect
+import { useContext, useState, useRef, useCallback } from "react"; 
 
-// Ícones (Adicionados FiPlus e FiTrash2)
-import { FiUpload, FiPlus, FiSettings, FiTrash2 } from "react-icons/fi";
+// Ícones
+import { FiUpload, FiPlus, FiSettings, FiTrash2, FiUser, FiMapPin, FiBriefcase } from "react-icons/fi";
 
 // Imagem Padrão
 import avatar from "../../assets/avatar.png";
@@ -10,7 +10,7 @@ import avatar from "../../assets/avatar.png";
 // Contexto de Autenticação
 import { AuthContext } from "../../contexts/auth";
 
-// Firebase (Firestore e Auth)
+// Firebase
 import { doc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../../services/FirebaseConnection";
 import { sendPasswordResetEmail } from "firebase/auth";
@@ -19,18 +19,18 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import axios from "axios";
 import { toast } from "react-toastify";
 import InputMask from "react-input-mask";
-// --- 1. IMPORTAÇÕES DO CALENDÁRIO ---
+
+// Calendário
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css"; // Importa o CSS padrão
+import "react-calendar/dist/Calendar.css"; 
 
 // Componentes de Layout
 import PageHeader from "../../components/PageHeader";
 import Title from "../../components/Title";
 
-// CSS da Página
+// CSS
 import "./profile.css";
 
-// --- Função auxiliar de data ---
 const formatDate = (date) => {
   if (!date) return "";
   const year = date.getFullYear();
@@ -41,7 +41,6 @@ const formatDate = (date) => {
 
 export default function Profile() {
   const { user, setUser, storageUser } = useContext(AuthContext);
-
   const [activeTab, setActiveTab] = useState("pessoais");
 
   const [formData, setFormData] = useState({
@@ -56,7 +55,6 @@ export default function Profile() {
     endereco: user?.endereco || "",
     estado: user?.estado || "",
     sobreDomicilio: user?.sobreDomicilio || "",
-    // O estado 'servicos' já está como array, o que é perfeito.
     servicos: (user && Array.isArray(user.servicos)) ? user.servicos : [],
   });
 
@@ -64,12 +62,10 @@ export default function Profile() {
   const [imagemAvatar, setImagemAvatar] = useState(null);
   const [disponivel, setDisponivel] = useState(user?.disponivel || false);
   const [isSaving, setIsSaving] = useState(false);
-
   const [unavailableDates, setUnavailableDates] = useState(
     user && Array.isArray(user.unavailableDates) ? user.unavailableDates : []
   );
 
-  // --- 2. NOVOS STATES E REF PARA O FORMULÁRIO DE SERVIÇOS ---
   const [novoServicoNome, setNovoServicoNome] = useState("");
   const [novoServicoPreco, setNovoServicoPreco] = useState("");
 
@@ -95,8 +91,7 @@ export default function Profile() {
     }
   }, []);
 
-  const atualizarDados = useCallback(
-    async (atualizacoes) => {
+  const atualizarDados = useCallback(async (atualizacoes) => {
       const docRef = doc(db, "usuarios", user.uid);
       try {
         await updateDoc(docRef, atualizacoes);
@@ -109,14 +104,12 @@ export default function Profile() {
         toast.error("Erro ao atualizar dados.");
         throw error;
       }
-    },
-    [user, setUser, storageUser]
-  );
+    }, [user, setUser, storageUser]);
 
   const uploadFoto = useCallback(async () => {
     const CLOUD_NAME = "dy11aoczl";
     const UPLOAD_PRESET = "CleanUp";
-    if (!CLOUD_NAME || !UPLOAD_PRESET || CLOUD_NAME === "SEU_CLOUD_NAME_AQUI") {
+    if (!CLOUD_NAME || !UPLOAD_PRESET) {
       toast.error("Credenciais do Cloudinary não configuradas.");
       return null;
     }
@@ -135,8 +128,7 @@ export default function Profile() {
     }
   }, [imagemAvatar]);
 
-  const salvar = useCallback(
-    async (e) => {
+  const salvar = useCallback(async (e) => {
       e.preventDefault();
       if (!formData.cpf) {
         toast.error("Por favor, preencha seu CPF.");
@@ -144,7 +136,6 @@ export default function Profile() {
       }
       setIsSaving(true);
       try {
-        // formData (incluindo formData.servicos) já está atualizado
         const atualizacoes = { ...formData }; 
         if (user.objetivo === "2") {
           atualizacoes.disponivel = disponivel;
@@ -165,17 +156,7 @@ export default function Profile() {
       } finally {
         setIsSaving(false);
       }
-    },
-    [
-      formData,
-      disponivel,
-      imagemAvatar,
-      user.objetivo,
-      unavailableDates,
-      uploadFoto,
-      atualizarDados,
-    ]
-  );
+    }, [formData, disponivel, imagemAvatar, user.objetivo, unavailableDates, uploadFoto, atualizarDados]);
 
   const alternarDisponibilidade = useCallback(async () => {
     const novaDisponibilidade = !disponivel;
@@ -184,14 +165,10 @@ export default function Profile() {
   }, [disponivel, atualizarDados]);
 
   const handleCepBlur = useCallback(async () => {
-    // Corrigido: O seu código anterior ainda tinha um [cep, setCep]
-    // Esta versão usa o formData.cep
     const cepLimpo = formData.cep.replace(/\D/g, ""); 
     if (cepLimpo.length !== 8) return;
     try {
-      const response = await fetch(
-        `https://viacep.com.br/ws/${cepLimpo}/json/`
-      );
+      const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
       const data = await response.json();
       if (data.erro) {
         toast.error("CEP não encontrado.");
@@ -203,14 +180,10 @@ export default function Profile() {
       console.error("Erro ao buscar o CEP:", error);
       toast.error("Erro ao buscar o CEP. Tente novamente.");
     }
-  }, [formData.cep]); // Depende do formData.cep
+  }, [formData.cep]);
 
   const handleChangePassword = useCallback(async () => {
-    if (
-      window.confirm(
-        "Você tem certeza que deseja alterar sua senha?\nUm e-mail de redefinição será enviado para você."
-      )
-    ) {
+    if (window.confirm("Você tem certeza que deseja alterar sua senha?\nUm e-mail de redefinição será enviado para você.")) {
       try {
         await sendPasswordResetEmail(auth, user.email);
         toast.success("E-mail de redefinição de senha enviado!");
@@ -224,9 +197,7 @@ export default function Profile() {
   const handleDateChange = (date) => {
     const dateString = formatDate(date);
     if (unavailableDates.includes(dateString)) {
-      setUnavailableDates((prevDates) =>
-        prevDates.filter((d) => d !== dateString)
-      );
+      setUnavailableDates((prevDates) => prevDates.filter((d) => d !== dateString));
     } else {
       setUnavailableDates((prevDates) => [...prevDates, dateString]);
     }
@@ -235,74 +206,45 @@ export default function Profile() {
   const tileClassName = ({ date, view }) => {
     if (view === "month") {
       const dateString = formatDate(date);
-      if (unavailableDates.includes(dateString)) {
-        return "unavailable-day";
-      }
+      if (unavailableDates.includes(dateString)) return "unavailable-day";
     }
     return null;
   };
 
-  // --- 3. NOVAS FUNÇÕES PARA GERENCIAR SERVIÇOS ---
   const handleAdicionarServico = () => {
       if (novoServicoNome.trim() === "") {
           toast.warn("Por favor, preencha o nome do serviço.");
           return;
       }
-      
       const novoServico = {
           nome: novoServicoNome.trim(),
           preco: novoServicoPreco.trim() || 'A combinar' 
       };
-      
-      // Atualiza o formData.servicos
-      setFormData(prev => ({
-          ...prev,
-          servicos: [...prev.servicos, novoServico]
-      }));
-      
-      // Limpa os inputs
+      setFormData(prev => ({ ...prev, servicos: [...prev.servicos, novoServico] }));
       setNovoServicoNome("");
       setNovoServicoPreco("");
   };
 
   const handleRemoverServico = (indexToRemove) => {
-      // Remove o serviço do formData.servicos
-      setFormData(prev => ({
-          ...prev,
-          servicos: prev.servicos.filter((_, index) => index !== indexToRemove)
-      }));
+      setFormData(prev => ({ ...prev, servicos: prev.servicos.filter((_, index) => index !== indexToRemove) }));
       toast.info("Serviço removido. Clique em 'Atualizar Perfil' para salvar a alteração."); 
   };
   
-  // --- 4. FUNÇÃO DE PREÇO ATUALIZADA (Formatação de Moeda) ---
   const handlePrecoChange = (e) => {
       let value = e.target.value;
-
-      // Permite "A combinar"
       if (value.toLowerCase().startsWith('a')) {
           setNovoServicoPreco("A combinar");
           return;
       }
-
-      // Remove tudo que não for dígito
       let numeros = value.replace(/\D/g, '');
       if (numeros === "") {
           setNovoServicoPreco("");
           return;
       }
-
-      // Converte para número (em centavos)
       let valorNumerico = parseFloat(numeros);
-
-      // Formata como BRL (Real) usando a API Intl do navegador
-      let valorFormatado = new Intl.NumberFormat('pt-BR', {
-          style: 'currency',
-          currency: 'BRL',
-      }).format(valorNumerico / 100); // Divide por 100 para tratar como centavos
-      
+      let valorFormatado = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valorNumerico / 100); 
       setNovoServicoPreco(valorFormatado);
   };
-  // --- FIM DAS NOVAS FUNÇÕES ---
 
   return (
     <div>
@@ -313,27 +255,20 @@ export default function Profile() {
       </PageHeader>
 
       <div className="profile-container">
-        {/* Profile sidebar with avatar and basic info */}
         <div className="profile-sidebar">
           <label className="label-avatar">
-            <span>
-              <FiUpload color="#FFF" size={25} />
-            </span>
+            <span><FiUpload color="#FFF" size={25} /></span>
             <img src={avatarUrl || avatar} alt="Foto de perfil" />
             <input type="file" accept="image/*" onChange={mudarFoto} hidden />
           </label>
           <div className="sidebar-info">
-            <div className="user-name">
-              {formData.nome} {formData.sobrenome}
-            </div>
+            <div className="user-name">{formData.nome} {formData.sobrenome}</div>
             <p className="user-email">{user.email}</p>
           </div>
           {user.objetivo === "2" && (
             <button
               type="button"
-              className={`btn-disponibilidade ${
-                disponivel ? "disponivel" : "indisponivel"
-              }`}
+              className={`btn-disponibilidade ${disponivel ? "disponivel" : "indisponivel"}`}
               onClick={alternarDisponibilidade}
             >
               {disponivel ? "Disponível (Geral)" : "Indisponível (Geral)"}
@@ -341,294 +276,158 @@ export default function Profile() {
           )}
         </div>
 
-        <div className="profile-form-container">
-          <div className="profile-tabs-nav">
-            <button
-              type="button"
-              className={`tab-button ${
-                activeTab === "pessoais" ? "active" : ""
-              }`}
-              onClick={() => setActiveTab("pessoais")}
-            >
-              Dados Pessoais
-            </button>
-
-            <button
-              type="button"
-              className={`tab-button ${
-                activeTab === "contato" ? "active" : ""
-              }`}
-              onClick={() => setActiveTab("contato")}
-            >
-              Contato & Endereço
-            </button>
-
-            {user.objetivo === "2" && (
-              <button
+        <form className="form-profile" onSubmit={salvar} style={{ width: '100%' }}>
+            <div className="profile-form-container">
+            
+            {/* ABAS AGORA COM ÍCONE E TEXTO */}
+            <div className="profile-tabs-nav">
+                <button
                 type="button"
-                className={`tab-button ${
-                  activeTab === "servicos" ? "active" : ""
-                }`}
-                onClick={() => setActiveTab("servicos")}
-              >
-                Serviços e Disponibilidade
-              </button>
-            )}
-          </div>
+                className={`tab-button ${activeTab === "pessoais" ? "active" : ""}`}
+                onClick={() => setActiveTab("pessoais")}
+                >
+                <FiUser size={20} />
+                <span>Dados Pessoais</span>
+                </button>
 
-          <form className="form-profile" onSubmit={salvar}>
-            {/* --- ABA 1: DADOS PESSOAIS --- */}
-            <div
-              className={`tab-content ${
-                activeTab === "pessoais" ? "active" : ""
-              }`}
-            >
-              <div className="form-grid">
-                <div className="field-group">
-                  <label>Nome</label>
-                  <input
-                    type="text"
-                    name="nome"
-                    value={formData.nome}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="field-group">
-                  <label>Sobrenome</label>
-                  <input
-                    type="text"
-                    name="sobrenome"
-                    value={formData.sobrenome}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="field-group">
-                  <label>CPF</label>
-                  <InputMask
-                    inputRef={cpfRef}
-                    className="styled-mask"
-                    mask="999.999.999-99"
-                    name="cpf"
-                    value={formData.cpf}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="field-group">
-                  <label>Data de Nascimento</label>
-                  <input
-                    type="date"
-                    name="dataNascimento"
-                    value={formData.dataNascimento}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="field-group">
-                  <label>Gênero</label>
-                  <select
-                    name="genero"
-                    value={formData.genero}
-                    onChange={handleInputChange}
-                  >
-                    <option value="" disabled>
-                      Selecione
-                    </option>
-                    <option value="Masculino">Masculino</option>
-                    <option value="Feminino">Feminino</option>
-                    <option value="Outro">Prefiro não informar</option>
-                  </select>
-                </div>
-              </div>
-            </div>
+                <button
+                type="button"
+                className={`tab-button ${activeTab === "contato" ? "active" : ""}`}
+                onClick={() => setActiveTab("contato")}
+                >
+                <FiMapPin size={20} />
+                <span>Contato & Endereço</span>
+                </button>
 
-            {/* --- ABA 2: CONTATO & ENDEREÇO --- */}
-            <div
-              className={`tab-content ${
-                activeTab === "contato" ? "active" : ""
-              }`}
-            >
-              <div className="form-grid">
-                <div className="field-group full-width">
-                  <label>Email</label>
-                  <input type="text" value={user.email} disabled={true} />
-                </div>
-                <div className="field-group">
-                  <label>Telefone</label>
-                  <InputMask
-                    inputRef={telefoneRef}
-                    className="styled-mask"
-                    mask="(99) 99999-9999"
-                    name="telefone"
-                    value={formData.telefone}
-                    onChange={handleInputChange}
-                  />
-                </div>
-
-                {/* Este é o ÚNICO campo CEP, agora usa formData */}
-                <div className="field-group">
-                  <label>CEP</label>
-                  <InputMask
-                    inputRef={cepRef}
-                    className="styled-mask"
-                    mask="99999-999"
-                    name="cep"
-                    value={formData.cep} 
-                    onChange={handleInputChange}
-                    onBlur={handleCepBlur} // Corrigido
-                  />
-                </div>
-                <div className="field-group">
-                  <label>Bairro</label>
-                  <input
-                    type="text"
-                    name="bairro"
-                    value={formData.bairro}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="field-group">
-                  <label>Endereço</label>
-                  <input
-                    type="text"
-                    name="endereco"
-                    value={formData.endereco}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="field-group">
-                  <label>Estado</label>
-                  <input
-                    type="text"
-                    name="estado"
-                    value={formData.estado}
-                    onChange={handleInputChange}
-                  />
-                </div>
-
-                {user.objetivo === "1" && (
-                  <div className="field-group full-width">
-                    <label>Sobre o seu domicílio</label>
-                    <textarea
-                      name="sobreDomicilio"
-                      value={formData.sobreDomicilio}
-                      onChange={handleInputChange}
-                      placeholder="Ex: Casa com cachorro, Apto 301..."
-                    />
-                  </div>
+                {user.objetivo === "2" && (
+                <button
+                    type="button"
+                    className={`tab-button ${activeTab === "servicos" ? "active" : ""}`}
+                    onClick={() => setActiveTab("servicos")}
+                >
+                    <FiBriefcase size={20} />
+                    <span>Serviços</span>
+                </button>
                 )}
-              </div>
             </div>
 
-            {/* --- ABA 3: SERVIÇOS E DISPONIBILIDADE --- */}
-            {user.objetivo === "2" && (
-              <div
-                className={`tab-content ${
-                  activeTab === "servicos" ? "active" : ""
-                }`}
-              >
+                <div className={`tab-content ${activeTab === "pessoais" ? "active" : ""}`}>
+                <div className="form-grid">
+                    <div className="field-group">
+                    <label>Nome</label>
+                    <input type="text" name="nome" value={formData.nome} onChange={handleInputChange} />
+                    </div>
+                    <div className="field-group">
+                    <label>Sobrenome</label>
+                    <input type="text" name="sobrenome" value={formData.sobrenome} onChange={handleInputChange} />
+                    </div>
+                    <div className="field-group">
+                    <label>CPF</label>
+                    <InputMask inputRef={cpfRef} className="styled-mask" mask="999.999.999-99" name="cpf" value={formData.cpf} onChange={handleInputChange} />
+                    </div>
+                    <div className="field-group">
+                    <label>Data de Nascimento</label>
+                    <input type="date" name="dataNascimento" value={formData.dataNascimento} onChange={handleInputChange} />
+                    </div>
+                    <div className="field-group">
+                    <label>Gênero</label>
+                    <select name="genero" value={formData.genero} onChange={handleInputChange}>
+                        <option value="" disabled>Selecione</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Feminino">Feminino</option>
+                        <option value="Outro">Prefiro não informar</option>
+                    </select>
+                    </div>
+                </div>
+                </div>
 
-                {/* --- 5. JSX ATUALIZADO (SUBSTITUIÇÃO DO TEXTAREA) --- */}
-                <div className="servicos-section">
-                    <div className="section-title">Meus Serviços</div>
-                    <p>Liste os serviços que você oferece e o preço (opcional).</p>
-                    
-                    {/* Lista de serviços já adicionados */}
-                    <div className="servicos-list">
-                        {formData.servicos.length === 0 ? (
-                            <p className="servico-item-empty">Nenhum serviço cadastrado.</p>
-                        ) : (
-                            formData.servicos.map((servico, index) => (
-                                <div className="servico-item" key={index}>
-                                    <div className="servico-item-info">
-                                        <strong>{servico.nome}</strong>
-                                        <span>{servico.preco}</span>
+                <div className={`tab-content ${activeTab === "contato" ? "active" : ""}`}>
+                <div className="form-grid">
+                    <div className="field-group full-width">
+                    <label>Email</label>
+                    <input type="text" value={user.email} disabled={true} />
+                    </div>
+                    <div className="field-group">
+                    <label>Telefone</label>
+                    <InputMask inputRef={telefoneRef} className="styled-mask" mask="(99) 99999-9999" name="telefone" value={formData.telefone} onChange={handleInputChange} />
+                    </div>
+                    <div className="field-group">
+                    <label>CEP</label>
+                    <InputMask inputRef={cepRef} className="styled-mask" mask="99999-999" name="cep" value={formData.cep} onChange={handleInputChange} onBlur={handleCepBlur} />
+                    </div>
+                    <div className="field-group">
+                    <label>Bairro</label>
+                    <input type="text" name="bairro" value={formData.bairro} onChange={handleInputChange} />
+                    </div>
+                    <div className="field-group">
+                    <label>Endereço</label>
+                    <input type="text" name="endereco" value={formData.endereco} onChange={handleInputChange} />
+                    </div>
+                    <div className="field-group">
+                    <label>Estado</label>
+                    <input type="text" name="estado" value={formData.estado} onChange={handleInputChange} />
+                    </div>
+                    {user.objetivo === "1" && (
+                    <div className="field-group full-width">
+                        <label>Sobre o seu domicílio</label>
+                        <textarea name="sobreDomicilio" value={formData.sobreDomicilio} onChange={handleInputChange} placeholder="Ex: Casa com cachorro, Apto 301..." />
+                    </div>
+                    )}
+                </div>
+                </div>
+
+                {user.objetivo === "2" && (
+                <div className={`tab-content ${activeTab === "servicos" ? "active" : ""}`}>
+                    <div className="servicos-section">
+                        <div className="section-title">Meus Serviços</div>
+                        <p>Liste os serviços que você oferece e o preço (opcional).</p>
+                        <div className="servicos-list">
+                            {formData.servicos.length === 0 ? (
+                                <p className="servico-item-empty">Nenhum serviço cadastrado.</p>
+                            ) : (
+                                formData.servicos.map((servico, index) => (
+                                    <div className="servico-item" key={index}>
+                                        <div className="servico-item-info">
+                                            <strong>{servico.nome}</strong>
+                                            <span>{servico.preco}</span>
+                                        </div>
+                                        <button type="button" className="btn-remover-servico" onClick={() => handleRemoverServico(index)} title="Remover serviço">
+                                            <FiTrash2 size={18} />
+                                        </button>
                                     </div>
-                                    <button 
-                                        type="button" 
-                                        className="btn-remover-servico"
-                                        onClick={() => handleRemoverServico(index)}
-                                        title="Remover serviço"
-                                    >
-                                        <FiTrash2 size={18} />
-                                    </button>
-                                </div>
-                            ))
-                        )}
+                                ))
+                            )}
+                        </div>
+                        <div className="servico-add-form">
+                            <div className="field-group">
+                                <label>Novo Serviço</label>
+                                <input type="text" placeholder="Nome do serviço (ex: Limpeza Padrão)" value={novoServicoNome} onChange={(e) => setNovoServicoNome(e.target.value)} />
+                            </div>
+                            <div className="field-group">
+                                <label>Preço (Opcional)</label>
+                                <input type="text" className="styled-mask" placeholder="Ex: R$ 150,00" value={novoServicoPreco} onChange={handlePrecoChange} />
+                            </div>
+                            <button type="button" className="btn-add-servico" onClick={handleAdicionarServico}>
+                                <FiPlus size={20} /> Adicionar
+                            </button>
+                        </div>
                     </div>
-
-                    {/* Formulário para adicionar novo serviço (LAYOUT LADO A LADO) */}
-                    <div className="servico-add-form">
-                        <div className="field-group">
-                            <label>Novo Serviço</label>
-                            <input 
-                                type="text" 
-                                placeholder="Nome do serviço (ex: Limpeza Padrão)"
-                                value={novoServicoNome}
-                                onChange={(e) => setNovoServicoNome(e.target.value)}
-                            />
-                        </div>
-                        
-                        {/* --- 6. CAMPO DE PREÇO ATUALIZADO --- */}
-                        <div className="field-group">
-                            <label>Preço (Opcional)</label>
-                            {/* Trocado InputMask por input normal */}
-                            <input 
-                                type="text"
-                                className="styled-mask" /* Reutiliza a classe para manter o estilo */
-                                placeholder="Ex: R$ 150,00 ou A combinar"
-                                value={novoServicoPreco}
-                                onChange={handlePrecoChange} // Usa o handler customizado
-                            />
-                        </div>
-                        {/* --- FIM DA ATUALIZAÇÃO DO PREÇO --- */}
-
-                        <button 
-                            type="button" 
-                            className="btn-add-servico"
-                            onClick={handleAdicionarServico}
-                        >
-                            <FiPlus size={20} /> Adicionar
-                        </button>
+                    <div className="availability-section">
+                    <div className="section-title">Gerenciar Dias Indisponíveis</div>
+                    <p>Clique nos dias para marcá-los como indisponíveis.</p>
+                    <div className="calendar-container">
+                        <Calendar onChange={handleDateChange} tileClassName={tileClassName} minDate={new Date()} locale="pt-BR" />
+                    </div>
                     </div>
                 </div>
-                {/* --- FIM DA ATUALIZAÇÃO --- */}
+                )}
 
-
-                <div className="availability-section">
-                  <div className="section-title">Gerenciar Dias Indisponíveis</div>
-                  <p>
-                    Clique nos dias para marcá-los como indisponíveis. As
-                    alterações são salvas ao clicar em "Atualizar Perfil".
-                  </p>
-                  <div className="calendar-container">
-                    <Calendar
-                      onChange={handleDateChange}
-                      tileClassName={tileClassName}
-                      minDate={new Date()}
-                      locale="pt-BR"
-                    />
-                  </div>
+                <div className="form-actions">
+                <button type="button" className="btn-change-password" onClick={handleChangePassword}>Alterar Senha</button>
+                <button className="btn-atualizar" type="submit" disabled={isSaving}>{isSaving ? "Salvando..." : "Atualizar Perfil"}</button>
                 </div>
-              </div>
-            )}
-
-            <div className="form-actions">
-              <button
-                type="button"
-                className="btn-change-password"
-                onClick={handleChangePassword}
-              >
-                Alterar Senha
-              </button>
-              <button
-                className="btn-atualizar"
-                type="submit"
-                disabled={isSaving}
-              >
-                {isSaving ? "Salvando..." : "Atualizar Perfil"}
-              </button>
             </div>
-          </form>
-        </div>
+        </form>
       </div>
     </div>
   );

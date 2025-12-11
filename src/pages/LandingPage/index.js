@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FiChevronLeft, FiChevronRight, FiPhone, FiMail, FiMenu, FiX } from 'react-icons/fi';
-import './landing.css';
+import './Landing.css';
 
 const carouselSlides = [
   { image: 'https://images.unsplash.com/photo-1596424222201-6c183b9c03b1?q=80&w=2070&auto=format&fit=crop', title: 'Limpeza Residencial Completa', description: 'Deixe sua casa brilhando com nossos profissionais de confiança.' },

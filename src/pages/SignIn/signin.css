@@ -279,7 +279,7 @@ form h1 {
   .login input[type="text"],
   .login input[type="email"],
   .login input[type="password"],
-  .gsi-material-button,
+  .gsi-material-button-contents,
   .select-profile {
     width: 90%;
   }

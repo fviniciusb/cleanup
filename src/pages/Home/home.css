@@ -55,6 +55,7 @@
 .info {
     padding: 20px;
     text-align: center;
+    
 }
 
 .info h2 {
@@ -85,7 +86,7 @@
 
 .rating span {
   font-size: 0.8rem;
-  color: var(--text-light);
+  color: var(--text-dark);
 }
 
 .btn-agendar {
