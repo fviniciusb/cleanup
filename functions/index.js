@@ -15,7 +15,7 @@ exports.criarAgendamento = functions.https.onCall(async (data, context) => {
 
   const userId = context.auth.uid;
   // Corrigido espaçamento das chaves
-  const {prestadorId, dataAgendamento, horarioAgendamento} = data;
+  const {prestadorId, dataAgendamento, horarioAgendamento} = data.data;
 
   // 2. Validação de segurança
   if (!prestadorId || !dataAgendamento || !horarioAgendamento) {
@@ -66,7 +66,7 @@ exports.criarAgendamento = functions.https.onCall(async (data, context) => {
         clienteId: userId,
         status: "pendente",
         criadoEm: admin.firestore.FieldValue.serverTimestamp(),
-        ...data, // Corrigido: Vírgula adicionada
+        ...data // Corrigido: Vírgula adicionada
       });
     });
 
