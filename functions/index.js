@@ -6,12 +6,12 @@ const db = admin.firestore();
 
 exports.criarAgendamento = functions.https.onCall(async (data, context) => {
   // 1. Verifica se o usuário está logado
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
-        "unauthenticated",
-        "Você precisa estar logado.",
-    );
-  }
+  // if (!context.auth) {
+  //   throw new functions.https.HttpsError(
+  //       "unauthenticated",
+  //       "Você precisa estar logado.",
+  //   );
+  // }
 
   const userId = context.auth.uid;
   // Corrigido espaçamento das chaves

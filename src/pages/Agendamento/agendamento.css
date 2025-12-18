@@ -317,3 +317,42 @@
     width: 100%;
   }
 }
+.modal-feedback-area {
+  margin: 15px 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-feedback-area textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 15px;
+  border: 2px solid #eee; /* Borda mais sutil */
+  border-radius: 12px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais moderna */
+  font-size: 14px;
+  resize: vertical;
+  background-color: #f8f9fa;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.modal-feedback-area textarea:focus {
+  border-color: #f1c40f; /* Cor de destaque amarela */
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(241, 196, 15, 0.1); /* 'Glow' suave no foco */
+}
+
+/* Botões do Modal */
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.modal-actions button {
+  flex: 1; /* Botões ocupam a mesma largura */
+  padding: 12px;
+  font-size: 1rem;
+}
